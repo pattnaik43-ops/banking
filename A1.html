@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>SBI Bank Ops - Target Ledger</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<style>
+:root {
+  /* Night Ledger — dark (default) */
+  --ink:             #5aa2ff;
+  --ink-secondary:   #2f6fe0;
+  --ink-light:       rgba(90, 162, 255, 0.14);
+  --ink-glow:        rgba(90, 162, 255, 0.30);
+
+  --bg-main:         #0c1220;
+  --paper:           #131b2e;
+  --paper-elevated:  #1b2640;
+  --paper-glass:     #101828;
+
+  --text-main:       #eef3fb;
+  --text-muted:      #8a97b3;
+  --border:          #243150;
+  --border-active:   #3b6fc4;
+
+  --success:         #34d399;
+  --success-light:   rgba(52, 211, 153, 0.14);
+  --danger:          #fb7185;
+  --danger-light:    rgba(251, 113, 133, 0.15);
+
+  --radius-sm:       10px;
+  --radius-md:       16px;
+  --radius-lg:       24px;
+
+  --card-shadow:     none;
+  --btn-shadow:      none;
+
+  --font-ui:   system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Roboto Mono", monospace;
+}
+
+body.light-theme {
+  /* Clean Paper — light */
+  --ink:             #1f5fbf;
+  --ink-secondary:   #164a96;
+  --ink-light:       rgba(31, 95, 191, 0.10);
+  --ink-glow:        rgba(31, 95, 191, 0.20);
+
+  --bg-main:         #f1f4f9;
+  --paper:           #ffffff;
+  --paper-elevated:  #eaf0f8;
+  --paper-glass:     #ffffff;
+
+  --text-main:       #14202f;
+  --text-muted:      #66758c;
+  --border:          #dde4ef;
+  --border-active:   #9db9e6;
+
+  --success:         #0f9d6e;
+  --success-light:   rgba(15, 157, 110, 0.10);
+  --danger:          #d63150;
+  --danger-light:    rgba(214, 49, 80, 0.10);
+
+  --card-shadow:     0 1px 2px rgba(20, 32, 47, 0.06);
+  --btn-shadow:      none;
+}
+
+*, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { -webkit-font-smoothing: antialiased; }
+button, a { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+button { font-family: var(--font-ui); }
+
+body {
+  font-family: var(--font-ui);
+  margin: 0; padding: 0;
+  height: 100vh; height: 100dvh;
+  overflow: hidden;
+  background: var(--bg-main);
+  color: var(--text-main);
+  display: flex; flex-direction: column;
+}
+
+h1, h2, h4, .brand-name { font-weight: 700; letter-spacing: -0.01em; }
+.mono, .w-count, .seal-pct { font-family: var(--font-mono); }
+.hidden { display: none !important; }
+
+/* ---------- HEADER ---------- */
+header {
+  background: var(--paper-glass);
+  padding: max(10px, env(safe-area-inset-top)) 16px 10px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--border);
+  z-index: 10; flex-shrink: 0;
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-seal {
+  width: 36px; height: 36px; border-radius: 12px;
+  background: var(--ink-secondary); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 12px; letter-spacing: 0.02em;
+}
+.brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+.brand-name { font-size: 15px; }
+.brand-sub { font-size: 10.5px; color: var(--text-muted); font-weight: 600; font-family: var(--font-mono); }
+
+#theme-toggle {
+  background: var(--paper-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 7px 12px; border-radius: 999px;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em;
+  cursor: pointer;
+}
+#theme-toggle:active { transform: scale(0.96); }
+
+/* ---------- LOGIN ---------- */
+#login-page {
+  height: 100%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 24px; text-align: center;
+}
+.login-seal {
+  width: 84px; height: 84px; margin-bottom: 22px; border-radius: 26px;
+  background: var(--ink-secondary); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; font-weight: 800; letter-spacing: 0.02em;
+}
+#login-page h2 { font-size: 1.7rem; margin: 0 0 10px; }
+#login-page p {
+  color: var(--text-muted); font-size: 0.8rem; margin: 0 0 28px;
+  background: var(--paper); padding: 6px 14px; border-radius: 999px;
+  border: 1px solid var(--border); font-family: var(--font-mono);
+}
+
+/* ---------- DASHBOARD ---------- */
+#dashboard {
+  display: flex; flex-direction: column; height: 100%;
+  flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden;
+  padding: 14px 14px 100px; gap: 16px;
+  max-width: 540px; width: 100%; margin: 0 auto;
+}
+
+/* Re-KYC banner */
+.quick-link-banner {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--ink-secondary); color: #fff;
+  border-radius: var(--radius-md); padding: 12px 14px;
+  text-decoration: none; font-weight: 700; font-size: 13px;
+  flex-shrink: 0;
+}
+.quick-link-banner:active { opacity: 0.88; }
+.quick-link-icon-wrapper { display: flex; align-items: center; gap: 10px; }
+.quick-link-icon {
+  width: 30px; height: 30px; border-radius: 10px;
+  background: rgba(255,255,255,0.18); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+}
+.quick-link-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.3; }
+.quick-link-icon-wrapper span span { color: rgba(255,255,255,0.75) !important; }
+.quick-link-arrow { color: #fff; font-weight: 700; font-size: 17px; }
+
+/* Progress summary */
+.command-module {
+  background: var(--paper); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 16px;
+  box-shadow: var(--card-shadow); flex-shrink: 0;
+}
+.summary-card { display: flex; align-items: center; gap: 16px; width: 100%; }
+.seal-ring-wrap { position: relative; width: 62px; height: 62px; flex-shrink: 0; }
+.seal-ring-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.seal-track { fill: none; stroke: var(--paper-elevated); stroke-width: 10; }
+.seal-fill { fill: none; stroke: var(--ink); stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 0.4s ease; }
+.seal-center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.seal-pct { font-size: 13px; font-weight: 700; }
+
+.summary-meta { flex: 1; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.summary-left { display: flex; flex-direction: column; gap: 3px; }
+.summary-title { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.06em; }
+.summary-sub { font-size: 13px; color: var(--ink); font-weight: 700; }
+.summary-frac { font-size: 22px; font-weight: 700; }
+
+/* Section titles */
+.section-title {
+  font-size: 11px; font-weight: 800; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin: 0 2px 10px; display: flex; align-items: center; gap: 10px;
+}
+.section-title::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+/* Target cards */
+.target-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+.widget {
+  background: var(--paper); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 13px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  box-shadow: var(--card-shadow);
+  position: relative; overflow: hidden;
+}
+.widget.met { border-color: var(--success); background: var(--success-light); }
+.widget.met .w-title { color: var(--success); }
+.widget.met .w-target { background: transparent; color: var(--success); border-color: var(--success); }
+.widget.met .w-count { color: var(--success); }
+.widget.met .w-btn { background: var(--success); color: #06231a; border-color: var(--success); }
+.widget.met .w-prog-fill { background: var(--success); }
+
+.w-header { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 8px; }
+.w-title { font-size: 12.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.w-target { font-size: 10px; border: 1px solid var(--border); color: var(--text-muted); padding: 2px 7px; border-radius: 999px; font-weight: 700; flex-shrink: 0; }
+
+.w-main-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 2px 0 12px; }
+.w-count { font-size: 2.1rem; font-weight: 700; line-height: 1; letter-spacing: -0.03em; }
+
+.w-btn {
+  height: 40px; min-width: 70px; padding: 0 14px;
+  border: 1px solid var(--border-active); border-radius: 999px;
+  font-family: var(--font-mono); font-size: 13px; font-weight: 700; cursor: pointer;
+  background: var(--ink-light); color: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+}
+.w-btn:active { background: var(--ink); color: #fff; transform: scale(0.96); }
+
+.w-prog-track { width: 100%; height: 5px; background: var(--paper-elevated); border-radius: 5px; overflow: hidden; }
+.w-prog-fill { height: 100%; width: 0%; background: var(--ink); border-radius: 5px; transition: width 0.3s ease; }
+
+/* Lists */
+.compact-list {
+  display: flex; flex-direction: column;
+  background: var(--paper); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 4px 14px;
+  box-shadow: var(--card-shadow);
+}
+.compact-card {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.compact-card:last-child { border-bottom: none; }
+.compact-info { display: flex; align-items: center; justify-content: space-between; flex: 1; padding-right: 12px; min-width: 0; }
+.compact-title { font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.compact-count {
+  font-family: var(--font-mono); font-size: 13px; font-weight: 700;
+  color: var(--ink); background: var(--ink-light);
+  padding: 3px 10px; border-radius: 999px; min-width: 36px; text-align: center;
+  flex-shrink: 0; margin-left: 8px;
+}
+.compact-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--paper-elevated); color: var(--text-main);
+  border: 1px solid var(--border); font-size: 20px; font-weight: 600; line-height: 1;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0;
+}
+.compact-btn:active { background: var(--ink); color: #fff; border-color: var(--ink); transform: scale(0.94); }
+
+.compact-card.danger-met .compact-count { color: var(--success); background: var(--success-light); }
+.compact-card.danger-met .compact-btn { background: var(--success); color: #06231a; border-color: var(--success); }
+
+/* ---------- BOTTOM NAV ---------- */
+.bottom-dock-wrapper {
+  position: fixed; bottom: max(10px, env(safe-area-inset-bottom)); left: 0; right: 0;
+  display: flex; justify-content: center; pointer-events: none; z-index: 100;
+}
+.bottom-nav {
+  background: var(--paper-glass);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px; gap: 2px; width: 94%; max-width: 420px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  pointer-events: auto;
+}
+.nav-item {
+  flex: 1; background: none; border: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: 10px; font-weight: 700; cursor: pointer; gap: 3px;
+  height: 48px; border-radius: 16px;
+}
+.nav-item svg { width: 19px; height: 19px; stroke: currentColor; fill: none; stroke-width: 2.1; }
+.nav-item:active { color: var(--ink); background: var(--ink-light); }
+.nav-item:disabled { opacity: 0.3; cursor: not-allowed; }
+.nav-item.danger-icon:active { color: var(--danger); background: var(--danger-light); }
+
+/* ---------- MODALS ---------- */
+.overlay {
+  position: fixed; inset: 0; background: rgba(5, 9, 18, 0.72);
+  opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 1000;
+}
+.overlay.show { opacity: 1; pointer-events: auto; }
+.bottom-sheet {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--paper);
+  padding: 24px 18px max(20px, env(safe-area-inset-bottom));
+  border-radius: 26px 26px 0 0;
+  transform: translateY(100%); transition: transform 0.25s ease;
+  z-index: 1001; max-width: 540px; margin: auto;
+  border-top: 1px solid var(--border);
+}
+.overlay.show .bottom-sheet { transform: translateY(0); }
+.bottom-sheet h4 { font-size: 1.25rem; margin: 0 0 14px; }
+
+.input-field {
+  width: 100%; height: 50px; padding: 0 14px; margin-bottom: 14px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  font-size: 1.1rem; font-family: var(--font-mono); font-weight: 700;
+  background: var(--bg-main); outline: none; text-align: center; color: var(--text-main);
+}
+.input-field:focus { border-color: var(--ink); }
+
+.field-label {
+  display: block; font-size: 11px; font-weight: 700;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 6px 4px;
+}
+
+.modal-btn {
+  width: 100%; height: 48px; border: 1px solid transparent; border-radius: 999px;
+  font-size: 14px; font-weight: 700; cursor: pointer; margin-bottom: 10px;
+}
+.modal-btn:active { transform: scale(0.98); }
+.modal-btn.primary { background: var(--ink-secondary); color: #fff; }
+.modal-btn.cancel { background: var(--paper-elevated); color: var(--text-muted); border-color: var(--border); }
+.modal-btn.danger { background: var(--danger); color: #fff; }
+
+/* ---------- REPORT ---------- */
+#report-page { overflow-y: auto; height: 100%; padding: 14px; max-width: 640px; margin: 0 auto; width: 100%; }
+.report-back {
+  background: var(--paper); color: var(--text-main); border: 1px solid var(--border);
+  height: 46px; border-radius: 999px; font-weight: 700; font-size: 13px;
+  margin-bottom: 16px; width: 100%; cursor: pointer;
+}
+.report-section { border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 18px; overflow: hidden; background: var(--paper); }
+.report-section h4 { background: var(--paper-elevated); margin: 0; padding: 12px 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+.report-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.report-table th, .report-table td { padding: 10px 16px; border-bottom: 1px solid var(--border); text-align: left; }
+.report-table tr:last-child td { border-bottom: none; }
+.report-table th { color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 10px; }
+
+@media (max-width: 360px) {
+  .w-count { font-size: 1.7rem; }
+  .w-btn { min-width: 58px; height: 36px; font-size: 12px; }
+  .target-grid { gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-seal">SBI</div>
+    <div class="brand-text">
+      <span class="brand-name">SBI Ops Deck</span>
+      <span class="brand-sub">// NODE 17978</span>
+    </div>
+  </div>
+  <div style="display:flex; align-items:center; gap:8px;">
+    <button id="theme-toggle" onclick="toggleTheme()">VIBE: DARK</button>
+  </div>
+</header>
+
+<div id="login-page">
+  <div class="login-seal">SBI</div>
+  <h2>Ops Command Deck</h2>
+  <p>Komtalpeta // 17978</p>
+  <button class="modal-btn primary" style="max-width: 240px;" onclick="doLogin()">Boot Ledger →</button>
+</div>
+
+<div id="dashboard" class="hidden">
+
+  <!-- QUICK LINK BANNER -->
+  <a href="https://yonoretail.sbi.bank.in/accounts/re-kyc/kyc-entry?srcChn=RINB" target="_blank" class="quick-link-banner">
+    <div class="quick-link-icon-wrapper">
+      <span class="quick-link-icon">
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </span>
+      <span>Re-KYC Portal <span style="font-size: 10px; color: var(--text-muted); font-family: 'Space Mono', monospace; margin-left: 4px;">[RINB]</span></span>
+    </div>
+    <span class="quick-link-arrow">↗</span>
+  </a>
+  
+  <!-- COMPACT COMMAND MODULE (Overall Daily Target) -->
+  <div class="command-module">
+    <div class="summary-card">
+      <div class="seal-ring-wrap">
+        <svg viewBox="0 0 100 100">
+          <circle class="seal-track" cx="50" cy="50" r="42"></circle>
+          <circle class="seal-fill" id="seal-ring-fill" cx="50" cy="50" r="42"></circle>
+        </svg>
+        <div class="seal-center">
+          <span class="seal-pct" id="seal-pct">0%</span>
+        </div>
+      </div>
+      <div class="summary-meta">
+        <div class="summary-left">
+          <div class="summary-title">Daily Target Progress</div>
+          <div class="summary-sub" id="summary-status">Keep pushing!</div>
+        </div>
+        <div class="summary-frac mono" id="seal-frac">0 / 40</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: MOBILE-OPTIMIZED KEY PERFORMANCE TARGETS -->
+  <div>
+    <div class="section-title">Daily Targets</div>
+    <div class="target-grid">
+      <!-- 1. Yono SBI -->
+      <div class="widget ledger-row" id="card-yono">
+        <div class="w-header">
+          <span class="w-title">YONO Reg.</span>
+          <span class="w-target mono">G:5</span>
+        </div>
+        <div class="w-main-row">
+          <span class="w-count mono" id="c-yono">0</span>
+          <button id="btn-yono" class="w-btn" onclick="addSimple('Yono SBI')">+ 1</button>
+        </div>
+        <div class="w-prog-track"><div class="w-prog-fill" id="prog-yono"></div></div>
+      </div>
+
+      <!-- 2. WhatsApp -->
+      <div class="widget ledger-row" id="card-wa">
+        <div class="w-header">
+          <span class="w-title">WhatsApp</span>
+          <span class="w-target mono">G:15</span>
+        </div>
+        <div class="w-main-row">
+          <span class="w-count mono" id="c-wa">0</span>
+          <button id="btn-wa" class="w-btn" onclick="addSimple('WhatsApp')">+ 1</button>
+        </div>
+        <div class="w-prog-track"><div class="w-prog-fill" id="prog-wa"></div></div>
+      </div>
+
+      <!-- 3. Contact Centre -->
+      <div class="widget ledger-row" id="card-contact">
+        <div class="w-header">
+          <span class="w-title">Contact Ctr</span>
+          <span class="w-target mono">G:10</span>
+        </div>
+        <div class="w-main-row">
+          <span class="w-count mono" id="c-contact">0</span>
+          <button id="btn-contact" class="w-btn" onclick="addSimple('Contact Centre')">+ 1</button>
+        </div>
+        <div class="w-prog-track"><div class="w-prog-fill" id="prog-contact"></div></div>
+      </div>
+
+      <!-- 4. NPS -->
+      <div class="widget ledger-row" id="card-nps">
+        <div class="w-header">
+          <span class="w-title">NPS Feedback</span>
+          <span class="w-target mono">G:10</span>
+        </div>
+        <div class="w-main-row">
+          <span class="w-count mono" id="c-nps">0</span>
+          <button id="btn-nps" class="w-btn" onclick="addSimple('NPS')">+ 1</button>
+        </div>
+        <div class="w-prog-track"><div class="w-prog-fill" id="prog-nps"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: SERVICES & UPDATES -->
+  <div>
+    <div class="section-title">Service Log</div>
+    <div class="compact-list">
+
+      <div class="compact-card" id="card-form15">
+        <div class="compact-info"><span class="compact-title">Form 15 G/H</span><span class="compact-count" id="c-form15">0</span></div>
+        <button id="btn-form15" class="compact-btn" onclick="addSimple('FORM 15 G/H Submission')">+</button>
+      </div>
+
+      <div class="compact-card" id="card-atm">
+        <div class="compact-info"><span class="compact-title">ATM Card Issuance</span><span class="compact-count" id="c-atm">0</span></div>
+        <button id="btn-atm" class="compact-btn" onclick="addSimple('ATM Card Issuance')">+</button>
+      </div>
+
+      <div class="compact-card" id="card-cheque">
+        <div class="compact-info"><span class="compact-title">Cheque Book Req</span><span class="compact-count" id="c-cheque">0</span></div>
+        <button id="btn-cheque" class="compact-btn" onclick="addSimple('Cheque Book Request')">+</button>
+      </div>
+
+      <div class="compact-card" id="card-cm">
+        <div class="compact-info"><span class="compact-title">Re-KYC Update</span><span class="compact-count" id="c-cm">0</span></div>
+        <button id="btn-cm" class="compact-btn" onclick="addSimple('Re-KYC')">+</button>
+      </div>
+
+      <div class="compact-card" id="card-nominee">
+        <div class="compact-info"><span class="compact-title">Nominee Update</span><span class="compact-count" id="c-nominee">0</span></div>
+        <button id="btn-nominee" class="compact-btn" onclick="addSimple('Nominee update')">+</button>
+      </div>
+
+      <div class="compact-card" id="card-stmt">
+        <div class="compact-info"><span class="compact-title">Statement & Enquiry</span><span class="compact-count" id="c-stmt">0</span></div>
+        <button id="btn-stmt" class="compact-btn" onclick="addSimple('Statement & Enquiry')">+</button>
+      </div>
+
+      <div class="compact-card" id="card-resetold">
+        <div class="compact-info"><span class="compact-title">YONO Reset Old</span><span class="compact-count" id="c-resetold">0</span></div>
+        <button id="btn-resetold" class="compact-btn" onclick="addSimple('Yono Reset Old')">+</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 3: FINANCIAL TRANSACTIONS -->
+  <div>
+    <div class="section-title">Financial & Accounts</div>
+    <div class="compact-list">
+      
+      <div class="compact-card" id="card-dep40">
+        <div class="compact-info"><span class="compact-title">Upto 40k Deposit</span><span class="compact-count" id="c-dep40">0</span></div>
+        <button id="btn-dep40" class="compact-btn" onclick="addSimple('Upto 40000 Deposit')">+</button>
+      </div>
+      
+      <div class="compact-card" id="card-wd40">
+        <div class="compact-info"><span class="compact-title">Upto 40k Withdraw</span><span class="compact-count" id="c-wd40">0</span></div>
+        <button id="btn-wd40" class="compact-btn" onclick="addSimple('Upto 40000 Widrawl')">+</button>
+      </div>
+      
+      <div class="compact-card" id="card-tr40">
+        <div class="compact-info"><span class="compact-title">Upto 40k Transfer</span><span class="compact-count" id="c-tr40">0</span></div>
+        <button id="btn-tr40" class="compact-btn" onclick="addSimple('Upto 40000 Transfer')">+</button>
+      </div>
+      
+      <div class="compact-card" id="card-trabove40">
+        <div class="compact-info"><span class="compact-title">Above 40k Transfer</span><span class="compact-count" id="c-trabove40">0</span></div>
+        <button id="btn-trabove40" class="compact-btn" onclick="addSimple('Above 40000 Transfer')">+</button>
+      </div>
+      
+      <div class="compact-card" id="card-fin">
+        <div class="compact-info"><span class="compact-title">Financial TXN (Other)</span><span class="compact-count" id="c-fin">0</span></div>
+        <button id="btn-fin" class="compact-btn" onclick="addSimple('FINANCIAL TRANSACTION')">+</button>
+      </div>
+      
+      <div class="compact-card" id="card-nonfin">
+        <div class="compact-info"><span class="compact-title">Non Financial</span><span class="compact-count" id="c-nonfin">0</span></div>
+        <button id="btn-nonfin" class="compact-btn" onclick="addSimple('NON FINANCIAL')">+</button>
+      </div>
+
+      <div class="compact-card" id="card-sbac">
+        <div class="compact-info"><span class="compact-title">SB Acc Open / Funding</span><span class="compact-count" id="c-sbac">0</span></div>
+        <button id="btn-sbac" class="compact-btn" onclick="addSimple('SB Account opening/Funding')">+</button>
+      </div>
+
+      <div class="compact-card" id="card-cbdc">
+        <div class="compact-info"><span class="compact-title">CBDC</span><span class="compact-count" id="c-cbdc">0</span></div>
+        <button id="btn-cbdc" class="compact-btn" onclick="addSimple('CBDC')">+</button>
+      </div>
+
+      <div class="compact-card" id="card-fd">
+        <div class="compact-info"><span class="compact-title">FD Through YONO</span><span class="compact-count" id="c-fd">0</span></div>
+        <button id="btn-fd" class="compact-btn" onclick="addSimple('FD Through yono')">+</button>
+      </div>
+
+      <div class="compact-card" id="card-pai">
+        <div class="compact-info"><span class="compact-title">PAI</span><span class="compact-count" id="c-pai">0</span></div>
+        <button id="btn-pai" class="compact-btn" onclick="addSimple('PAI')">+</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- FLOATING DOCK BOTTOM NAVIGATION -->
+<div class="bottom-dock-wrapper">
+  <nav class="bottom-nav hidden" id="bottom-nav">
+    <button id="btn-undo" class="nav-item" onclick="undoLast()">
+      <svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+      Undo
+    </button>
+    <button class="nav-item" onclick="showReport()">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Logs
+    </button>
+    <button class="nav-item" onclick="generatePDF()">
+      <svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+      PDF
+    </button>
+    <button class="nav-item" onclick="shareWA()">
+      <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      Share
+    </button>
+    <button class="nav-item" onclick="openBranchShareModal()">
+      <svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><path d="M9 11h.01M15 11h.01M9 15h.01M15 15h.01"/></svg>
+      Branch
+    </button>
+    <button class="nav-item danger-icon" onclick="resetApp()">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      Reset
+    </button>
+  </nav>
+</div>
+
+<!-- REPORT PAGE -->
+<div id="report-page" class="hidden">
+  <button class="report-back" onclick="hideReport()">← Back to Deck</button>
+  <div class="report-section">
+    <h4>Daily Summary</h4>
+    <table class="report-table" id="summary-table"></table>
+  </div>
+  <div class="report-section">
+    <h4>Activity Logs</h4>
+    <div style="overflow-x: auto;">
+      <table class="report-table" id="logs-table"></table>
+    </div>
+  </div>
+</div>
+
+<!-- BRANCH SHARE MODAL -->
+<div id="branch-share-overlay" class="overlay" onclick="closeBranchShareModal(event)">
+  <div class="bottom-sheet" id="branch-share-sheet" onclick="event.stopPropagation()">
+    <h4>Share Branch Report</h4>
+    <p style="color:var(--text-muted); font-size:12.5px; margin-top:-8px; margin-bottom: 16px;">Enter values for the quick branch summary.</p>
+
+    <label class="field-label" for="branch-cc">Contact Centre (CC)</label>
+    <input type="number" id="branch-cc" class="input-field" placeholder="0" min="0" step="1">
+
+    <label class="field-label" for="branch-nps">NPS (Feedback)</label>
+    <input type="number" id="branch-nps" class="input-field" placeholder="0" min="0" step="1">
+
+    <button class="modal-btn primary" onclick="shareBranchReport()">Send via WhatsApp</button>
+    <button class="modal-btn cancel" onclick="closeBranchShareModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div id="confirm-overlay" class="overlay" onclick="closeConfirmModal(event)">
+  <div class="bottom-sheet" id="confirm-sheet" onclick="event.stopPropagation()">
+    <h4 id="confirm-title" style="text-align: center;">Confirm Action</h4>
+    <p id="confirm-msg" style="text-align: center; color:var(--text-muted); margin-bottom: 16px; font-size: 13px;">Type YES below to proceed.</p>
+    <input type="text" id="confirm-field" class="input-field" placeholder="Type YES" autocomplete="off">
+    <button class="modal-btn" id="confirm-ok" onclick="handleConfirmSubmit()">Confirm</button>
+    <button class="modal-btn cancel" onclick="closeConfirmModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- JS LOGIC -->
+<script>
+const { jsPDF } = window.jspdf;
+
+const TARGETS = { 'Yono SBI': 5, WhatsApp: 15, 'Contact Centre': 10, NPS: 10 };
+const TOTAL_TARGET = Object.values(TARGETS).reduce((a,b) => a+b, 0);
+
+const MAP = [
+  { key: 'Yono SBI', id: 'yono' },
+  { key: 'WhatsApp', id: 'wa' },
+  { key: 'Contact Centre', id: 'contact' },
+  { key: 'NPS', id: 'nps' },
+  { key: 'FORM 15 G/H Submission', id: 'form15' },
+  { key: 'ATM Card Issuance', id: 'atm' },
+  { key: 'Cheque Book Request', id: 'cheque' },
+  { key: 'Re-KYC', id: 'cm' },
+  { key: 'Nominee update', id: 'nominee' },
+  { key: 'Statement & Enquiry', id: 'stmt' },
+  { key: 'FINANCIAL TRANSACTION', id: 'fin' },
+  { key: 'NON FINANCIAL', id: 'nonfin' },
+  { key: 'SB Account opening/Funding', id: 'sbac' },
+  { key: 'CBDC', id: 'cbdc' },
+  { key: 'PAI', id: 'pai' },
+  { key: 'FD Through yono', id: 'fd' },
+  { key: 'Yono Reset Old', id: 'resetold' },
+  { key: 'Upto 40000 Deposit', id: 'dep40' },
+  { key: 'Upto 40000 Widrawl', id: 'wd40' },
+  { key: 'Upto 40000 Transfer', id: 'tr40' },
+  { key: 'Above 40000 Transfer', id: 'trabove40' }
+];
+
+let state = JSON.parse(localStorage.getItem('sbi_v20_dark_v4')) || {
+  counts: {}, logs: [], loginTime: null,
+  brName:'Komtalpeta', brCode:'17978', userName:'Ashutosh Pattnaik'
+};
+
+MAP.forEach(({ key }) => { if (state.counts[key] === undefined) state.counts[key] = 0; });
+
+const $ = id => document.getElementById(id);
+const els = {};
+MAP.forEach(({ key, id }) => { 
+  els[key] = { 
+    count: $('c-'+id), 
+    btn: $('btn-'+id), 
+    card: $('card-'+id),
+    prog: $('prog-'+id)
+  }; 
+});
+
+const SEAL_CIRC = 2 * Math.PI * 42;
+$('seal-ring-fill').style.strokeDasharray = SEAL_CIRC;
+$('seal-ring-fill').style.strokeDashoffset = SEAL_CIRC;
+
+function doLogin() {
+  if (!state.loginTime) state.loginTime = new Date().toLocaleTimeString();
+  $('login-page').classList.add('hidden');
+  $('dashboard').classList.remove('hidden');
+  $('bottom-nav').classList.remove('hidden');
+  save();
+}
+
+function addSimple(cat) {
+  state.counts[cat]++;
+  state.logs.push({ id: state.logs.length+1, cat, val:'Auto (+1)', time: new Date().toLocaleTimeString() });
+  save();
+}
+
+function undoLast() {
+  if (state.logs.length === 0) return;
+  const lastLog = state.logs.pop();
+  const baseMap = MAP.find(m => lastLog.cat === m.key || lastLog.cat.startsWith(m.key + ' '));
+  if (baseMap && state.counts[baseMap.key] > 0) state.counts[baseMap.key]--;
+  save();
+}
+
+function save() { localStorage.setItem('sbi_v20_dark_v4', JSON.stringify(state)); refreshUI(); }
+
+function refreshUI() {
+  $('btn-undo').disabled = state.logs.length === 0;
+  let totalTargetCount = 0;
+  let targetsMetCount = 0;
+
+  MAP.forEach(({ key }) => {
+    const count = state.counts[key];
+    const e = els[key];
+    e.count.textContent = count;
+    e.card.classList.remove('met', 'danger-met');
+    
+    if (TARGETS[key]) {
+      totalTargetCount += count;
+      const itemPct = Math.min(100, Math.round((count / TARGETS[key]) * 100));
+      if (e.prog) e.prog.style.width = itemPct + '%';
+
+      if (count >= TARGETS[key]) { 
+        e.card.classList.add('met'); 
+        e.btn.textContent = 'DONE';
+        targetsMetCount++;
+      } else { 
+        e.btn.textContent = '+ 1'; 
+      }
+    } else {
+      if (count >= 5) { e.card.classList.add('danger-met'); }
+    }
+  });
+
+  const pct = Math.min(100, Math.round((totalTargetCount / TOTAL_TARGET) * 100));
+  $('seal-pct').textContent = pct + '%';
+  $('seal-frac').textContent = `${totalTargetCount} / ${TOTAL_TARGET}`;
+  $('seal-ring-fill').style.strokeDashoffset = SEAL_CIRC - (Math.min(1, totalTargetCount / TOTAL_TARGET) * SEAL_CIRC);
+
+  const statusEl = $('summary-status');
+  if (statusEl) {
+    if (targetsMetCount === 4) statusEl.textContent = 'All 4 goals cleared!';
+    else statusEl.textContent = `${targetsMetCount} of 4 goals cleared`;
+  }
+}
+
+function showReport() {
+  $('dashboard').classList.add('hidden'); $('bottom-nav').classList.add('hidden');
+  $('report-page').classList.remove('hidden');
+  let sumHTML = '<tr><th>Category</th><th>Count</th><th>Target</th></tr>';
+  MAP.forEach(({ key }) => { sumHTML += `<tr><td>${key}</td><td class="mono"><b>${state.counts[key]}</b></td><td class="mono">${TARGETS[key] || '-'}</td></tr>`; });
+  $('summary-table').innerHTML = sumHTML;
+  let logHTML = '<tr><th>#</th><th>Details</th><th>Value</th><th>Time</th></tr>';
+  if (state.logs.length === 0) logHTML += '<tr><td colspan="4" style="text-align:center; padding: 20px; color: var(--text-muted);">No entries recorded yet</td></tr>';
+  else state.logs.forEach((l, i) => { logHTML += `<tr><td class="mono">${i+1}</td><td>${l.cat}</td><td class="mono">${l.val}</td><td class="mono">${l.time}</td></tr>`; });
+  $('logs-table').innerHTML = logHTML;
+}
+
+function hideReport() {
+  $('report-page').classList.add('hidden');
+  $('dashboard').classList.remove('hidden'); $('bottom-nav').classList.remove('hidden');
+}
+
+let pendingAction = null;
+function openConfirmModal(type, action) {
+  pendingAction = action;
+  $('confirm-ok').className = type === 'reset' ? 'modal-btn danger' : 'modal-btn primary';
+  $('confirm-field').value = '';
+  $('confirm-overlay').classList.add('show');
+  setTimeout(() => $('confirm-field').focus(), 150);
+}
+function closeConfirmModal(e) {
+  if (e && e.target !== $('confirm-overlay')) return;
+  $('confirm-overlay').classList.remove('show'); $('confirm-field').value = ''; pendingAction = null; 
+}
+function handleConfirmSubmit() {
+  if ($('confirm-field').value.trim().toLowerCase() !== 'yes') { $('confirm-field').value = ''; return $('confirm-field').focus(); }
+  const action = pendingAction; closeConfirmModal();
+  if (typeof action === 'function') action();
+}
+$('confirm-field').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); handleConfirmSubmit(); } });
+
+function generatePDF() { openConfirmModal('pdf', doGeneratePDF); }
+function doGeneratePDF() {
+  const doc = new jsPDF(); const dateStr = new Date().toLocaleDateString('en-GB');
+  doc.setFontSize(18); doc.setTextColor(0, 75, 135); doc.text('SBI Ops Ledger Report', 14, 16);
+  doc.setFontSize(10); doc.setTextColor(100, 116, 139); doc.text(`Login: ${state.loginTime || '-'} | Date: ${dateStr}`, 14, 24);
+  
+  doc.autoTable({ startY: 32, head: [['Category','Count','Target']], body: MAP.map(({ key }) => [key, state.counts[key], TARGETS[key] || '-']), headStyles: { fillColor: [0, 75, 135] }, theme: 'grid' });
+  const afterSum = doc.lastAutoTable.finalY + 10;
+  doc.setFontSize(14); doc.setTextColor(0, 75, 135); doc.text('Detailed Logs', 14, afterSum);
+  doc.autoTable({ startY: afterSum + 5, head: [['#','Details','Value']], body: state.logs.map((l, i) => [i+1, `${l.cat} [${l.time}]`, l.val]), headStyles: { fillColor: [0, 75, 135] }, theme: 'grid' });
+  
+  doc.save(`SBI_${dateStr.replace(/\//g,'_')}.pdf`);
+  setTimeout(() => { localStorage.clear(); window.location.reload(); }, 1500);
+}
+
+function shareWA() {
+  const c = state.counts;
+  const msg = `*DAILY REPORTING OF DATA*\nName- ${state.userName}\nBranch -${state.brName}\n*Date* ${new Date().toLocaleDateString('en-GB')}\n1. YONO Registration - ${c['Yono SBI']}\n2. What's app Registration - ${c['WhatsApp']}\n3. Contact centre Migration - ${c['Contact Centre']}\n4. NPS (FeedBack) - ${c['NPS']}\n5. FORM 15 G/H Submission : ${c['FORM 15 G/H Submission']}\n6. ATM Card Issuance : ${c['ATM Card Issuance']}\n7. Cheque Book Request: ${c['Cheque Book Request']}\n8. RE-KYC update: ${c['Re-KYC']}\n9. Nominee update: ${c['Nominee update']}\n10. Statement & Enquiry : ${c['Statement & Enquiry']}\n11. FINANCIAL TRANSACTION - ${c['FINANCIAL TRANSACTION']}\n12. NON FINANCIAL - ${c['NON FINANCIAL']}\n13. SB Account opening - ${c['SB Account opening/Funding']}\n14. CBDC - ${c['CBDC']}\n15. PAI - ${c['PAI']}\n16. FD Through yono - ${c['FD Through yono']}\n17. Yono Reset Old - ${c['Yono Reset Old']}\n18. Upto 40000 Deposit - ${c['Upto 40000 Deposit']}\n19. Upto 40000 Widrawl - ${c['Upto 40000 Widrawl']}\n20. Upto 40000 Transfer - ${c['Upto 40000 Transfer']}\n21. Above 40000 Transfer - ${c['Above 40000 Transfer']}`;
+  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+}
+
+function openBranchShareModal() {
+  $('branch-cc').value = '';
+  $('branch-nps').value = '';
+  $('branch-share-overlay').classList.add('show');
+  setTimeout(() => $('branch-cc').focus(), 150);
+}
+function closeBranchShareModal(e) {
+  if (e && e.target !== $('branch-share-overlay')) return;
+  $('branch-share-overlay').classList.remove('show');
+}
+function shareBranchReport() {
+  const ccRaw = $('branch-cc').value.trim();
+  const npsRaw = $('branch-nps').value.trim();
+  const cc = ccRaw === '' ? 0 : parseInt(ccRaw, 10);
+  const nps = npsRaw === '' ? 0 : parseInt(npsRaw, 10);
+  if (isNaN(cc) || isNaN(nps)) return alert('Please enter valid numbers.');
+  const msg = `*BRANCH REPORT*\nBranch -${state.brName}\n*Date* ${new Date().toLocaleDateString('en-GB')}\n1. Contact Centre (CC) - ${cc}\n2. NPS (Feedback) - ${nps}`;
+  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+  closeBranchShareModal();
+}
+
+function toggleTheme() {
+  document.body.classList.toggle('light-theme');
+  const isLight = document.body.classList.contains('light-theme');
+  localStorage.setItem('sbi_theme', isLight ? 'light' : 'dark');
+  $('theme-toggle').textContent = isLight ? 'VIBE: CAFE' : 'VIBE: DARK';
+}
+function applySavedTheme() {
+  if (localStorage.getItem('sbi_theme') === 'light') {
+    document.body.classList.add('light-theme');
+    $('theme-toggle').textContent = 'VIBE: CAFE';
+  }
+}
+function resetApp() { openConfirmModal('reset', () => { localStorage.clear(); window.location.reload(); }); }
+window.onload = () => { applySavedTheme(); if (state.loginTime) doLogin(); else refreshUI(); };
+</script>
+</body>
+</html>

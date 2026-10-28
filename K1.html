@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>SBI Daily Report — Koraput</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Botanical Rose-Gold & Cream — Light Mode (Default) */
+  --bg-main:       #f7f2eb;
+  --bg-accent:     #efe6d8;
+  --paper:         #ffffff;
+  --paper-glass:   rgba(255, 255, 255, 0.97);
+  --paper-subtle:  #faf7f2;
+
+  --ink:           #261c18;
+  --mute:          #7d6e65;
+  --line:          #e6dacb;
+
+  --primary:       #d95f43;
+  --primary-light: rgba(217, 95, 67, 0.12);
+  --gold:          #d49b3b;
+  --gold-light:    rgba(212, 155, 59, 0.15);
+  --teal:          #3b82f6;
+  --amber:         #d97706;
+  --amber-bg:      #fffbeb;
+  --green:         #15803d;
+  --green-bg:      #f0fdf4;
+  --green-border:  #86efac;
+  --danger:        #e11d48;
+
+  --card-shadow:   0 3px 0 #dfd3c3, 0 8px 20px rgba(38, 28, 24, 0.04);
+  --btn-shadow:    0 3px 0 #b84329;
+  --radius-sm:     10px;
+  --radius-md:     16px;
+  --radius-lg:     24px;
+}
+
+body.dark-theme {
+  /* Velvet Espresso & Rose Gold — Dark Mode */
+  --bg-main:       #141115;
+  --bg-accent:     #1e1920;
+  --paper:         #211c24;
+  --paper-glass:   rgba(33, 28, 36, 0.97);
+  --paper-subtle:  #2a242e;
+
+  --ink:           #f9f5f0;
+  --mute:          #a3969e;
+  --line:          #352e3a;
+
+  --primary:       #ff7e67;
+  --primary-light: rgba(255, 126, 103, 0.15);
+  --gold:          #f5b952;
+  --gold-light:    rgba(245, 185, 82, 0.15);
+  --teal:          #60a5fa;
+  --amber:         #fbbf24;
+  --amber-bg:      rgba(251, 191, 36, 0.08);
+  --green:         #34d399;
+  --green-bg:      rgba(52, 211, 153, 0.1);
+  --green-border:  rgba(52, 211, 153, 0.4);
+  --danger:        #fb7185;
+
+  --card-shadow:   0 3px 0 #0a080b, 0 10px 24px rgba(0, 0, 0, 0.4);
+  --btn-shadow:    0 3px 0 #b54632;
+}
+
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+html { -webkit-font-smoothing: antialiased; }
+button, a, .stat-card { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: var(--ink);
+  height: 100vh; height: 100dvh;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  background-color: var(--bg-main);
+  background-image:
+    radial-gradient(circle at 10% 0%, var(--primary-light), transparent 45%),
+    radial-gradient(circle at 90% 100%, var(--gold-light), transparent 45%),
+    radial-gradient(var(--line) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 22px 22px;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.hidden { display: none !important; }
+
+/* HEADER */
+header {
+  background: var(--paper-glass);
+  border-bottom: 1.5px solid var(--line);
+  padding: max(10px, env(safe-area-inset-top)) 14px 10px;
+  display: flex; justify-content: space-between; align-items: center;
+  z-index: 100; flex-shrink: 0;
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-icon {
+  width: 36px; height: 36px; border-radius: 11px;
+  background: linear-gradient(135deg, var(--primary), var(--gold));
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 13px; letter-spacing: -0.02em;
+  box-shadow: 0 3px 10px var(--primary-light);
+}
+.brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.brand-name { font-weight: 800; font-size: 15px; color: var(--ink); }
+.brand-sub { font-size: 10px; font-weight: 700; color: var(--mute); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 1px; }
+
+.header-actions { display: flex; align-items: center; gap: 8px; }
+#live-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700; color: var(--primary);
+  background: var(--primary-light);
+  padding: 5px 8px; border-radius: 8px;
+}
+.btn-icon {
+  width: 32px; height: 32px; border-radius: 9px;
+  border: 1.5px solid var(--line); background: var(--paper-subtle);
+  color: var(--ink); font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.btn-exit {
+  background: var(--paper-subtle);
+  border: 1.5px solid var(--line);
+  color: var(--mute);
+  padding: 5px 11px; border-radius: 9px;
+  font: 700 11px 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+}
+.btn-exit:active, .btn-icon:active { transform: scale(0.94); }
+
+/* MAIN CONTENT CONTAINER */
+#main-content {
+  display: flex; flex-direction: column;
+  flex: 1; min-height: 0;
+  max-width: 520px; width: 100%;
+  margin: 0 auto; position: relative;
+}
+
+/* LOGIN SCREEN */
+#login-wrapper {
+  height: 100%; display: flex;
+  align-items: center; justify-content: center; padding: 20px;
+}
+#login-page {
+  background: var(--paper);
+  border: 2px solid var(--line);
+  border-radius: 28px;
+  padding: 40px 26px 30px;
+  text-align: center; width: 100%;
+  box-shadow: var(--card-shadow);
+  position: relative;
+}
+.auth-icon {
+  width: 72px; height: 72px;
+  margin: -74px auto 16px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, var(--primary), var(--gold));
+  border: 4px solid var(--paper);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  box-shadow: 0 8px 20px var(--primary-light);
+  transform: rotate(-4deg);
+}
+#login-page h1 {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 2.2rem;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+#login-page p {
+  font-weight: 600; font-size: 0.9rem;
+  color: var(--mute); margin-bottom: 26px;
+}
+.btn-main {
+  width: 100%; height: 50px; border-radius: 16px;
+  background: linear-gradient(135deg, var(--primary), var(--gold));
+  color: #fff; border: none;
+  font: 800 15px 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+  box-shadow: var(--btn-shadow);
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.btn-main:active { transform: translateY(3px); box-shadow: none; }
+
+/* DASHBOARD & SCROLL AREA */
+#dashboard { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.scroll-area {
+  flex: 1; min-height: 0;
+  overflow-y: auto; overflow-x: hidden;
+  padding: 12px 12px 16px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+/* TOP BAR: COMPACT SUMMARY + RE-KYC LINK SIDE BY SIDE */
+.top-deck {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.overview-card {
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 9px 12px;
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: var(--card-shadow);
+}
+.ov-left { display: flex; flex-direction: column; }
+.ov-label { font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--mute); }
+.ov-val { font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 700; color: var(--ink); margin-top: 1px; }
+.ov-sub { font-size: 10px; font-weight: 700; color: var(--primary); }
+
+.quick-link-banner {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 9px 12px;
+  color: var(--ink); text-decoration: none;
+  font-weight: 800; font-size: 11.5px;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.quick-link-banner:active { transform: translateY(2px); box-shadow: none; }
+.quick-link-icon-wrapper { display: flex; align-items: center; gap: 7px; }
+.quick-link-icon {
+  width: 26px; height: 26px; border-radius: 8px;
+  background: var(--primary-light); color: var(--primary);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.quick-link-icon svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.3; display: block; }
+.quick-link-arrow { color: var(--primary); font-weight: 800; font-size: 13px; }
+
+/* SECTION HEADER */
+.section-header {
+  font-weight: 800; font-size: 10.5px;
+  color: var(--mute); letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 2px;
+}
+.section-header::before { content: "✦"; color: var(--primary); font-size: 11px; }
+.section-header::after { content: ""; flex: 1; height: 1.5px; background: var(--line); }
+
+/* MOBILE-OPTIMIZED 2-COLUMN GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.grid > div:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+.stat-card {
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 9px 11px 9px 13px;
+  cursor: pointer; position: relative; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 5px;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.2s ease;
+}
+.stat-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 4px; background: var(--primary);
+}
+.stat-card:active {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+.card-top-row {
+  display: flex; justify-content: space-between; align-items: center; gap: 4px;
+}
+.card-title-group {
+  display: flex; align-items: center; gap: 6px; min-width: 0;
+}
+.card-icon {
+  font-size: 15px; line-height: 1; flex-shrink: 0;
+}
+.card-title {
+  font-size: 11.5px; font-weight: 800; color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.card-target {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 9.5px; color: var(--mute);
+  background: var(--paper-subtle); border: 1px solid var(--line);
+  padding: 2px 5px; border-radius: 6px; flex-shrink: 0;
+}
+
+.card-body {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: 1px;
+}
+.card-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.65rem; font-weight: 700; color: var(--ink); line-height: 1;
+}
+.tap-pill {
+  font-size: 10px; font-weight: 800; color: var(--primary);
+  background: var(--primary-light);
+  padding: 3px 7px; border-radius: 6px;
+}
+
+.progress-track {
+  width: 100%; height: 4px;
+  background: var(--bg-accent);
+  border-radius: 4px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: var(--primary);
+  width: 0%; transition: width 0.3s ease; border-radius: 4px;
+}
+
+/* MID STATE (>= 50%) */
+.stat-card.mid::before, .stat-card.mid .progress-fill { background: var(--amber); }
+.stat-card.mid .card-count { color: var(--amber); }
+.stat-card.mid .tap-pill { color: var(--amber); background: var(--amber-bg); }
+
+/* MET STATE (100%+) */
+.stat-card.met { background: var(--green-bg); border-color: var(--green-border); }
+.stat-card.met::before, .stat-card.met .progress-fill { background: var(--green); }
+.stat-card.met .card-count { color: var(--green); }
+.stat-card.met .tap-pill { color: var(--green); background: rgba(21, 128, 61, 0.12); }
+
+/* BOTTOM ACTION DOCK */
+.bottom-actions {
+  background: var(--paper-glass);
+  border-top: 1.5px solid var(--line);
+  padding: 10px 14px max(10px, env(safe-area-inset-bottom));
+  display: flex; gap: 10px; z-index: 10; flex-shrink: 0;
+}
+.action-btn {
+  flex: 1; height: 44px; border-radius: 14px; border: none;
+  font: 800 13px 'Plus Jakarta Sans', sans-serif;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  cursor: pointer; transition: transform 0.1s ease;
+}
+.action-btn:active { transform: translateY(2px); }
+.action-btn.send {
+  background: linear-gradient(135deg, var(--primary), var(--gold));
+  color: #fff; box-shadow: var(--btn-shadow);
+}
+.action-btn.send:active { box-shadow: none; }
+.action-btn.reset {
+  background: var(--paper-subtle);
+  border: 1.5px solid var(--line);
+  color: var(--danger); flex: 0.45;
+}
+
+/* TOAST NOTIFICATION */
+#toast {
+  position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: var(--paper);
+  padding: 10px 20px; border-radius: 100px;
+  font-weight: 700; font-size: 12.5px; white-space: nowrap;
+  z-index: 9999; transition: top 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+#toast.show { top: max(14px, env(safe-area-inset-top)); }
+
+/* CONFIRMATION MODAL */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(20, 15, 18, 0.6);
+  opacity: 0; pointer-events: none; transition: 0.2s ease;
+  z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.overlay.show { opacity: 1; pointer-events: auto; }
+.modal-box {
+  background: var(--paper);
+  border: 2px solid var(--line);
+  border-radius: 24px; padding: 24px 20px;
+  width: 100%; max-width: 320px; text-align: center;
+  transform: scale(0.95);
+  transition: 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+.overlay.show .modal-box { transform: scale(1); }
+#modal-icon { font-size: 32px; margin-bottom: 8px; }
+#modal-title { font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 6px; color: var(--ink); }
+#modal-msg { font-size: 12.5px; font-weight: 600; color: var(--mute); margin-bottom: 20px; line-height: 1.4; }
+.modal-btn {
+  width: 100%; height: 44px; border-radius: 12px; border: none;
+  margin-bottom: 8px; font: 800 13.5px 'Plus Jakarta Sans', sans-serif; cursor: pointer;
+}
+.modal-btn-primary { background: linear-gradient(135deg, var(--primary), var(--gold)); color: #fff; }
+.modal-btn-danger { background: var(--danger); color: #fff; }
+.modal-btn-cancel { background: var(--paper-subtle); color: var(--mute); border: 1.5px solid var(--line); margin-bottom: 0; }
+.modal-btn:active { transform: scale(0.97); }
+
+@media (max-width: 350px) {
+  .card-count { font-size: 1.4rem; }
+  .top-deck { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+</style>
+</head>
+<body>
+
+<header id="app-header" class="hidden">
+  <div class="brand">
+    <div class="brand-icon">SBI</div>
+    <div class="brand-text">
+      <span class="brand-name">Daily Report</span>
+      <span class="brand-sub">Koraput &bull; 00121</span>
+    </div>
+  </div>
+  <div class="header-actions">
+    <span id="live-date"></span>
+    <button class="btn-icon" id="theme-btn" onclick="toggleTheme()" title="Switch Theme">🌙</button>
+    <button class="btn-exit" onclick="openConfirm('logout')">Exit</button>
+  </div>
+</header>
+
+<div id="main-content">
+  <div id="login-wrapper">
+    <div id="login-page">
+      <div class="auth-icon">🌸</div>
+      <h1>Welcome back</h1>
+      <p>SBI Koraput &bull; Daily Report</p>
+      <button class="btn-main" onclick="login()">Sign in to Ledger</button>
+    </div>
+  </div>
+
+  <div id="dashboard" class="hidden">
+    <div class="scroll-area">
+      <!-- COMPACT TOP BAR: TOTAL PROGRESS + RE-KYC LINK -->
+      <div class="top-deck">
+        <div class="overview-card">
+          <div class="ov-left">
+            <span class="ov-label">Daily Total</span>
+            <span class="ov-val" id="total-vol">0 / 197</span>
+          </div>
+          <span class="ov-sub" id="goals-cleared">0/11 Met</span>
+        </div>
+
+        <a href="https://yonoretail.sbi.bank.in/accounts/re-kyc/kyc-entry?srcChn=RINB" target="_blank" class="quick-link-banner">
+          <div class="quick-link-icon-wrapper">
+            <span class="quick-link-icon">
+              <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </span>
+            <span>Re-KYC</span>
+          </div>
+          <span class="quick-link-arrow">↗</span>
+        </a>
+      </div>
+
+      <div class="section-header">Today's Numbers (Tap to +1)</div>
+      <div class="grid" id="grid"></div>
+    </div>
+
+    <div class="bottom-actions">
+      <button class="action-btn reset" onclick="openConfirm('reset')">Reset</button>
+      <button class="action-btn send" onclick="exportToWhatsApp()">📲 Send WhatsApp Report</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<div id="confirm-overlay" class="overlay" onclick="closeConfirm()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div id="modal-icon">⚠️</div>
+    <div id="modal-title">Confirm Action</div>
+    <div id="modal-msg">Are you sure?</div>
+    <button class="modal-btn" id="confirm-action-btn" onclick="executeConfirm()">Proceed</button>
+    <button class="modal-btn modal-btn-cancel" onclick="closeConfirm()">Cancel</button>
+  </div>
+</div>
+
+<script>
+const CARDS=[
+  ['nps','😊','NPS Feedback',20],
+  ['whatsapp','💬','WhatsApp Reg',25],
+  ['yonoRegistration','📝','Yono Reg',20],
+  ['contactCentre','☎️','Contact Ctr',40],
+  ['cbdc','💳','CBDC',5],
+  ['channelMigration','🔄','Migration',12],
+  ['rekyc','🪪','Re-KYC',20],
+  ['yonoUsage','📱','Yono Usage',15],
+  ['whatsappUsage','📲','WA Usage',20],
+  ['atmCardIssuance','🏧','ATM Card Issue',10],
+  ['chequeBookIssuance','📘','Cheque Book',10]
+];
+const TARGETS=Object.fromEntries(CARDS.map(c=>[c[0],c[3]]));
+const TOTAL_GOAL=CARDS.reduce((sum,c)=>sum+c[3],0);
+const FIELDS=Object.keys(TARGETS);
+
+document.getElementById('grid').innerHTML=CARDS.map(([f,i,t,n])=>`
+  <div class="stat-card" id="btn-${f}" onclick="increment('${f}')">
+    <div class="card-top-row">
+      <div class="card-title-group">
+        <span class="card-icon">${i}</span>
+        <span class="card-title">${t}</span>
+      </div>
+      <span class="card-target">G:${n}</span>
+    </div>
+    <div class="card-body">
+      <span class="card-count" id="${f}">0</span>
+      <span class="tap-pill" id="pill-${f}">+1</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="pb-${f}"></div></div>
+  </div>
+`).join('');
+
+function fmt(date){return `${String(date.getDate()).padStart(2,'0')}/${String(date.getMonth()+1).padStart(2,'0')}/${date.getFullYear()}`}
+function setDate(){const el=document.getElementById('live-date');if(el)el.textContent=fmt(new Date())}
+function showToast(msg,dur=3500){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur)}
+function greeting(){const h=new Date().getHours();return (h<12?'Good morning':h<17?'Good afternoon':'Good evening')+', Pummy ✨'}
+
+function login(){
+  localStorage.setItem('sbi_a1_loggedIn','true');
+  document.getElementById('login-wrapper').classList.add('hidden');
+  showDashboard();showToast(greeting());
+}
+function showDashboard(){
+  const lw=document.getElementById('login-wrapper');if(lw)lw.classList.add('hidden');
+  document.getElementById('app-header').classList.remove('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+  setDate();loadSavedData();refreshTotals();
+}
+function doLogout(){localStorage.removeItem('sbi_a1_loggedIn');window.location.reload()}
+
+function updateUI(field){
+  const val=parseInt(document.getElementById(field).textContent)||0,target=TARGETS[field],mid=Math.floor(target/2);
+  document.getElementById('pb-'+field).style.width=Math.min(Math.round(val/target*100),100)+'%';
+  const btn=document.getElementById('btn-'+field);
+  const pill=document.getElementById('pill-'+field);
+  btn.classList.remove('mid','met');
+  if(val>=target){
+    btn.classList.add('met');
+    if(pill)pill.textContent='✓ Done';
+  }else if(val>=mid){
+    btn.classList.add('mid');
+    if(pill)pill.textContent='+1';
+  }else{
+    if(pill)pill.textContent='+1';
+  }
+  refreshTotals();
+}
+
+function refreshTotals(){
+  let total=0,met=0;
+  FIELDS.forEach(f=>{
+    const v=parseInt(document.getElementById(f).textContent)||0;
+    total+=v;
+    if(v>=TARGETS[f])met++;
+  });
+  const tv=document.getElementById('total-vol');
+  const gc=document.getElementById('goals-cleared');
+  if(tv)tv.textContent=`${total} / ${TOTAL_GOAL}`;
+  if(gc)gc.textContent=`${met}/11 Met`;
+}
+
+function increment(field){
+  const el=document.getElementById(field);
+  el.textContent=(parseInt(el.textContent)||0)+1;
+  updateUI(field);saveData();
+  if(navigator.vibrate)navigator.vibrate(35);
+}
+function saveData(){const d={};FIELDS.forEach(f=>{d[f]=document.getElementById(f).textContent});localStorage.setItem('sbi_a1_data',JSON.stringify(d))}
+function loadSavedData(){const s=localStorage.getItem('sbi_a1_data');if(!s)return;const d=JSON.parse(s);FIELDS.forEach(f=>{const el=document.getElementById(f);if(el){el.textContent=d[f]||0;updateUI(f)}})}
+function exportToWhatsApp(){
+  const today=fmt(new Date()),d={};FIELDS.forEach(f=>{d[f]=document.getElementById(f).textContent});
+  const msg=`*Date:* ${today}\n*Name:* ELIPOMA NAG\n*Branch name:* SBI KORAPUT\n*Branch code:* 00121\n\n*Data Report:*\nNPS: ${d.nps}\nWhatsApp: ${d.whatsapp}\nYono Registration: ${d.yonoRegistration}\nContact Centre: ${d.contactCentre}\nCBDC: ${d.cbdc}\nChannel Migration: ${d.channelMigration}\nRe-KYC: ${d.rekyc}\nWhatsApp Usage: ${d.whatsappUsage}\nYono Usage: ${d.yonoUsage}\nATM Card Issuance: ${d.atmCardIssuance}\nCheque Book Issuance: ${d.chequeBookIssuance}`;
+  window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+}
+function doReset(){FIELDS.forEach(f=>{document.getElementById(f).textContent='0';updateUI(f)});localStorage.removeItem('sbi_a1_data');showToast('All counts reset.')}
+
+let pendingConfirmAction=null;
+function openConfirm(type){
+  pendingConfirmAction=type;
+  const icon=document.getElementById('modal-icon'),title=document.getElementById('modal-title'),msg=document.getElementById('modal-msg'),btn=document.getElementById('confirm-action-btn');
+  if(type==='reset'){icon.textContent='🗑️';title.textContent='Reset counts?';msg.textContent='This will erase all of today\'s counts. It cannot be undone.';btn.className='modal-btn modal-btn-danger';btn.textContent='Yes, reset'}
+  else{icon.textContent='🔒';title.textContent='Sign out?';msg.textContent='Are you sure you want to sign out?';btn.className='modal-btn modal-btn-primary';btn.textContent='Sign out'}
+  document.getElementById('confirm-overlay').classList.add('show');
+}
+function closeConfirm(){document.getElementById('confirm-overlay').classList.remove('show');pendingConfirmAction=null}
+function executeConfirm(){if(pendingConfirmAction==='reset')doReset();else if(pendingConfirmAction==='logout')doLogout();closeConfirm()}
+
+function toggleTheme(){
+  document.body.classList.toggle('dark-theme');
+  const isDark=document.body.classList.contains('dark-theme');
+  localStorage.setItem('sbi_a1_theme',isDark?'dark':'light');
+  document.getElementById('theme-btn').textContent=isDark?'☀️':'🌙';
+}
+function applySavedTheme(){
+  if(localStorage.getItem('sbi_a1_theme')==='dark'){
+    document.body.classList.add('dark-theme');
+    document.getElementById('theme-btn').textContent='☀️';
+  }
+}
+
+window.onload=()=>{
+  applySavedTheme();
+  if(localStorage.getItem('sbi_a1_loggedIn')==='true'){
+    document.getElementById('login-wrapper').classList.add('hidden');showDashboard();
+  }
+};
+</script>
+</body>
+</html>
