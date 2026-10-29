@@ -337,25 +337,35 @@ header {
   background: var(--paper-glass);
   border-top: 1.5px solid var(--line);
   padding: 10px 14px max(10px, env(safe-area-inset-bottom));
-  display: flex; gap: 10px; z-index: 10; flex-shrink: 0;
+  display: flex; gap: 8px; z-index: 10; flex-shrink: 0;
 }
 .action-btn {
-  flex: 1; height: 44px; border-radius: 14px; border: none;
-  font: 800 13px 'Plus Jakarta Sans', sans-serif;
-  display: flex; align-items: center; justify-content: center; gap: 7px;
+  height: 44px; border-radius: 14px; border: none;
+  font: 800 12.5px 'Plus Jakarta Sans', sans-serif;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
   cursor: pointer; transition: transform 0.1s ease;
+  white-space: nowrap;
 }
 .action-btn:active { transform: translateY(2px); }
-.action-btn.send {
-  background: linear-gradient(135deg, var(--primary), var(--gold));
-  color: #fff; box-shadow: var(--btn-shadow);
-}
-.action-btn.send:active { box-shadow: none; }
 .action-btn.reset {
   background: var(--paper-subtle);
   border: 1.5px solid var(--line);
-  color: var(--danger); flex: 0.45;
+  color: var(--danger);
+  flex: 0.3;
 }
+.action-btn.rm {
+  background: var(--paper-subtle);
+  border: 1.5px solid var(--line);
+  color: var(--ink);
+  flex: 0.45;
+  font-weight: 800;
+}
+.action-btn.send {
+  background: linear-gradient(135deg, var(--primary), var(--gold));
+  color: #fff; box-shadow: var(--btn-shadow);
+  flex: 0.85;
+}
+.action-btn.send:active { box-shadow: none; }
 
 /* TOAST NOTIFICATION */
 #toast {
@@ -368,18 +378,18 @@ header {
 }
 #toast.show { top: max(14px, env(safe-area-inset-top)); }
 
-/* CONFIRMATION MODAL */
+/* CONFIRMATION & RM MODALS */
 .overlay {
   position: fixed; inset: 0;
   background: rgba(20, 15, 18, 0.6);
   opacity: 0; pointer-events: none; transition: 0.2s ease;
-  z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px;
+  z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 16px;
 }
 .overlay.show { opacity: 1; pointer-events: auto; }
 .modal-box {
   background: var(--paper);
   border: 2px solid var(--line);
-  border-radius: 24px; padding: 24px 20px;
+  border-radius: 24px; padding: 22px 18px;
   width: 100%; max-width: 320px; text-align: center;
   transform: scale(0.95);
   transition: 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -398,9 +408,64 @@ header {
 .modal-btn-cancel { background: var(--paper-subtle); color: var(--mute); border: 1.5px solid var(--line); margin-bottom: 0; }
 .modal-btn:active { transform: scale(0.97); }
 
+/* RM REPORT FORM MODAL STYLES */
+.rm-modal-box {
+  background: var(--paper);
+  border: 2px solid var(--line);
+  border-radius: 24px; padding: 18px 16px 16px;
+  width: 100%; max-width: 380px; text-align: left;
+  transform: scale(0.95);
+  transition: 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  display: flex; flex-direction: column; max-height: 90vh;
+}
+.overlay.show .rm-modal-box { transform: scale(1); }
+.rm-header {
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1.5px solid var(--line); padding-bottom: 10px; margin-bottom: 12px;
+}
+.rm-title { font-size: 14.5px; font-weight: 800; color: var(--ink); }
+.rm-sub { font-size: 11px; font-weight: 600; color: var(--mute); }
+.rm-form-scroll {
+  overflow-y: auto; flex: 1; padding-right: 4px; display: flex; flex-direction: column; gap: 9px;
+}
+.rm-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  background: var(--paper-subtle); border: 1.5px solid var(--line);
+  padding: 6px 10px; border-radius: 11px;
+}
+.rm-row.auto-fetched {
+  background: var(--primary-light); border-color: rgba(217, 95, 67, 0.25);
+}
+.rm-label {
+  font-size: 11.5px; font-weight: 700; color: var(--ink); flex: 1;
+}
+.rm-tag {
+  font-size: 9px; font-weight: 800; text-transform: uppercase;
+  color: var(--primary); background: var(--paper);
+  padding: 2px 6px; border-radius: 5px; margin-right: 4px;
+}
+.rm-input {
+  width: 82px; height: 32px; border-radius: 8px;
+  border: 1.5px solid var(--line); background: var(--paper);
+  text-align: right; padding: 0 8px;
+  font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 13px;
+  color: var(--ink); outline: none;
+}
+.rm-input:focus { border-color: var(--primary); }
+.rm-branch-input {
+  width: 140px; text-align: left; font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.rm-btn-grid {
+  display: flex; gap: 8px; margin-top: 14px; padding-top: 10px;
+  border-top: 1.5px solid var(--line);
+}
+
 @media (max-width: 350px) {
   .card-count { font-size: 1.4rem; }
   .top-deck { grid-template-columns: 1fr; }
+  .bottom-actions { flex-wrap: wrap; }
+  .action-btn.send { flex: 1 1 100%; order: -1; }
 }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
 </style>
@@ -461,13 +526,15 @@ header {
 
     <div class="bottom-actions">
       <button class="action-btn reset" onclick="openConfirm('reset')">Reset</button>
-      <button class="action-btn send" onclick="exportToWhatsApp()">📲 Send WhatsApp Report</button>
+      <button class="action-btn rm" onclick="openRMModal()">📋 RM Report</button>
+      <button class="action-btn send" onclick="exportToWhatsApp()">📲 WhatsApp</button>
     </div>
   </div>
 </div>
 
 <div id="toast"></div>
 
+<!-- CONFIRMATION MODAL -->
 <div id="confirm-overlay" class="overlay" onclick="closeConfirm()">
   <div class="modal-box" onclick="event.stopPropagation()">
     <div id="modal-icon">⚠️</div>
@@ -475,6 +542,85 @@ header {
     <div id="modal-msg">Are you sure?</div>
     <button class="modal-btn" id="confirm-action-btn" onclick="executeConfirm()">Proceed</button>
     <button class="modal-btn modal-btn-cancel" onclick="closeConfirm()">Cancel</button>
+  </div>
+</div>
+
+<!-- RM REPORT MODAL DIALOG -->
+<div id="rm-overlay" class="overlay" onclick="closeRMModal()">
+  <div class="rm-modal-box" onclick="event.stopPropagation()">
+    <div class="rm-header">
+      <div>
+        <div class="rm-title">Channel Migration Report</div>
+        <div class="rm-sub">Auto-filled from today's data</div>
+      </div>
+      <button class="btn-icon" onclick="closeRMModal()" style="font-size:11px;">✕</button>
+    </div>
+
+    <div class="rm-form-scroll">
+      <div class="rm-row">
+        <span class="rm-label">Branch Name</span>
+        <input type="text" id="rm-branch" class="rm-input rm-branch-input" value="Koraput">
+      </div>
+
+      <div class="rm-row">
+        <span class="rm-label">1. Digital FD</span>
+        <input type="number" id="rm-fd" class="rm-input" value="0" min="0">
+      </div>
+
+      <div class="rm-row">
+        <span class="rm-label">2. Statement Enquiry</span>
+        <input type="number" id="rm-stmt" class="rm-input" value="0" min="0">
+      </div>
+
+      <!-- AUTO-FETCHED FROM RE-KYC -->
+      <div class="rm-row auto-fetched">
+        <span class="rm-label"><span class="rm-tag">Auto</span>3. Digital KYC</span>
+        <input type="number" id="rm-kyc" class="rm-input" value="0" min="0">
+      </div>
+
+      <!-- AUTO-FETCHED FROM FORM 15 G/H -->
+      <div class="rm-row auto-fetched">
+        <span class="rm-label"><span class="rm-tag">Auto</span>4. Form 15G/H</span>
+        <input type="number" id="rm-15gh" class="rm-input" value="0" min="0">
+      </div>
+
+      <!-- AUTO-FETCHED FROM NOMINEE UPDATE -->
+      <div class="rm-row auto-fetched">
+        <span class="rm-label"><span class="rm-tag">Auto</span>5. Nominee update</span>
+        <input type="number" id="rm-nominee" class="rm-input" value="0" min="0">
+      </div>
+
+      <div class="rm-row">
+        <span class="rm-label">6. Trf upto 40K</span>
+        <input type="number" id="rm-trf" class="rm-input" value="0" min="0">
+      </div>
+
+      <div class="rm-row">
+        <span class="rm-label">7. Withdrawal upto 40k</span>
+        <input type="number" id="rm-wdr" class="rm-input" value="0" min="0">
+      </div>
+
+      <div class="rm-row">
+        <span class="rm-label">8. Deposit upto 49900</span>
+        <input type="number" id="rm-dep" class="rm-input" value="0" min="0">
+      </div>
+
+      <div class="rm-row">
+        <span class="rm-label">9. INOP SB &gt;50k</span>
+        <input type="number" id="rm-inop" class="rm-input" value="0" min="0">
+      </div>
+
+      <!-- AUTO-FETCHED FROM YONO REG -->
+      <div class="rm-row auto-fetched">
+        <span class="rm-label"><span class="rm-tag">Auto</span>10. YONO Registration</span>
+        <input type="number" id="rm-yono" class="rm-input" value="0" min="0">
+      </div>
+    </div>
+
+    <div class="rm-btn-grid">
+      <button class="modal-btn modal-btn-cancel" onclick="closeRMModal()">Cancel</button>
+      <button class="modal-btn modal-btn-primary" onclick="exportRMReport()">📲 Send WhatsApp</button>
+    </div>
   </div>
 </div>
 
@@ -640,6 +786,55 @@ function doReset() {
   });
   localStorage.removeItem('sbi_a1_data');
   showToast('All counts reset.');
+}
+
+/* RM REPORT LOGIC */
+function openRMModal() {
+  // Load saved custom inputs if any
+  const savedRM = JSON.parse(localStorage.getItem('sbi_a1_rm_inputs') || '{}');
+  if (savedRM.branch) document.getElementById('rm-branch').value = savedRM.branch;
+  if (savedRM.fd) document.getElementById('rm-fd').value = savedRM.fd;
+  if (savedRM.stmt) document.getElementById('rm-stmt').value = savedRM.stmt;
+  if (savedRM.trf) document.getElementById('rm-trf').value = savedRM.trf;
+  if (savedRM.wdr) document.getElementById('rm-wdr').value = savedRM.wdr;
+  if (savedRM.dep) document.getElementById('rm-dep').value = savedRM.dep;
+  if (savedRM.inop) document.getElementById('rm-inop').value = savedRM.inop;
+
+  // Auto-fetch current live counters from the dashboard
+  document.getElementById('rm-kyc').value = document.getElementById('rekyc')?.textContent || '0';
+  document.getElementById('rm-15gh').value = document.getElementById('form15GH')?.textContent || '0';
+  document.getElementById('rm-nominee').value = document.getElementById('nomineeUpdate')?.textContent || '0';
+  document.getElementById('rm-yono').value = document.getElementById('yonoRegistration')?.textContent || '0';
+
+  document.getElementById('rm-overlay').classList.add('show');
+}
+
+function closeRMModal() {
+  document.getElementById('rm-overlay').classList.remove('show');
+}
+
+function exportRMReport() {
+  const branch = document.getElementById('rm-branch').value.trim() || 'Koraput';
+  const fd = document.getElementById('rm-fd').value || '0';
+  const stmt = document.getElementById('rm-stmt').value || '0';
+  const kyc = document.getElementById('rm-kyc').value || '0';
+  const gh = document.getElementById('rm-15gh').value || '0';
+  const nominee = document.getElementById('rm-nominee').value || '0';
+  const trf = document.getElementById('rm-trf').value || '0';
+  const wdr = document.getElementById('rm-wdr').value || '0';
+  const dep = document.getElementById('rm-dep').value || '0';
+  const inop = document.getElementById('rm-inop').value || '0';
+  const yono = document.getElementById('rm-yono').value || '0';
+
+  // Save manual inputs for convenience
+  localStorage.setItem('sbi_a1_rm_inputs', JSON.stringify({
+    branch, fd, stmt, trf, wdr, dep, inop
+  }));
+
+  const msg = `*Channel Migration and Adoption Data*\nBranch name- ${branch}\n1. Digital FD- ${fd}\n2. Statement Enquiry- ${stmt}\n3. Digital KYC- ${kyc}\n4. Form 15G/H- ${gh}\n5. Nominee update- ${nominee}\n6. Trf upto 40K- ${trf}\n7. Withdrawal upto 40k- ${wdr}\n8. Deposit upto 49900- ${dep}\n9. INOP SB >50k- ${inop}\n10. YONO Registration- ${yono}`;
+
+  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+  closeRMModal();
 }
 
 let pendingConfirmAction = null;
