@@ -9,32 +9,32 @@
 <style>
 :root {
   /* Night Ledger — dark (default) */
-  --ink:             #5aa2ff;
-  --ink-secondary:   #2f6fe0;
-  --ink-light:       rgba(90, 162, 255, 0.14);
-  --ink-glow:        rgba(90, 162, 255, 0.30);
+  --ink:              #5aa2ff;
+  --ink-secondary:    #2f6fe0;
+  --ink-light:        rgba(90, 162, 255, 0.14);
+  --ink-glow:         rgba(90, 162, 255, 0.30);
 
-  --bg-main:         #0c1220;
-  --paper:           #131b2e;
-  --paper-elevated:  #1b2640;
-  --paper-glass:     #101828;
+  --bg-main:          #0c1220;
+  --paper:            #131b2e;
+  --paper-elevated:   #1b2640;
+  --paper-glass:      #101828;
 
-  --text-main:       #eef3fb;
-  --text-muted:      #8a97b3;
-  --border:          #243150;
-  --border-active:   #3b6fc4;
+  --text-main:        #eef3fb;
+  --text-muted:       #8a97b3;
+  --border:           #243150;
+  --border-active:    #3b6fc4;
 
-  --success:         #34d399;
-  --success-light:   rgba(52, 211, 153, 0.14);
-  --danger:          #fb7185;
-  --danger-light:    rgba(251, 113, 133, 0.15);
+  --success:          #34d399;
+  --success-light:    rgba(52, 211, 153, 0.14);
+  --danger:           #fb7185;
+  --danger-light:     rgba(251, 113, 133, 0.15);
 
-  --radius-sm:       10px;
-  --radius-md:       16px;
-  --radius-lg:       24px;
+  --radius-sm:        10px;
+  --radius-md:        16px;
+  --radius-lg:        24px;
 
-  --card-shadow:     none;
-  --btn-shadow:      none;
+  --card-shadow:      none;
+  --btn-shadow:       none;
 
   --font-ui:   system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Roboto Mono", monospace;
@@ -42,28 +42,28 @@
 
 body.light-theme {
   /* Clean Paper — light */
-  --ink:             #1f5fbf;
-  --ink-secondary:   #164a96;
-  --ink-light:       rgba(31, 95, 191, 0.10);
-  --ink-glow:        rgba(31, 95, 191, 0.20);
+  --ink:              #1f5fbf;
+  --ink-secondary:    #164a96;
+  --ink-light:        rgba(31, 95, 191, 0.10);
+  --ink-glow:         rgba(31, 95, 191, 0.20);
 
-  --bg-main:         #f1f4f9;
-  --paper:           #ffffff;
-  --paper-elevated:  #eaf0f8;
-  --paper-glass:     #ffffff;
+  --bg-main:          #f1f4f9;
+  --paper:            #ffffff;
+  --paper-elevated:   #eaf0f8;
+  --paper-glass:      #ffffff;
 
-  --text-main:       #14202f;
-  --text-muted:      #66758c;
-  --border:          #dde4ef;
-  --border-active:   #9db9e6;
+  --text-main:        #14202f;
+  --text-muted:       #66758c;
+  --border:           #dde4ef;
+  --border-active:    #9db9e6;
 
-  --success:         #0f9d6e;
-  --success-light:   rgba(15, 157, 110, 0.10);
-  --danger:          #d63150;
-  --danger-light:    rgba(214, 49, 80, 0.10);
+  --success:          #0f9d6e;
+  --success-light:    rgba(15, 157, 110, 0.10);
+  --danger:           #d63150;
+  --danger-light:     rgba(214, 49, 80, 0.10);
 
-  --card-shadow:     0 1px 2px rgba(20, 32, 47, 0.06);
-  --btn-shadow:      none;
+  --card-shadow:      0 1px 2px rgba(20, 32, 47, 0.06);
+  --btn-shadow:       none;
 }
 
 *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -141,24 +141,33 @@ header {
   max-width: 540px; width: 100%; margin: 0 auto;
 }
 
-/* Re-KYC banner */
+/* Quick links 2-column container */
+.quick-link-deck {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  flex-shrink: 0;
+}
+
 .quick-link-banner {
   display: flex; justify-content: space-between; align-items: center;
   background: var(--ink-secondary); color: #fff;
-  border-radius: var(--radius-md); padding: 12px 14px;
-  text-decoration: none; font-weight: 700; font-size: 13px;
-  flex-shrink: 0;
+  border-radius: var(--radius-md); padding: 11px 12px;
+  text-decoration: none; font-weight: 700; font-size: 12.5px;
+  min-width: 0;
 }
 .quick-link-banner:active { opacity: 0.88; }
-.quick-link-icon-wrapper { display: flex; align-items: center; gap: 10px; }
+.quick-link-icon-wrapper { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .quick-link-icon {
-  width: 30px; height: 30px; border-radius: 10px;
+  width: 28px; height: 28px; border-radius: 8px;
   background: rgba(255,255,255,0.18); color: #fff;
-  display: flex; align-items: center; justify-content: center;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-.quick-link-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.3; }
-.quick-link-icon-wrapper span span { color: rgba(255,255,255,0.75) !important; }
-.quick-link-arrow { color: #fff; font-weight: 700; font-size: 17px; }
+.quick-link-icon svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2.3; }
+.quick-link-text {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.quick-link-arrow { color: #fff; font-weight: 700; font-size: 15px; flex-shrink: 0; margin-left: 4px; }
 
 /* Progress summary */
 .command-module {
@@ -338,6 +347,8 @@ header {
   .w-count { font-size: 1.7rem; }
   .w-btn { min-width: 58px; height: 36px; font-size: 12px; }
   .target-grid { gap: 8px; }
+  .quick-link-banner { font-size: 11px; padding: 10px 8px; }
+  .quick-link-icon { width: 24px; height: 24px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
@@ -366,16 +377,28 @@ header {
 
 <div id="dashboard" class="hidden">
 
-  <!-- QUICK LINK BANNER -->
-  <a href="https://yonoretail.sbi.bank.in/accounts/re-kyc/kyc-entry?srcChn=RINB" target="_blank" class="quick-link-banner">
-    <div class="quick-link-icon-wrapper">
-      <span class="quick-link-icon">
-        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      </span>
-      <span>Re-KYC Portal <span style="font-size: 10px; color: var(--text-muted); font-family: 'Space Mono', monospace; margin-left: 4px;">[RINB]</span></span>
-    </div>
-    <span class="quick-link-arrow">↗</span>
-  </a>
+  <!-- QUICK LINKS: RE-KYC & NEW REGISTRATION -->
+  <div class="quick-link-deck">
+    <a href="https://yonoretail.sbi.bank.in/accounts/re-kyc/kyc-entry?srcChn=RINB" target="_blank" class="quick-link-banner">
+      <div class="quick-link-icon-wrapper">
+        <span class="quick-link-icon">
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </span>
+        <span class="quick-link-text">Re-KYC</span>
+      </div>
+      <span class="quick-link-arrow">↗</span>
+    </a>
+
+    <a href="https://yonoretail.sbi.bank.in/registration/new-user-registration" target="_blank" class="quick-link-banner">
+      <div class="quick-link-icon-wrapper">
+        <span class="quick-link-icon">
+          <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        </span>
+        <span class="quick-link-text">New Reg.</span>
+      </div>
+      <span class="quick-link-arrow">↗</span>
+    </a>
+  </div>
   
   <!-- COMPACT COMMAND MODULE (Overall Daily Target) -->
   <div class="command-module">
