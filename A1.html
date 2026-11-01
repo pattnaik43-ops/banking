@@ -351,6 +351,37 @@ header {
   .quick-link-icon { width: 24px; height: 24px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* ===== ADDED: SIGN-IN SIDE PANEL ===== */
+.si-overlay {
+  position: fixed; inset: 0; background: rgba(5, 9, 18, 0.72);
+  opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 1000;
+}
+.si-overlay.show { opacity: 1; pointer-events: auto; }
+.si-panel {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: min(360px, 88%);
+  background: var(--paper); border-left: 1px solid var(--border);
+  padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; justify-content: center;
+  transform: translateX(100%); transition: transform 0.25s ease;
+}
+.si-overlay.show .si-panel { transform: translateX(0); }
+.si-panel h4 { font-size: 1.25rem; margin: 0 0 8px; text-align: center; }
+.si-panel p { color: var(--text-muted); font-size: 13px; text-align: center; margin: 0 0 20px; }
+.si-error { color: var(--danger); font-size: 12px; text-align: center; margin: -6px 0 12px; }
+
+/* ===== ADDED: NET SOURCING BANNER ===== */
+.quick-link-deck:has(#net-sourcing) { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.quick-link-deck:has(#net-sourcing) .quick-link-banner { padding: 10px 8px; font-size: 11.5px; }
+.quick-link-deck:has(#net-sourcing) .quick-link-icon { display: none; }
+#net-sourcing {
+  border: none; cursor: pointer; font-family: var(--font-ui);
+  flex-direction: column; justify-content: center; gap: 2px; text-align: center;
+}
+#net-sourcing .ns-label { font-size: 10.5px; font-weight: 700; white-space: nowrap; }
+#net-sourcing .ns-count { font-family: var(--font-mono); font-size: 17px; font-weight: 800; line-height: 1; }
+
 </style>
 </head>
 <body>
@@ -372,7 +403,8 @@ header {
   <div class="login-seal">SBI</div>
   <h2>Ops Command Deck</h2>
   <p>Komtalpeta // 17978</p>
-  <button class="modal-btn primary" style="max-width: 240px;" onclick="doLogin()">Boot Ledger →</button>
+  <!-- CHANGED: onclick now opens the sign-in side panel (was doLogin()) -->
+  <button class="modal-btn primary" style="max-width: 240px;" onclick="openSignInPanel()">Boot Ledger →</button>
 </div>
 
 <div id="dashboard" class="hidden">
@@ -398,6 +430,12 @@ header {
       </div>
       <span class="quick-link-arrow">↗</span>
     </a>
+
+    <!-- ADDED: NET SOURCING (display only, not part of any report) -->
+    <button type="button" id="net-sourcing" class="quick-link-banner" onclick="addNetSourcing()">
+      <span class="ns-label">Net Sourcing</span>
+      <span class="ns-count" id="ns-count">0</span>
+    </button>
   </div>
   
   <!-- COMPACT COMMAND MODULE (Overall Daily Target) -->
@@ -656,6 +694,29 @@ header {
   </div>
 </div>
 
+<!-- ADDED: SIGN-IN SIDE PANEL -->
+<div id="si-overlay" class="si-overlay" onclick="closeSignInPanel(event)">
+  <div class="si-panel" onclick="event.stopPropagation()">
+
+    <div id="si-step1">
+      <h4>Did you sign in to the application?</h4>
+      <p>Please confirm before starting the ledger.</p>
+      <button class="modal-btn primary" onclick="signInYes()">Yes</button>
+      <button class="modal-btn cancel" onclick="closeSignInPanel()">No</button>
+    </div>
+
+    <div id="si-step2" class="hidden">
+      <h4>Please reconfirm</h4>
+      <p>Type YES below to enter the ledger.</p>
+      <input type="text" id="si-field" class="input-field" placeholder="Type YES" autocomplete="off">
+      <div id="si-error" class="si-error hidden">Please type YES to continue.</div>
+      <button class="modal-btn primary" onclick="signInConfirm()">Confirm</button>
+      <button class="modal-btn cancel" onclick="closeSignInPanel()">Cancel</button>
+    </div>
+
+  </div>
+</div>
+
 <!-- JS LOGIC -->
 <script>
 const { jsPDF } = window.jspdf;
@@ -865,6 +926,85 @@ function applySavedTheme() {
 }
 function resetApp() { openConfirmModal('reset', () => { localStorage.clear(); window.location.reload(); }); }
 window.onload = () => { applySavedTheme(); if (state.loginTime) doLogin(); else refreshUI(); };
+
+/* ===== ADDED: SIGN-IN SIDE PANEL LOGIC ===== */
+function openSignInPanel() {
+  $('si-step1').classList.remove('hidden');
+  $('si-step2').classList.add('hidden');
+  $('si-error').classList.add('hidden');
+  $('si-field').value = '';
+  $('si-overlay').classList.add('show');
+}
+function closeSignInPanel(e) {
+  if (e && e.target !== $('si-overlay')) return;
+  $('si-overlay').classList.remove('show');
+  $('si-field').value = '';
+}
+function signInYes() {
+  $('si-step1').classList.add('hidden');
+  $('si-step2').classList.remove('hidden');
+  setTimeout(() => $('si-field').focus(), 150);
+}
+function signInConfirm() {
+  if ($('si-field').value.trim().toLowerCase() !== 'yes') {
+    $('si-error').classList.remove('hidden');
+    $('si-field').value = '';
+    return $('si-field').focus();
+  }
+  closeSignInPanel();
+  doLogin();   // your existing function opens the ledger
+}
+$('si-field').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); signInConfirm(); }
+});
+
+/* ===== ADDED: NET SOURCING COUNTER (separate from reports) ===== */
+let netSourcing = parseInt(localStorage.getItem('sbi_net_sourcing'), 10) || 0;
+$('ns-count').textContent = netSourcing;
+function addNetSourcing() {
+  netSourcing++;
+  localStorage.setItem('sbi_net_sourcing', netSourcing);
+  $('ns-count').textContent = netSourcing;
+}
+
+/* ===== ADDED: UNDO NOW ALSO COVERS NET SOURCING (undoes the latest action in order) ===== */
+let actionStack = [];
+try { actionStack = JSON.parse(localStorage.getItem('sbi_action_stack')) || []; } catch (e) { actionStack = []; }
+(function syncStack() {
+  const logN = actionStack.filter(a => a === 'log').length;
+  const nsN = actionStack.filter(a => a === 'ns').length;
+  if (logN !== state.logs.length || nsN !== netSourcing) {
+    actionStack = Array(netSourcing).fill('ns').concat(Array(state.logs.length).fill('log'));
+  }
+})();
+function saveStack() { localStorage.setItem('sbi_action_stack', JSON.stringify(actionStack)); }
+
+const _addSimple = addSimple;
+addSimple = function (cat) { _addSimple(cat); actionStack.push('log'); saveStack(); };
+
+const _addNetSourcing = addNetSourcing;
+addNetSourcing = function () { _addNetSourcing(); actionStack.push('ns'); saveStack(); refreshUI(); };
+
+const _undoLast = undoLast;
+undoLast = function () {
+  const top = actionStack.pop();
+  saveStack();
+  if (top === 'ns' && netSourcing > 0) {
+    netSourcing--;
+    localStorage.setItem('sbi_net_sourcing', netSourcing);
+    $('ns-count').textContent = netSourcing;
+    refreshUI();
+  } else {
+    _undoLast();
+  }
+};
+
+const _refreshUI = refreshUI;
+refreshUI = function () {
+  _refreshUI();
+  $('btn-undo').disabled = state.logs.length === 0 && netSourcing === 0;
+};
+
 </script>
 </body>
 </html>
