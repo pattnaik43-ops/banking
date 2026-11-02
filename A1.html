@@ -382,6 +382,67 @@ header {
 #net-sourcing .ns-label { font-size: 10.5px; font-weight: 700; white-space: nowrap; }
 #net-sourcing .ns-count { font-family: var(--font-mono); font-size: 17px; font-weight: 800; line-height: 1; }
 
+
+/* ===== ADDED: GEOTAG PHOTO ===== */
+.gt-open-btn { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.gt-open-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }
+.gt-head-btn {
+  width: 34px; height: 34px; border-radius: 50%; padding: 0;
+  background: var(--paper-elevated); border: 1px solid var(--border); color: var(--text-main);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.gt-head-btn:active { transform: scale(0.94); }
+.gt-head-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }
+.gt-overlay {
+  position: fixed; inset: 0; background: rgba(5, 9, 18, 0.72);
+  opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 1000;
+}
+.gt-overlay.show { opacity: 1; pointer-events: auto; }
+.gt-sheet {
+  position: fixed; bottom: 0; left: 0; right: 0; margin: 0 auto; max-width: 540px;
+  max-height: 94dvh; overflow-y: auto;
+  background: var(--paper); border-top: 1px solid var(--border);
+  border-radius: 26px 26px 0 0;
+  padding: 18px 18px max(20px, env(safe-area-inset-bottom));
+  transform: translateY(100%); transition: transform 0.25s ease;
+}
+.gt-overlay.show .gt-sheet { transform: translateY(0); }
+.gt-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.gt-head h4 { margin: 0; font-size: 1.2rem; }
+.gt-x {
+  width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border);
+  background: var(--paper-elevated); color: var(--text-main); font-size: 15px; cursor: pointer;
+}
+.gt-addr-box {
+  background: var(--bg-main); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 10px 12px; margin-bottom: 14px;
+}
+.gt-addr-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.gt-addr-text { font-size: 13px; font-weight: 600; word-break: break-word; }
+.gt-link-btn {
+  background: none; border: none; color: var(--ink); font-weight: 700;
+  font-size: 12px; cursor: pointer; padding: 4px 6px; flex-shrink: 0;
+}
+.gt-addr-input {
+  width: 100%; height: 44px; padding: 0 12px; margin: 8px 0;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--paper); color: var(--text-main); font-size: 14px; outline: none;
+}
+.gt-addr-input:focus { border-color: var(--ink); }
+.gt-video-wrap {
+  position: relative; width: 100%; aspect-ratio: 3 / 4; margin: 0 auto 12px;
+  background: #000; border-radius: var(--radius-md); overflow: hidden;
+}
+.gt-video-wrap video { width: 100%; height: 100%; object-fit: cover; }
+.gt-count {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 96px; font-weight: 800; color: #fff;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.6); pointer-events: none;
+}
+.gt-preview { width: 100%; max-height: 56dvh; object-fit: contain; border-radius: var(--radius-md); background: #000; margin-bottom: 12px; display: block; }
+.gt-msg { min-height: 16px; font-size: 12px; color: var(--danger); text-align: center; margin-top: 2px; }
+.gt-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.gt-row .modal-btn { margin-bottom: 0; }
 </style>
 </head>
 <body>
@@ -395,7 +456,10 @@ header {
     </div>
   </div>
   <div style="display:flex; align-items:center; gap:8px;">
-    <button id="theme-toggle" onclick="toggleTheme()">VIBE: DARK</button>
+    <!-- ADDED: GEOTAG PHOTO SHORTCUT (available on every page) -->
+    <button id="gt-header-btn" class="gt-head-btn" onclick="openGeoPanel()" aria-label="Geotag Photo">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+    </button>
   </div>
 </header>
 
@@ -405,6 +469,11 @@ header {
   <p>Komtalpeta // 17978</p>
   <!-- CHANGED: onclick now opens the sign-in side panel (was doLogin()) -->
   <button class="modal-btn primary" style="max-width: 240px;" onclick="openSignInPanel()">Boot Ledger →</button>
+  <!-- ADDED: GEOTAG PHOTO BUTTON -->
+  <button class="modal-btn cancel gt-open-btn" style="max-width: 240px;" onclick="openGeoPanel()">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+    Geotag Photo
+  </button>
 </div>
 
 <div id="dashboard" class="hidden">
@@ -717,6 +786,71 @@ header {
   </div>
 </div>
 
+<!-- ADDED: GEOTAG PHOTO PANEL -->
+<div id="gt-overlay" class="gt-overlay" onclick="closeGeoPanel(event)">
+  <div class="gt-sheet" onclick="event.stopPropagation()">
+    <div class="gt-head">
+      <h4>Geotag Photo</h4>
+      <button class="gt-x" onclick="closeGeoPanel()" aria-label="Close">✕</button>
+    </div>
+
+    <div class="gt-addr-box">
+      <span class="field-label" style="margin:0 0 4px;">Saved location</span>
+      <div class="gt-addr-row">
+        <span class="gt-addr-text" id="gt-addr-text"></span>
+        <button class="gt-link-btn" id="gt-addr-edit" onclick="gtEditAddr()">Edit</button>
+      </div>
+      <div id="gt-addr-editor" class="hidden">
+        <input type="text" id="gt-in-l1" class="gt-addr-input" maxlength="80" placeholder="Line 1 (e.g. Hanumannagar -1, Komtalpeta,)">
+        <input type="text" id="gt-in-l2" class="gt-addr-input" maxlength="90" placeholder="Line 2 (e.g. Rayagada, Odisha 765017, India)">
+        <div class="gt-row">
+          <input type="text" id="gt-in-lat" class="gt-addr-input" inputmode="decimal" placeholder="Latitude">
+          <input type="text" id="gt-in-lon" class="gt-addr-input" inputmode="decimal" placeholder="Longitude">
+        </div>
+        <span class="field-label" style="margin:6px 0 0;">Date &amp; time (optional, empty = automatic)</span>
+        <div class="gt-row">
+          <input type="date" id="gt-in-date" class="gt-addr-input">
+          <input type="time" id="gt-in-time" class="gt-addr-input">
+        </div>
+        <div class="gt-row">
+          <button class="modal-btn primary" onclick="gtSaveAddr()">Save</button>
+          <button class="modal-btn cancel" onclick="gtCancelAddr()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="gt-choose">
+      <button class="modal-btn primary" onclick="gtStartCamera()">Click a picture</button>
+      <button class="modal-btn cancel" onclick="gtPickFile()">Upload a picture</button>
+    </div>
+
+    <div id="gt-camera" class="hidden">
+      <div class="gt-video-wrap" id="gt-vwrap">
+        <video id="gt-video" playsinline muted autoplay></video>
+        <div class="gt-count hidden" id="gt-count"></div>
+      </div>
+      <div class="gt-row">
+        <button class="modal-btn primary" id="gt-capture-btn" onclick="gtCapture()">Capture (3s)</button>
+        <button class="modal-btn cancel" onclick="gtCancelCamera()">Cancel</button>
+      </div>
+      <button class="modal-btn cancel" style="margin-top:10px;" onclick="gtFlip()">Flip camera</button>
+    </div>
+
+    <div id="gt-result" class="hidden">
+      <img id="gt-preview" class="gt-preview" alt="Geotagged photo preview">
+      <div class="gt-row" style="margin-bottom:10px;">
+        <button class="modal-btn primary" onclick="gtShare()">Share</button>
+        <button class="modal-btn cancel" onclick="gtDownload()">Download</button>
+      </div>
+      <button class="modal-btn cancel" onclick="gtNew()">New photo</button>
+    </div>
+
+    <div class="gt-msg" id="gt-msg"></div>
+    <div id="gt-credit" style="text-align:center; color:var(--text-muted); font-size:10.5px; margin-top:6px;"></div>
+    <input type="file" id="gt-file" accept="image/*" class="hidden">
+  </div>
+</div>
+
 <!-- JS LOGIC -->
 <script>
 const { jsPDF } = window.jspdf;
@@ -916,14 +1050,9 @@ function toggleTheme() {
   document.body.classList.toggle('light-theme');
   const isLight = document.body.classList.contains('light-theme');
   localStorage.setItem('sbi_theme', isLight ? 'light' : 'dark');
-  $('theme-toggle').textContent = isLight ? 'VIBE: CAFE' : 'VIBE: DARK';
+  if ($('theme-toggle')) $('theme-toggle').textContent = isLight ? 'VIBE: CAFE' : 'VIBE: DARK';
 }
-function applySavedTheme() {
-  if (localStorage.getItem('sbi_theme') === 'light') {
-    document.body.classList.add('light-theme');
-    $('theme-toggle').textContent = 'VIBE: CAFE';
-  }
-}
+function applySavedTheme() { document.body.classList.remove('light-theme'); }   /* theme button removed: always dark */
 function resetApp() { openConfirmModal('reset', () => { localStorage.clear(); window.location.reload(); }); }
 window.onload = () => { applySavedTheme(); if (state.loginTime) doLogin(); else refreshUI(); };
 
@@ -1005,6 +1134,374 @@ refreshUI = function () {
   $('btn-undo').disabled = state.logs.length === 0 && netSourcing === 0;
 };
 
+
+/* ===== ADDED: GEOTAG PHOTO (separate from ledger data and reports) ===== */
+const GT_KEY = 'sbi_geotag_loc', GT_MAPKEY = 'sbi_geotag_map', GT_DTKEY = 'sbi_geotag_dt';
+const GT_DEF = { l1: 'Hanumannagar -1, Komtalpeta,', l2: 'Rayagada, Odisha 765017, India', lat: 19.235755, lon: 83.422085 };
+const GT_MAX = 1600, GT_Z = 18;
+const GT_FONT = 'Roboto, "Segoe UI", system-ui, -apple-system, Arial, sans-serif';
+let gtStream = null, gtBlob = null, gtUrl = null, gtBusy = false, gtName = 'geotag.jpg', gtFacing = 'environment';
+let gtMapP = null, gtMapPKey = '';
+
+function gtLoc() {
+  try {
+    const o = JSON.parse(localStorage.getItem(GT_KEY));
+    if (o && o.l1 && isFinite(o.lat) && isFinite(o.lon)) return o;
+  } catch (e) {}
+  return GT_DEF;
+}
+function gtDT() {
+  try {
+    const o = JSON.parse(localStorage.getItem(GT_DTKEY));
+    if (o && (o.date || o.time)) return o;
+  } catch (e) {}
+  return null;
+}
+function gtMsg(t) { $('gt-msg').textContent = t || ''; }
+function gtStep(name) { ['choose', 'camera', 'result'].forEach(n => $('gt-' + n).classList.toggle('hidden', n !== name)); }
+function gtShowLoc() {
+  const o = gtLoc();
+  const dt = gtDT();
+  $('gt-addr-text').textContent = o.l1 + ' ' + (o.l2 || '') + '  (' + Number(o.lat).toFixed(6) + ', ' + Number(o.lon).toFixed(6) + ')' +
+    (dt ? '  |  Date/time: ' + (dt.date || 'today') + ' ' + (dt.time || 'now') : '');
+}
+function gtWarmMap() { const o = gtLoc(); gtMap(Number(o.lat), Number(o.lon)).catch(() => {}); }
+
+function openGeoPanel() {
+  gtMsg(''); gtCancelAddr(); gtClearResult(); gtStopCamera();
+  gtFacing = 'environment';
+  gtShowLoc(); gtStep('choose');
+  $('gt-overlay').classList.add('show');
+  gtWarmMap();                       /* map is fetched in the background, so capture is instant */
+}
+function closeGeoPanel(e) {
+  if (e && e.target !== $('gt-overlay')) return;
+  gtStopCamera(); gtClearResult();
+  $('gt-overlay').classList.remove('show');
+}
+
+/* ---- saved location ---- */
+function gtEditAddr() {
+  const o = gtLoc();
+  $('gt-in-l1').value = o.l1; $('gt-in-l2').value = o.l2 || '';
+  $('gt-in-lat').value = o.lat; $('gt-in-lon').value = o.lon;
+  const dt = gtDT();
+  $('gt-in-date').value = dt ? (dt.date || '') : ''; $('gt-in-time').value = dt ? (dt.time || '') : '';
+  $('gt-addr-editor').classList.remove('hidden');
+  $('gt-addr-edit').classList.add('hidden');
+}
+function gtCancelAddr() {
+  $('gt-addr-editor').classList.add('hidden');
+  $('gt-addr-edit').classList.remove('hidden');
+}
+function gtSaveAddr() {
+  const l1 = $('gt-in-l1').value.trim(), l2 = $('gt-in-l2').value.trim();
+  const lat = parseFloat($('gt-in-lat').value), lon = parseFloat($('gt-in-lon').value);
+  if (!l1) return gtMsg('Line 1 of the address cannot be empty.');
+  if (!(lat >= -90 && lat <= 90) || !(lon >= -180 && lon <= 180)) return gtMsg('Enter valid latitude and longitude.');
+  const dDate = $('gt-in-date').value, dTime = $('gt-in-time').value;
+  try {
+    localStorage.setItem(GT_KEY, JSON.stringify({ l1, l2, lat, lon }));
+    if (dDate || dTime) localStorage.setItem(GT_DTKEY, JSON.stringify({ date: dDate, time: dTime }));
+    else localStorage.removeItem(GT_DTKEY);
+  } catch (e) {}
+  gtMapP = null; try { localStorage.removeItem(GT_MAPKEY); } catch (e) {}
+  gtMsg(''); gtShowLoc(); gtCancelAddr(); gtWarmMap();
+}
+
+/* ---- camera ---- */
+function gtStopStream() {
+  if (gtStream) { gtStream.getTracks().forEach(t => t.stop()); gtStream = null; }
+  const v = $('gt-video'); if (v) v.srcObject = null;
+}
+function gtStopCamera() {
+  gtStopStream();
+  $('gt-count').classList.add('hidden');
+  gtBusy = false; $('gt-capture-btn').disabled = false;
+}
+/* preview box takes the exact shape of the camera frame, so what you see is what is captured */
+function gtFitVideo() {
+  const v = $('gt-video'); if (!v.videoWidth) return;
+  const w = $('gt-vwrap'), r = v.videoWidth / v.videoHeight;
+  w.style.aspectRatio = v.videoWidth + ' / ' + v.videoHeight;
+  w.style.width = 'min(100%, ' + (56 * r).toFixed(2) + 'dvh)';
+}
+$('gt-video').addEventListener('loadedmetadata', gtFitVideo);
+
+async function gtStartCamera() {
+  gtMsg('');
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    gtMsg('Live camera not available here. Opening your phone camera instead.');
+    return gtOpenFile(true);
+  }
+  try {
+    gtStopStream();
+    gtStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: gtFacing }, width: { ideal: 1200 }, height: { ideal: 1600 } },
+      audio: false
+    });
+    const v = $('gt-video');
+    v.style.transform = gtFacing === 'user' ? 'scaleX(-1)' : '';
+    v.srcObject = gtStream;
+    gtStep('camera');
+    await v.play().catch(() => {});
+    gtFitVideo();
+  } catch (err) {
+    gtStopCamera();
+    gtMsg('Camera blocked or unavailable. Opening your phone camera instead.');
+    gtOpenFile(true);
+  }
+}
+function gtFlip() {
+  if (gtBusy) return;
+  gtFacing = gtFacing === 'environment' ? 'user' : 'environment';
+  gtStartCamera();
+}
+function gtCancelCamera() { gtStopCamera(); gtStep('choose'); gtMsg(''); }
+
+function gtCountdown() {
+  return new Promise(resolve => {
+    let n = 3; const c = $('gt-count');
+    c.classList.remove('hidden'); c.textContent = n;
+    const t = setInterval(() => {
+      n--;
+      if (n <= 0) { clearInterval(t); c.classList.add('hidden'); resolve(); }
+      else c.textContent = n;
+    }, 1000);
+  });
+}
+async function gtCapture() {
+  if (gtBusy || !gtStream) return;
+  gtBusy = true; $('gt-capture-btn').disabled = true; gtMsg('');
+  await gtCountdown();
+  const v = $('gt-video');
+  if (!v.videoWidth) { gtBusy = false; $('gt-capture-btn').disabled = false; return gtMsg('Camera not ready. Try again.'); }
+  try {
+    await gtProcess(v, v.videoWidth, v.videoHeight, new Date(), 'cam');
+    gtStopCamera();
+  } catch (e) {
+    gtBusy = false; $('gt-capture-btn').disabled = false;
+    gtMsg('Could not capture the photo. Try again.');
+  }
+}
+
+/* ---- upload / phone-camera fallback ---- */
+function gtOpenFile(useCamera) {
+  const f = $('gt-file');
+  if (useCamera) f.setAttribute('capture', 'environment'); else f.removeAttribute('capture');
+  f.click();
+}
+function gtPickFile() { gtMsg(''); gtOpenFile(false); }
+$('gt-file').addEventListener('change', async (e) => {
+  const file = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if (!file) return;
+  if (!file.type.startsWith('image/')) return gtMsg('Please choose an image file.');
+  gtMsg('Processing photo…');
+  try {
+    let bmp;
+    try { bmp = await createImageBitmap(file, { imageOrientation: 'from-image' }); }
+    catch (err) {
+      const u = URL.createObjectURL(file);
+      bmp = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = u; });
+      URL.revokeObjectURL(u);
+    }
+    const when = file.lastModified ? new Date(file.lastModified) : new Date();
+    await gtProcess(bmp, bmp.width || bmp.naturalWidth, bmp.height || bmp.naturalHeight, when, 'upload');
+    if (bmp.close) bmp.close();
+    gtMsg('');
+  } catch (err) { gtMsg('Could not read that photo. Try another one.'); }
+});
+
+/* ---- drawing helpers ---- */
+function gtRR(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+function gtFlagW(fh) { return Math.round(fh * 1.5); }
+function gtFlag(ctx, x, y, fh) {
+  const fw = gtFlagW(fh), s = fh / 3;
+  ctx.fillStyle = '#ff9933'; ctx.fillRect(x, y, fw, s);
+  ctx.fillStyle = '#ffffff'; ctx.fillRect(x, y + s, fw, s);
+  ctx.fillStyle = '#138808'; ctx.fillRect(x, y + 2 * s, fw, s + 0.5);
+  ctx.strokeStyle = '#000080'; ctx.lineWidth = Math.max(1, fh * 0.07);
+  ctx.beginPath(); ctx.arc(x + fw / 2, y + fh / 2, s * 0.42, 0, Math.PI * 2); ctx.stroke();
+}
+function gtImg(url, ms, cors) {
+  return new Promise(res => {
+    const im = new Image(); if (cors) im.crossOrigin = 'anonymous';
+    const t = setTimeout(() => res(null), ms);
+    im.onload = () => { clearTimeout(t); res(im); };
+    im.onerror = () => { clearTimeout(t); res(null); };
+    im.src = url;
+  });
+}
+
+/* ---- map thumbnail: satellite tiles (Esri) -> OpenStreetMap -> plain grid; cached on the phone ---- */
+function gtMap(lat, lon) {
+  const key = GT_Z + ':' + lat + ',' + lon;
+  if (gtMapP && gtMapPKey === key) return gtMapP;
+  gtMapPKey = key;
+  gtMapP = gtMapLoad(lat, lon, key).then(m => {
+    if (!m.ok) setTimeout(() => { if (gtMapPKey === key) gtMapP = null; }, 60000);   /* retry later if offline */
+    return m;
+  });
+  return gtMapP;
+}
+async function gtMapLoad(lat, lon, key) {
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const cx = c.getContext('2d');
+  /* 1) saved copy from last time: instant and works offline */
+  try {
+    const raw = JSON.parse(localStorage.getItem(GT_MAPKEY) || 'null');
+    if (raw && raw.key === key) {
+      const im = await gtImg(raw.data, 2000, false);
+      if (im) { cx.drawImage(im, 0, 0); return { canvas: c, ok: true, credit: raw.credit }; }
+    }
+  } catch (e) {}
+  /* 2) download tiles around the saved coordinates */
+  const n = Math.pow(2, GT_Z), sinL = Math.sin(lat * Math.PI / 180);
+  const wx = (lon + 180) / 360 * n * 256;
+  const wy = (0.5 - Math.log((1 + sinL) / (1 - sinL)) / (4 * Math.PI)) * n * 256;
+  const left = wx - 128, top = wy - 128;
+  const providers = [
+    { credit: 'Esri, Maxar', url: (z, x, y) => 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/' + z + '/' + y + '/' + x },
+    { credit: '© OpenStreetMap', url: (z, x, y) => 'https://tile.openstreetmap.org/' + z + '/' + x + '/' + y + '.png' }
+  ];
+  for (const pv of providers) {
+    const jobs = [];
+    for (let tx = Math.floor(left / 256); tx <= Math.floor((left + 255) / 256); tx++)
+      for (let ty = Math.floor(top / 256); ty <= Math.floor((top + 255) / 256); ty++)
+        jobs.push(gtImg(pv.url(GT_Z, tx, ty), 4500, true).then(im => ({ im, dx: tx * 256 - left, dy: ty * 256 - top })));
+    const got = await Promise.all(jobs);
+    if (got.every(g => g.im)) {
+      got.forEach(g => cx.drawImage(g.im, g.dx, g.dy));
+      try { localStorage.setItem(GT_MAPKEY, JSON.stringify({ key, credit: pv.credit, data: c.toDataURL('image/jpeg', 0.82) })); } catch (e) {}
+      return { canvas: c, ok: true, credit: pv.credit };
+    }
+  }
+  /* 3) offline fallback: plain map-style grid */
+  cx.fillStyle = '#e6e2d6'; cx.fillRect(0, 0, 256, 256);
+  cx.strokeStyle = '#cfc9b8'; cx.lineWidth = 2;
+  for (let i = 0; i <= 256; i += 32) { cx.beginPath(); cx.moveTo(i, 0); cx.lineTo(i, 256); cx.stroke(); cx.beginPath(); cx.moveTo(0, i); cx.lineTo(256, i); cx.stroke(); }
+  return { canvas: c, ok: false, credit: '' };
+}
+function gtPin(ctx, x, y, r) {
+  ctx.fillStyle = '#e53935';
+  ctx.beginPath(); ctx.arc(x, y - r * 1.7, r, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(x - r * 0.85, y - r * 1.25); ctx.lineTo(x, y); ctx.lineTo(x + r * 0.85, y - r * 1.25); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#7f1d1d'; ctx.beginPath(); ctx.arc(x, y - r * 1.7, r * 0.4, 0, Math.PI * 2); ctx.fill();
+}
+function gtFmt(d) {
+  const p = n => String(n).padStart(2, '0');
+  const wd = d.toLocaleDateString('en-GB', { weekday: 'long' });
+  let h = d.getHours(); const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
+  const off = -d.getTimezoneOffset(), sg = off >= 0 ? '+' : '-', a = Math.abs(off);
+  return wd + ', ' + p(d.getDate()) + '/' + p(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + p(h) + ':' + p(d.getMinutes()) + ' ' + ap + ' GMT ' + sg + p(Math.floor(a / 60)) + ':' + p(a % 60);
+}
+
+/* ---- stamping: layout measured from the reference image (1200 x 1600) ---- */
+async function gtProcess(src, sw, sh, when, mode) {
+  const scale = Math.min(1, GT_MAX / Math.max(sw, sh));
+  const w = Math.round(sw * scale), h = Math.round(sh * scale);
+  const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+  const ctx = cv.getContext('2d');
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(src, 0, 0, w, h);
+
+  const loc = gtLoc();
+  const dt = gtDT();
+  let manual = false;
+  if (dt) {
+    const z = n => String(n).padStart(2, '0'), t0 = new Date();
+    const ds = dt.date || (t0.getFullYear() + '-' + z(t0.getMonth() + 1) + '-' + z(t0.getDate()));
+    const ts = dt.time || (z(t0.getHours()) + ':' + z(t0.getMinutes()));
+    const d2 = new Date(ds + 'T' + ts);
+    if (!isNaN(d2)) { when = d2; manual = true; }
+  }
+  const map = await gtMap(Number(loc.lat), Number(loc.lon));
+
+  const u = Math.min(w, h) / 1200;                       /* layout unit */
+  const mg = 60 * u, T = 193 * u, gap = 22 * u, bot = 25 * u, pad = 18 * u;
+  const ty = h - bot - T, px = mg + T + gap, pw = w - px - mg;
+
+  /* map thumbnail */
+  ctx.save(); gtRR(ctx, mg, ty, T, T, 12 * u); ctx.clip();
+  ctx.drawImage(map.canvas, 0, 0, 256, 256, mg, ty, T, T);
+  gtPin(ctx, mg + T / 2, ty + T / 2 + 14 * u, 13 * u);
+  ctx.restore();
+  gtRR(ctx, mg, ty, T, T, 12 * u); ctx.strokeStyle = 'rgba(255,255,255,0.85)'; ctx.lineWidth = 2 * u; ctx.stroke();
+
+  /* info panel */
+  ctx.fillStyle = 'rgba(0,0,0,0.55)';
+  gtRR(ctx, px, ty, pw, T, 16 * u); ctx.fill();
+
+  const lines = [
+    { t: loc.l1, size: 33, bold: true, flag: true },
+    loc.l2 ? { t: loc.l2, size: 24, flag: true } : null,
+    { t: 'Lat ' + Number(loc.lat).toFixed(6) + '° Long ' + Number(loc.lon).toFixed(6) + '°', size: 24 },
+    { t: gtFmt(when), size: 24 },
+    manual ? { t: 'Date/Time set manually', size: 24 } : null
+  ].filter(Boolean);
+  const CYS = { 3: [62, 102, 133], 4: [54, 94, 125, 156], 5: [36, 75, 105, 135, 164] };
+  const CY = CYS[lines.length];
+
+  ctx.textBaseline = 'middle';
+  lines.forEach((l, idx) => {
+    let fs = l.size * u;
+    const wt = l.bold ? '700 ' : '400 ';
+    const flagSpace = l.flag ? gtFlagW(fs * 0.82) + 10 * u : 0;
+    const avail = pw - pad * 2 - flagSpace;
+    ctx.font = wt + fs + 'px ' + GT_FONT;
+    const tw = ctx.measureText(l.t).width;
+    if (tw > avail) { fs = Math.max(l.size * u * 0.55, fs * avail / tw); ctx.font = wt + fs + 'px ' + GT_FONT; }
+    const cy = ty + CY[idx] * u;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(l.t, px + pad, cy);
+    if (l.flag) { const fh = fs * 0.82; gtFlag(ctx, px + pad + ctx.measureText(l.t).width + 10 * u, cy - fh / 2, fh); }
+  });
+
+  const blob = await new Promise(res => cv.toBlob(res, 'image/jpeg', 0.92));
+  cv.width = cv.height = 0;
+  if (!blob) throw new Error('blob');
+  gtClearResult();
+  gtBlob = blob; gtUrl = URL.createObjectURL(blob);
+  const now = new Date(), pp = n => String(n).padStart(2, '0');
+  gtName = 'SBI_geotag_' + now.getFullYear() + pp(now.getMonth() + 1) + pp(now.getDate()) + '_' + pp(now.getHours()) + pp(now.getMinutes()) + pp(now.getSeconds()) + '.jpg';
+  $('gt-preview').src = gtUrl;
+  $('gt-credit').textContent = map.credit ? 'Map imagery: ' + map.credit : '';
+  gtStep('result');
+}
+
+/* ---- result actions ---- */
+function gtClearResult() {
+  if (gtUrl) URL.revokeObjectURL(gtUrl);
+  gtUrl = null; gtBlob = null;
+  $('gt-preview').removeAttribute('src');
+}
+function gtNew() { gtClearResult(); gtStep('choose'); gtMsg(''); }
+function gtDownload() {
+  if (!gtUrl) return;
+  const a = document.createElement('a');
+  a.href = gtUrl; a.download = gtName;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+async function gtShare() {
+  if (!gtBlob) return;
+  const file = new File([gtBlob], gtName, { type: 'image/jpeg' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], title: 'Geotagged photo' }); gtMsg(''); }
+    catch (err) { if (err && err.name !== 'AbortError') gtMsg('Sharing failed. Use Download instead.'); }
+  } else {
+    gtMsg('Sharing is not supported on this browser. Use Download instead.');
+  }
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden && gtStream) gtCancelCamera(); });
 </script>
 </body>
 </html>
