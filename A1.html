@@ -576,7 +576,15 @@ header {
         <button class="modal-btn primary" id="gt-capture-btn" onclick="gtCapture()">Capture (3s)</button>
         <button class="modal-btn cancel" onclick="gtCancelCamera()">Cancel</button>
       </div>
-      <button class="modal-btn cancel" style="margin-top:10px;" onclick="gtFlip()">Flip camera</button>
+      <div id="gt-zoom-row" class="hidden" style="margin:12px 0 4px;">
+        <span class="field-label" style="margin:0 0 4px;">Zoom (<span id="gt-zoom-val">1.0</span>x) – move left to fit more people</span>
+        <input type="range" id="gt-zoom" style="width:100%;" oninput="gtSetZoom(this.value)">
+      </div>
+      <div class="gt-row" style="margin-top:10px;">
+        <button class="modal-btn cancel" onclick="gtFlip()">Flip camera</button>
+        <button class="modal-btn cancel" id="gt-orient-btn" onclick="gtToggleOrient()">Portrait mode</button>
+      </div>
+      <button class="modal-btn cancel hidden" id="gt-lens-btn" style="margin-top:10px;" onclick="gtNextLens()">Next lens (wide / ultra-wide)</button>
     </div>
 
     <div id="gt-result" class="hidden">
@@ -851,7 +859,7 @@ function gtWarmMap() { const o = gtLoc(); gtMap(Number(o.lat), Number(o.lon)).ca
 
 function openGeoPanel() {
   gtMsg(''); gtCancelAddr(); gtClearResult(); gtStopCamera();
-  gtFacing = 'environment';
+  gtFacing = 'environment'; gtDeviceId = null; gtLensIdx = 0;
   gtShowLoc(); gtStep('choose');
   $('gt-overlay').classList.add('show');
   gtWarmMap();
@@ -906,33 +914,119 @@ function gtFitVideo() {
 }
 $('gt-video').addEventListener('loadedmetadata', gtFitVideo);
 
-async function gtStartCamera() {
+let gtOrient = 'landscape', gtDeviceId = null, gtBackCams = [], gtLensIdx = 0;
+
+/* tries several constraint sets so flip works on phones that reject the high-resolution request */
+async function gtGetStream(facing, swap) {
+  const land = (gtOrient === 'landscape') !== !!swap;
+  const size = land ? { width: { ideal: 2560 }, height: { ideal: 1920 } } : { width: { ideal: 1920 }, height: { ideal: 2560 } };
+  const tries = [];
+  if (gtDeviceId && facing === 'environment') tries.push({ deviceId: { exact: gtDeviceId }, ...size });
+  tries.push(
+    { facingMode: { exact: facing }, ...size },
+    { facingMode: { ideal: facing }, ...size },
+    { facingMode: { ideal: facing } },
+    true
+  );
+  let lastErr;
+  for (const video of tries) {
+    try { return await navigator.mediaDevices.getUserMedia({ video, audio: false }); }
+    catch (err) { lastErr = err; if (err && err.name === 'NotAllowedError') break; }
+  }
+  throw lastErr;
+}
+function gtWaitMeta(v) {
+  return new Promise(r => { if (v.videoWidth) return r(); v.onloadedmetadata = () => r(); setTimeout(r, 2000); });
+}
+async function gtAttach(facing) {
+  let stream = await gtGetStream(facing, false);
+  const v = $('gt-video');
+  v.style.transform = facing === 'user' ? 'scaleX(-1)' : '';
+  v.srcObject = stream;
+  await gtWaitMeta(v);
+  /* some phones return the opposite orientation: retry once with swapped sizes */
+  if (v.videoWidth && (v.videoWidth >= v.videoHeight) !== (gtOrient === 'landscape')) {
+    try {
+      const s2 = await gtGetStream(facing, true);
+      stream.getTracks().forEach(t => t.stop());
+      stream = s2; v.srcObject = s2; v.onloadedmetadata = null;
+      await new Promise(r => { v.onloadedmetadata = () => r(); setTimeout(r, 2000); });
+    } catch (e) {}
+  }
+  gtStream = stream;
+  gtStep('camera');
+  await v.play().catch(() => {});
+  if (v.videoWidth) gtFitVideo();
+  gtSetupZoom(); gtListLenses();
+  $('gt-orient-btn').textContent = gtOrient === 'landscape' ? 'Portrait mode' : 'Wide mode';
+}
+async function gtStartCamera(isFlip) {
   gtMsg('');
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     gtMsg('Live camera not available here. Opening your phone camera instead.');
     return gtOpenFile(true);
   }
+  const prevFacing = isFlip === 'flip' ? (gtFacing === 'user' ? 'environment' : 'user') : null;
   try {
     gtStopStream();
-    gtStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: gtFacing }, width: { ideal: 1800 }, height: { ideal: 2400 } },   /* was 1200 x 1600 */
-      audio: false
-    });
-    const v = $('gt-video');
-    v.style.transform = gtFacing === 'user' ? 'scaleX(-1)' : '';
-    v.srcObject = gtStream;
-    gtStep('camera');
-    await v.play().catch(() => {});
-    gtFitVideo();
+    await new Promise(r => setTimeout(r, 150));   /* lets the old camera release first (needed on many phones) */
+    await gtAttach(gtFacing);
   } catch (err) {
+    if (prevFacing) {                              /* flip failed: go back to the working camera */
+      gtFacing = prevFacing; gtDeviceId = null;
+      gtMsg('Other camera not available on this device.');
+      try { await gtAttach(gtFacing); return; } catch (e2) {}
+    }
     gtStopCamera(); gtStep('choose');
     gtMsg('Camera blocked or unavailable. Use "Upload a picture" or allow camera access.');
   }
 }
-function gtFlip() {
-  if (gtBusy) return;
-  gtFacing = gtFacing === 'environment' ? 'user' : 'environment';
+/* zoom slider starts at the widest setting so more people fit in the frame */
+function gtSetupZoom() {
+  const row = $('gt-zoom-row'), sl = $('gt-zoom');
+  row.classList.add('hidden');
+  try {
+    const tr = gtStream.getVideoTracks()[0], cap = tr.getCapabilities ? tr.getCapabilities() : {};
+    if (cap.zoom && cap.zoom.max > cap.zoom.min) {
+      sl.min = cap.zoom.min; sl.max = cap.zoom.max; sl.step = cap.zoom.step || 0.1; sl.value = cap.zoom.min;
+      tr.applyConstraints({ advanced: [{ zoom: cap.zoom.min }] }).catch(() => {});
+      $('gt-zoom-val').textContent = Number(cap.zoom.min).toFixed(1);
+      row.classList.remove('hidden');
+    }
+  } catch (e) {}
+}
+function gtSetZoom(z) {
+  try { gtStream.getVideoTracks()[0].applyConstraints({ advanced: [{ zoom: Number(z) }] }); } catch (e) {}
+  $('gt-zoom-val').textContent = Number(z).toFixed(1);
+}
+/* list back lenses (labels are available after permission) so an ultra-wide lens can be chosen */
+async function gtListLenses() {
+  try {
+    const all = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'videoinput');
+    gtBackCams = all.filter(d => !/front|user|selfie/i.test(d.label));
+    $('gt-lens-btn').classList.toggle('hidden', !(gtFacing === 'environment' && gtBackCams.length > 1));
+  } catch (e) {}
+}
+function gtNextLens() {
+  if (gtBusy || gtBackCams.length < 2) return;
+  gtLensIdx = (gtLensIdx + 1) % gtBackCams.length;
+  gtDeviceId = gtBackCams[gtLensIdx].deviceId;
   gtStartCamera();
+}
+function gtToggleOrient() {
+  if (gtBusy) return;
+  gtOrient = gtOrient === 'landscape' ? 'portrait' : 'landscape';
+  gtStartCamera();
+}
+async function gtFlip() {
+  if (gtBusy) return;
+  gtBusy = true;
+  $('gt-capture-btn').disabled = true;
+  gtFacing = gtFacing === 'environment' ? 'user' : 'environment';
+  gtDeviceId = null; gtLensIdx = 0;
+  await gtStartCamera('flip');
+  gtBusy = false;
+  $('gt-capture-btn').disabled = false;
 }
 function gtCancelCamera() { gtStopCamera(); gtStep('choose'); gtMsg(''); }
 
@@ -954,7 +1048,7 @@ async function gtCapture() {
   const v = $('gt-video');
   if (!v.videoWidth) { gtBusy = false; $('gt-capture-btn').disabled = false; return gtMsg('Camera not ready. Try again.'); }
   try {
-    await gtProcess(v, v.videoWidth, v.videoHeight, new Date(), 'cam');
+    await gtProcess(v, v.videoWidth, v.videoHeight, new Date(), gtFacing === 'user' ? 'cam-mirror' : 'cam');
     gtStopCamera();
   } catch (e) {
     gtBusy = false; $('gt-capture-btn').disabled = false;
@@ -1082,7 +1176,8 @@ async function gtProcess(src, sw, sh, when, mode) {
   const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
   const ctx = cv.getContext('2d');
   ctx.imageSmoothingQuality = 'high';
-  ctx.drawImage(src, 0, 0, w, h);
+  if (mode === 'cam-mirror') { ctx.save(); ctx.translate(w, 0); ctx.scale(-1, 1); ctx.drawImage(src, 0, 0, w, h); ctx.restore(); }
+  else ctx.drawImage(src, 0, 0, w, h);
 
   const loc = gtLoc(), dt = gtDT();
   let manual = false;
