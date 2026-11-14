@@ -184,6 +184,12 @@ header {
 .action-btn.reset { background:#fff1f2; border:1.5px solid #fecdd3; color:#e11d48; flex:.35; }
 .action-btn.rm { background:var(--surface-tint); border:1.5px solid #f5d0fe; color:var(--ink-tertiary); flex:.45; }
 .action-btn.send { background:linear-gradient(135deg,#ec4899,#8b5cf6); color:#fff; box-shadow:0 6px 18px rgba(236,72,153,.4); flex:.9; }
+.action-btn.undo { background:var(--bg-subtle); border:1.5px solid var(--border); color:var(--ink-secondary); flex:.4; }
+.action-btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+.minus-pill { width:26px; height:26px; padding:0; border-radius:9px; border:1.5px solid var(--border); background:var(--surface-tint); color:var(--ink-secondary); font:800 15px 'JetBrains Mono', monospace; line-height:1; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .12s ease; }
+.minus-pill:active { transform:scale(.92); }
+.minus-pill:disabled { opacity:.35; cursor:default; transform:none; }
+@media (max-width:440px) { .bottom-actions { gap:6px; padding-left:10px; padding-right:10px; } .action-btn { font-size:12.5px; padding:0 6px; } .lbl-long { display:none; } }
 
 /* TOAST */
 #toast { position:fixed; top:-100px; left:50%; transform:translateX(-50%); background:var(--toast-bg); color:#fff; border:2px solid #c084fc; padding:10px 20px; border-radius:var(--radius-pill); font-weight:800; font-size:12.5px; max-width:92%; white-space:nowrap; z-index:9999; transition:top .35s cubic-bezier(.16,1,.3,1); box-shadow:var(--shadow-float); }
@@ -258,7 +264,7 @@ body:has(#about-toggle:checked) .css-modal-card { transform:none; }
   .link-arrow { display:inline-block; transition:transform .2s ease; }
   .link-card:hover .link-arrow { transform:translate(3px,-3px); }
   .action-btn:hover, .btn-exit-pill:hover, .btn-login:hover, .icon-btn:hover { transform:translateY(-2px); }
-  .tap-pill:hover, .add-n-pill:hover, .preset-chip:hover { transform:scale(1.08); }
+  .tap-pill:hover, .add-n-pill:hover, .preset-chip:hover, .minus-pill:not(:disabled):hover { transform:scale(1.08); }
   .tn-link:hover { background:var(--bg-subtle); color:var(--ink); }
 }
 
@@ -279,7 +285,7 @@ body:is(.saver, .reduce-motion) :is(.stat-card, .link-card, .action-btn, .btn-ex
   * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   body, body.dark-theme, body.saver { --bg-page:#fff; --surface:#fff; --surface-tint:#f5f5f5; --bg-subtle:#eee; --border:#999; --ink:#000; --ink-secondary:#333; --ink-tertiary:#333; --glass:#fff; --met-bg:#eee; --met-bd:#555; --shadow-card:none; }
   html, body { height:auto !important; overflow:visible !important; display:block; background:#fff !important; background-image:none !important; }
-  header, .bottom-actions, .overlay, .css-modal, #toast, .quick-links-grid, .toggle-row, .add-n-pill, #login-wrapper { display:none !important; }
+  header, .bottom-actions, .overlay, .css-modal, #toast, .quick-links-grid, .toggle-row, .add-n-pill, .minus-pill, #login-wrapper { display:none !important; }
   #main-content { max-width:none; display:block; }
   #dashboard, .scroll-area { overflow:visible; height:auto; display:block; }
   .scroll-area { padding:0; }
@@ -380,7 +386,8 @@ body:is(.saver, .reduce-motion) :is(.stat-card, .link-card, .action-btn, .btn-ex
 
     <div class="bottom-actions">
       <button class="action-btn reset" onclick="openConfirm('reset')">Reset</button>
-      <button class="action-btn rm" onclick="openRMModal()">📋 RM Report</button>
+      <button class="action-btn undo" id="btn-undo" onclick="undoLast()" aria-label="Undo last change" disabled>↩ Undo</button>
+      <button class="action-btn rm" onclick="openRMModal()">📋 RM<span class="lbl-long"> Report</span></button>
       <button class="action-btn send" onclick="exportToWhatsApp()">📲 WhatsApp</button>
     </div>
   </div>
@@ -515,6 +522,7 @@ $('grid').innerHTML = CARDS.map(([f, i, t, n]) => `
     <div class="card-body">
       <span class="card-count" id="${f}">0</span>
       <div class="card-actions-row">
+        <button class="minus-pill" id="minus-${f}" onclick="event.stopPropagation(); increment('${f}', -1)" title="Remove one" aria-label="Remove one from ${t}" disabled>&minus;</button>
         <span class="tap-pill" id="pill-${f}">+1</span>
         <button class="add-n-pill" onclick="event.stopPropagation(); openAddNModal('${f}', '${t}', '${i}')" title="Add custom amount" aria-label="Add custom amount to ${t}">+N</button>
       </div>
@@ -559,6 +567,7 @@ function updateUI(field) {
   const track = $('pb-' + field).parentElement;
   track.style.setProperty('--pct', pct + '%'); track.setAttribute('aria-valuenow', pct);
   const btn = $('btn-' + field), pill = $('pill-' + field);
+  $('minus-' + field).disabled = val <= 0;
   btn.classList.remove('mid', 'met');
   if (val >= target) { btn.classList.add('met'); if (pill) pill.textContent = '✓ Done'; }
   else if (val >= mid) { btn.classList.add('mid'); if (pill) pill.textContent = '+1'; }
@@ -580,11 +589,23 @@ function refreshTotals() {
   ob.style.setProperty('--pct', pct + '%'); ob.setAttribute('aria-valuenow', pct);
 }
 
+let undoStack = [];
+const updateUndoBtn = () => { $('btn-undo').disabled = undoStack.length === 0; };
 function increment(field, amount = 1) {
-  const el = $(field);
-  el.textContent = Math.max(0, (parseInt(el.textContent) || 0) + amount);
-  updateUI(field); saveData();
-  if (navigator.vibrate) navigator.vibrate(35);
+  const el = $(field), cur = parseInt(el.textContent) || 0, next = Math.max(0, cur + amount), delta = next - cur;
+  if (!delta) return;
+  el.textContent = next;
+  undoStack.push({ f: field, d: delta }); if (undoStack.length > 100) undoStack.shift();
+  updateUI(field); updateUndoBtn(); saveData();
+  if (navigator.vibrate) navigator.vibrate(delta < 0 ? [20, 30, 20] : 35);
+}
+function undoLast() {
+  const a = undoStack.pop(); if (!a) return;
+  const el = $(a.f); el.textContent = Math.max(0, (parseInt(el.textContent) || 0) - a.d);
+  updateUI(a.f); updateUndoBtn(); saveData();
+  const title = (CARDS.find(c => c[0] === a.f) || [])[2] || '';
+  showToast(`Undone: ${a.d > 0 ? '+' : ''}${a.d} on ${title}`, 2200);
+  if (navigator.vibrate) navigator.vibrate(20);
 }
 
 /* +N MODAL */
@@ -610,7 +631,7 @@ function flushSave() {
   clearTimeout(saveT); saveT = null;
   if (!dirty) return; dirty = false;
   const d = {}; FIELDS.forEach(f => { d[f] = $(f).textContent; });
-  try { localStorage.setItem('sbi_a1_data', JSON.stringify(d)); } catch (e) {}
+  try { localStorage.setItem('sbi_a1_data', JSON.stringify(d)); localStorage.setItem('sbi_a1_undo', JSON.stringify(undoStack)); } catch (e) {}
 }
 function saveData() { dirty = true; clearTimeout(saveT); saveT = setTimeout(flushSave, 400); }
 addEventListener('pagehide', flushSave);
@@ -618,6 +639,9 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) flush
 
 function loadSavedData() {
   let d; try { d = JSON.parse(localStorage.getItem('sbi_a1_data')); } catch (e) {}
+  try { undoStack = JSON.parse(localStorage.getItem('sbi_a1_undo')) || []; } catch (e) { undoStack = []; }
+  if (!Array.isArray(undoStack)) undoStack = [];
+  updateUndoBtn();
   if (!d) return;
   FIELDS.forEach(f => { const el = $(f); if (el) { el.textContent = d[f] || 0; updateUI(f); } });
 }
@@ -632,7 +656,8 @@ function exportToWhatsApp() {
 function doReset() {
   clearTimeout(saveT); dirty = false;
   FIELDS.forEach(f => { $(f).textContent = '0'; updateUI(f); });
-  localStorage.removeItem('sbi_a1_data');
+  localStorage.removeItem('sbi_a1_data'); localStorage.removeItem('sbi_a1_undo');
+  undoStack = []; updateUndoBtn();
   showToast('All counts reset.');
 }
 
