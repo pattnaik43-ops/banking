@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>SBI Bank Ops - Target Ledger</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<meta name="theme-color" content="#0c1220">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%232f6fe0'/%3E%3Ctext x='256' y='320' font-family='Arial,sans-serif' font-size='190' font-weight='800' text-anchor='middle' fill='%23fff'%3ESBI%3C/text%3E%3C/svg%3E">
+<link rel="manifest" id="manifest-link">
 <style>
 :root {
   --ink:#5aa2ff; --ink-secondary:#2f6fe0; --ink-light:rgba(90,162,255,.14); --ink-glow:rgba(90,162,255,.30);
@@ -138,7 +139,7 @@ header {
 }
 .w-btn:active { background: var(--ink); color: #fff; transform: scale(.96); }
 .w-prog-track { width: 100%; height: 5px; background: var(--paper-elevated); border-radius: 5px; overflow: hidden; }
-.w-prog-fill { height: 100%; width: 0%; background: var(--ink); border-radius: 5px; transition: width .3s ease; }
+.w-prog-fill { height: 100%; background: var(--ink); border-radius: 5px; transition: width .3s ease; }
 
 .compact-list {
   display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--border);
@@ -312,9 +313,155 @@ header {
 .gt-msg { min-height: 16px; font-size: 12px; color: var(--danger); text-align: center; margin-top: 2px; }
 .gt-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .gt-row .modal-btn { margin-bottom: 0; }
+
+/* ===== ADDED FEATURES ===== */
+.sr-only { position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); border:0; white-space:nowrap; }
+.ic { stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; width:16px; height:16px; }
+
+/* 9. Sticky header + 2. Flexbox header/nav */
+header { position:sticky; top:0; gap:12px; flex-wrap:wrap; }
+.top-nav { display:none; align-items:center; gap:4px; }
+.tn-link { display:flex; align-items:center; gap:6px; height:34px; padding:0 12px; border-radius:999px; border:1px solid transparent; background:none; color:var(--text-muted); font-size:12.5px; font-weight:700; cursor:pointer; transition:color .2s, background .2s; }
+.head-tools { display:flex; align-items:center; gap:8px; }
+.gt-head-btn { position:relative; }
+label.gt-head-btn { cursor:pointer; }
+@media (min-width:640px) { .top-nav { display:flex; } }
+
+/* 15. CSS-only tooltip */
+.tip { position:relative; }
+.tip::after {
+  content:attr(data-tip); position:absolute; top:calc(100% + 8px); right:0; z-index:20;
+  background:var(--text-main); color:var(--bg-main); padding:4px 9px; border-radius:6px;
+  font-size:11px; font-weight:700; white-space:nowrap; pointer-events:none;
+  opacity:0; visibility:hidden; transform:translateY(-4px); transition:opacity .15s, transform .15s, visibility .15s;
+}
+.tip:hover::after, .tip:focus-visible::after, .tip:focus-within::after { opacity:1; visibility:visible; transform:none; }
+
+/* 10. Dark/Light switch (custom checkbox) */
+.theme-switch { position:relative; display:inline-flex; cursor:pointer; }
+.theme-switch input { position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:pointer; }
+.ts-track { position:relative; width:58px; height:32px; padding:0 8px; border-radius:999px; background:var(--paper-elevated); border:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.ts-track .ic { position:relative; z-index:1; width:15px; height:15px; color:var(--text-muted); transition:color .2s; }
+.ts-thumb { position:absolute; top:3px; left:3px; width:24px; height:24px; border-radius:50%; background:var(--ink-secondary); transition:transform .25s ease; }
+.theme-switch input:not(:checked) + .ts-track .ts-moon, .theme-switch input:checked + .ts-track .ts-sun { color:#fff; }
+.theme-switch input:checked + .ts-track .ts-thumb { transform:translateX(26px); }
+
+/* 4. Custom checkbox toggle: hide completed targets (pure CSS) */
+.chk-toggle { display:inline-flex; align-items:center; gap:10px; margin:0 2px 10px; cursor:pointer; font-size:12.5px; font-weight:600; color:var(--text-muted); position:relative; }
+.chk-toggle input { position:absolute; opacity:0; width:40px; height:22px; margin:0; cursor:pointer; }
+.chk-box { width:40px; height:22px; border-radius:999px; background:var(--paper-elevated); border:1px solid var(--border); position:relative; flex-shrink:0; transition:background .2s, border-color .2s; }
+.chk-box::after { content:""; position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:var(--text-muted); transition:transform .2s, background .2s; }
+.chk-toggle input:checked + .chk-box { background:var(--success-light); border-color:var(--success); }
+.chk-toggle input:checked + .chk-box::after { transform:translateX(18px); background:var(--success); }
+.chk-toggle input:focus-visible + .chk-box { outline:3px solid var(--ink); outline-offset:2px; }
+#dashboard:has(#hide-done:checked) .widget.met { display:none; }
+
+/* 5. Progress bar driven by CSS variable --pct */
+.w-prog-track { --pct:0%; }
+.w-prog-fill { width:var(--pct, 0%) !important; }
+.w-prog-track.overall { margin-top:14px; height:7px; }
+
+/* 1. Responsive grid */
+.lists-grid { display:grid; grid-template-columns:1fr; gap:16px; flex-shrink:0; align-items:start; }
+@media (min-width:768px) {
+  #dashboard { max-width:960px; }
+  .target-grid { grid-template-columns:repeat(4, 1fr); }
+  .lists-grid { grid-template-columns:1fr 1fr; }
+  .quick-link-deck:has(#net-sourcing) { max-width:520px; }
+}
+
+/* 13. Card layout with aspect ratio */
+.widget { aspect-ratio:5 / 4; align-self:start; }
+
+/* 6. Animated hover effects (pointer devices only) */
+@media (hover:hover) {
+  .widget, .quick-link-banner { transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease, filter .2s ease; }
+  .widget:hover { transform:translateY(-3px); border-color:var(--border-active); box-shadow:0 10px 22px rgba(0,0,0,.2); }
+  .quick-link-banner:hover { transform:translateY(-2px); filter:brightness(1.12); }
+  .quick-link-arrow { transition:transform .2s ease; }
+  .quick-link-banner:hover .quick-link-arrow { transform:translate(3px,-3px); }
+  .w-btn, .compact-btn, .nav-item, .gt-head-btn { transition:transform .15s ease, background .15s ease, color .15s ease; }
+  .w-btn:hover, .compact-btn:hover { transform:scale(1.08); }
+  .nav-item:hover { color:var(--ink); background:var(--ink-light); transform:translateY(-2px); }
+  .gt-head-btn:hover { transform:translateY(-1px) rotate(-6deg); }
+  .tn-link:hover { color:var(--ink); background:var(--ink-light); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .widget:hover, .quick-link-banner:hover, .w-btn:hover, .compact-btn:hover, .nav-item:hover, .gt-head-btn:hover { transform:none; }
+}
+
+/* 12. Responsive typography */
+body { font-size:clamp(14px, 13px + .25vw, 16px); }
+.brand-name { font-size:clamp(14px, .85rem + .3vw, 17px); }
+#login-page h2 { font-size:clamp(1.5rem, 1.1rem + 2vw, 2.2rem); }
+.w-count { font-size:clamp(1.7rem, 1.35rem + 1.5vw, 2.4rem); }
+.summary-frac { font-size:clamp(20px, 1rem + 1vw, 26px); }
+.compact-title { font-size:clamp(13.5px, .8rem + .3vw, 15px); }
+
+/* 3. CSS-only modal (checkbox hack) */
+.css-modal { position:fixed; inset:0; z-index:1100; display:grid; place-items:center; padding:16px; visibility:hidden; opacity:0; transition:opacity .2s ease, visibility .2s ease; }
+body:has(#about-toggle:checked) .css-modal { visibility:visible; opacity:1; }
+.css-modal-bg { position:absolute; inset:0; background:rgba(5,9,18,.72); cursor:pointer; }
+.css-modal-card { position:relative; width:min(440px, 100%); max-height:85dvh; overflow:auto; background:var(--paper); border:1px solid var(--border); border-radius:var(--radius-lg); padding:22px 20px; transform:translateY(12px) scale(.97); transition:transform .2s ease; }
+body:has(#about-toggle:checked) .css-modal-card { transform:none; }
+.css-modal-card h4 { margin:0 0 12px; font-size:1.2rem; }
+.css-modal-card ul { margin:0 0 6px; padding-left:18px; color:var(--text-muted); font-size:13.5px; line-height:1.6; }
+.css-modal-x { position:absolute; top:12px; right:12px; width:34px; height:34px; border-radius:50%; border:1px solid var(--border); background:var(--paper-elevated); color:var(--text-main); display:flex; align-items:center; justify-content:center; cursor:pointer; }
+
+/* 11. Accessible form styling */
+:where(button, a, input, select, textarea, label):focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
+.input-field:focus-visible, .gt-addr-input:focus-visible { outline:3px solid var(--ink); outline-offset:1px; border-color:var(--ink); }
+.input-field::placeholder, .gt-addr-input::placeholder { color:var(--text-muted); opacity:1; }
+.input-field:user-invalid, .gt-addr-input:user-invalid { border-color:var(--danger); }
+.input-field, .gt-addr-input { min-height:48px; }
+.field-hint { margin:-4px 0 12px 4px; font-size:12px; color:var(--text-muted); }
+@media (forced-colors:active) { .input-field, .gt-addr-input, .chk-box, .ts-track { border:2px solid ButtonText; } }
+
+/* 14. Print-friendly styles */
+@media print {
+  @page { margin:12mm; }
+  * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  :root, body { --bg-main:#fff; --paper:#fff; --paper-elevated:#eee; --paper-glass:#fff; --text-main:#000; --text-muted:#333; --border:#999; --ink:#000; --ink-secondary:#000; --ink-light:#eee; --success:#000; --success-light:#eee; --card-shadow:none; }
+  html, body { height:auto !important; overflow:visible !important; display:block; background:#fff; color:#000; }
+  header, .bottom-dock-wrapper, .overlay, .si-overlay, .gt-overlay, .css-modal, #login-page, .report-back, .quick-link-deck, .chk-toggle, .w-btn, .compact-btn { display:none !important; }
+  #dashboard, #report-page { height:auto; overflow:visible; max-width:none; padding:0; }
+  .widget, .compact-card, .report-section, .command-module { break-inside:avoid; }
+  .widget { aspect-ratio:auto; }
+  .target-grid { grid-template-columns:repeat(4, 1fr); }
+  .lists-grid { grid-template-columns:1fr 1fr; }
+}
+
+/* ===== DEVICE & PERFORMANCE ===== */
+.perf-pill { width:auto; padding:0 10px; gap:6px; border-radius:999px; font-size:11px; font-weight:700; font-family:var(--font-mono); }
+.net-dot { width:8px; height:8px; border-radius:50%; background:var(--success); }
+.net-dot[data-s="Slow"] { background:#f59e0b; }
+.net-dot[data-s="Offline"] { background:var(--danger); }
+@media (max-width:419px) { .hdr-bat { display:none; } }
+.perf-sheet { max-height:92dvh; overflow:auto; }
+.perf-grid { display:grid; grid-template-columns:auto 1fr; gap:8px 16px; margin:0 0 12px; font-size:13.5px; }
+.perf-grid dt { color:var(--text-muted); font-weight:700; }
+.perf-grid dd { margin:0; font-family:var(--font-mono); text-align:right; }
+.perf-sheet .chk-toggle { display:flex; margin:14px 0 0; }
+.perf-sheet .modal-btn { margin-top:18px; }
+.toast { position:fixed; left:50%; top:70px; transform:translateX(-50%); z-index:1200; max-width:90%; background:var(--text-main); color:var(--bg-main); padding:10px 16px; border-radius:12px; font-size:13px; font-weight:700; opacity:0; pointer-events:none; transition:opacity .2s; }
+.toast.show { opacity:1; }
+body:is(.saver, .reduce-motion) *, body:is(.saver, .reduce-motion) *::before, body:is(.saver, .reduce-motion) *::after { animation:none !important; transition:none !important; }
+body.saver .widget:hover, body.saver .quick-link-banner:hover, body.saver .w-btn:hover, body.saver .compact-btn:hover, body.saver .nav-item:hover, body.saver .gt-head-btn:hover { transform:none; box-shadow:none; filter:none; }
+body.saver:not(.light-theme) { --bg-main:#000; --paper:#070a11; --paper-glass:#000; --paper-elevated:#10151f; --border:#1a2336; }
+body.saver .bottom-nav { box-shadow:none; }
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+  <symbol id="i-print" viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></symbol>
+  <symbol id="i-activity" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+</defs></svg>
 
 <header>
   <div class="brand">
@@ -324,8 +471,24 @@ header {
       <span class="brand-sub">// NODE 17978</span>
     </div>
   </div>
-  <div style="display:flex; align-items:center; gap:8px;">
-    <button id="gt-header-btn" class="gt-head-btn" onclick="openGeoPanel()" aria-label="Geotag Photo">
+  <nav class="top-nav" aria-label="Primary">
+    <button type="button" class="tn-link" onclick="navDeck()"><svg class="ic" aria-hidden="true"><use href="#i-grid"/></svg>Deck</button>
+    <button type="button" class="tn-link" onclick="navLogs()"><svg class="ic" aria-hidden="true"><use href="#i-list"/></svg>Logs</button>
+    <button type="button" class="tn-link" onclick="window.print()"><svg class="ic" aria-hidden="true"><use href="#i-print"/></svg>Print</button>
+  </nav>
+  <div class="head-tools">
+    <button type="button" id="perf-btn" class="gt-head-btn perf-pill tip" data-tip="Device &amp; performance" onclick="openPerf()" aria-label="Device and performance">
+      <svg class="ic" aria-hidden="true"><use href="#i-activity"/></svg><span id="hdr-bat" class="hdr-bat"></span><span id="hdr-net" class="net-dot" data-s="Online" aria-hidden="true"></span>
+    </button>
+    <label class="theme-switch tip" data-tip="Dark / Light theme">
+      <input type="checkbox" id="theme-toggle" role="switch" aria-label="Light theme">
+      <span class="ts-track" aria-hidden="true"><span class="ts-thumb"></span><svg class="ic ts-moon"><use href="#i-moon"/></svg><svg class="ic ts-sun"><use href="#i-sun"/></svg></span>
+    </label>
+    <label class="gt-head-btn tip" data-tip="About &amp; tips">
+      <input type="checkbox" id="about-toggle" class="sr-only" aria-label="About this app">
+      <svg class="ic" aria-hidden="true"><use href="#i-info"/></svg>
+    </label>
+    <button id="gt-header-btn" class="gt-head-btn tip" data-tip="Geotag photo" onclick="openGeoPanel()" aria-label="Geotag Photo">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
     </button>
   </div>
@@ -388,34 +551,37 @@ header {
         <div class="summary-frac mono" id="seal-frac">0 / 40</div>
       </div>
     </div>
+    <div class="w-prog-track overall" id="overall-bar" role="progressbar" aria-label="Overall daily target progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="w-prog-fill"></div></div>
   </div>
 
   <div>
     <div class="section-title">Daily Targets</div>
+    <label class="chk-toggle"><input type="checkbox" id="hide-done"><span class="chk-box" aria-hidden="true"></span><span>Hide completed targets</span></label>
     <div class="target-grid">
       <div class="widget ledger-row" id="card-yono">
         <div class="w-header"><span class="w-title">YONO Reg.</span><span class="w-target mono">G:5</span></div>
         <div class="w-main-row"><span class="w-count mono" id="c-yono">0</span><button id="btn-yono" class="w-btn" onclick="addSimple('Yono SBI')">+ 1</button></div>
-        <div class="w-prog-track"><div class="w-prog-fill" id="prog-yono"></div></div>
+        <div class="w-prog-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="w-prog-fill" id="prog-yono"></div></div>
       </div>
       <div class="widget ledger-row" id="card-wa">
         <div class="w-header"><span class="w-title">WhatsApp</span><span class="w-target mono">G:15</span></div>
         <div class="w-main-row"><span class="w-count mono" id="c-wa">0</span><button id="btn-wa" class="w-btn" onclick="addSimple('WhatsApp')">+ 1</button></div>
-        <div class="w-prog-track"><div class="w-prog-fill" id="prog-wa"></div></div>
+        <div class="w-prog-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="w-prog-fill" id="prog-wa"></div></div>
       </div>
       <div class="widget ledger-row" id="card-contact">
         <div class="w-header"><span class="w-title">Contact Ctr</span><span class="w-target mono">G:10</span></div>
         <div class="w-main-row"><span class="w-count mono" id="c-contact">0</span><button id="btn-contact" class="w-btn" onclick="addSimple('Contact Centre')">+ 1</button></div>
-        <div class="w-prog-track"><div class="w-prog-fill" id="prog-contact"></div></div>
+        <div class="w-prog-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="w-prog-fill" id="prog-contact"></div></div>
       </div>
       <div class="widget ledger-row" id="card-nps">
         <div class="w-header"><span class="w-title">NPS Feedback</span><span class="w-target mono">G:10</span></div>
         <div class="w-main-row"><span class="w-count mono" id="c-nps">0</span><button id="btn-nps" class="w-btn" onclick="addSimple('NPS')">+ 1</button></div>
-        <div class="w-prog-track"><div class="w-prog-fill" id="prog-nps"></div></div>
+        <div class="w-prog-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="w-prog-fill" id="prog-nps"></div></div>
       </div>
     </div>
   </div>
 
+  <div class="lists-grid">
   <div>
     <div class="section-title">Service Log</div>
     <div class="compact-list">
@@ -443,6 +609,7 @@ header {
       <div class="compact-card" id="card-fd"><div class="compact-info"><span class="compact-title">FD Through YONO</span><span class="compact-count" id="c-fd">0</span></div><button id="btn-fd" class="compact-btn" onclick="addSimple('FD Through yono')">+</button></div>
       <div class="compact-card" id="card-pai"><div class="compact-info"><span class="compact-title">PAI</span><span class="compact-count" id="c-pai">0</span></div><button id="btn-pai" class="compact-btn" onclick="addSimple('PAI')">+</button></div>
     </div>
+  </div>
   </div>
 
 </div>
@@ -492,10 +659,11 @@ header {
   <div class="bottom-sheet" id="branch-share-sheet" onclick="event.stopPropagation()">
     <h4>Share Branch Report</h4>
     <p style="color:var(--text-muted); font-size:12.5px; margin-top:-8px; margin-bottom: 16px;">Enter values for the quick branch summary.</p>
+    <p id="branch-hint" class="field-hint">Whole numbers only. Leave blank for 0.</p>
     <label class="field-label" for="branch-cc">Contact Centre (CC)</label>
-    <input type="number" id="branch-cc" class="input-field" placeholder="0" min="0" step="1" inputmode="numeric">
+    <input type="number" id="branch-cc" class="input-field" aria-describedby="branch-hint" placeholder="0" min="0" step="1" inputmode="numeric">
     <label class="field-label" for="branch-nps">NPS (Feedback)</label>
-    <input type="number" id="branch-nps" class="input-field" placeholder="0" min="0" step="1" inputmode="numeric">
+    <input type="number" id="branch-nps" class="input-field" aria-describedby="branch-hint" placeholder="0" min="0" step="1" inputmode="numeric">
     <button class="modal-btn primary" onclick="shareBranchReport()">Send via WhatsApp</button>
     <button class="modal-btn cancel" onclick="closeBranchShareModal()">Cancel</button>
   </div>
@@ -505,7 +673,7 @@ header {
   <div class="bottom-sheet" id="confirm-sheet" onclick="event.stopPropagation()">
     <h4 id="confirm-title" style="text-align: center;">Confirm Action</h4>
     <p id="confirm-msg" style="text-align: center; color:var(--text-muted); margin-bottom: 16px; font-size: 13px;">Type YES below to proceed.</p>
-    <input type="text" id="confirm-field" class="input-field" placeholder="Type YES" autocomplete="off">
+    <input type="text" id="confirm-field" class="input-field" aria-label="Type YES to confirm" placeholder="Type YES" autocomplete="off">
     <button class="modal-btn" id="confirm-ok" onclick="handleConfirmSubmit()">Confirm</button>
     <button class="modal-btn cancel" onclick="closeConfirmModal()">Cancel</button>
   </div>
@@ -522,8 +690,8 @@ header {
     <div id="si-step2" class="hidden">
       <h4>Please reconfirm</h4>
       <p>Type YES below to enter the ledger.</p>
-      <input type="text" id="si-field" class="input-field" placeholder="Type YES" autocomplete="off">
-      <div id="si-error" class="si-error hidden">Please type YES to continue.</div>
+      <input type="text" id="si-field" class="input-field" aria-label="Type YES to confirm" placeholder="Type YES" autocomplete="off">
+      <div id="si-error" class="si-error hidden" role="alert">Please type YES to continue.</div>
       <button class="modal-btn primary" onclick="signInConfirm()">Confirm</button>
       <button class="modal-btn cancel" onclick="closeSignInPanel()">Cancel</button>
     </div>
@@ -563,6 +731,12 @@ header {
     </div>
 
     <div id="gt-choose">
+      <label class="field-label" for="gt-quality">Photo quality</label>
+      <select id="gt-quality" class="input-field" style="font-size:14px; font-family:var(--font-ui); font-weight:600;">
+        <option value="1200">Low (fastest, saves battery)</option>
+        <option value="1800">Medium</option>
+        <option value="2400">High (best detail)</option>
+      </select>
       <button class="modal-btn primary" onclick="gtStartCamera()">Click a picture</button>
       <button class="modal-btn cancel" onclick="gtPickFile()">Upload a picture</button>
     </div>
@@ -596,14 +770,47 @@ header {
       <button class="modal-btn cancel" onclick="gtNew()">New photo</button>
     </div>
 
-    <div class="gt-msg" id="gt-msg"></div>
+    <div class="gt-msg" id="gt-msg" aria-live="polite"></div>
     <div id="gt-credit" style="text-align:center; color:var(--text-muted); font-size:10.5px; margin-top:6px;"></div>
     <input type="file" id="gt-file" accept="image/*" class="hidden">
   </div>
 </div>
 
+<div id="perf-overlay" class="overlay" onclick="closePerf(event)">
+  <div class="bottom-sheet perf-sheet" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="perf-title">
+    <h4 id="perf-title">Device &amp; performance</h4>
+    <dl class="perf-grid">
+      <dt>Battery</dt><dd id="pf-bat">-</dd>
+      <dt>Network</dt><dd id="pf-net">-</dd>
+      <dt>Local data</dt><dd id="pf-store">-</dd>
+      <dt>Speed</dt><dd id="pf-fps">-</dd>
+      <dt>JS memory</dt><dd id="pf-mem">-</dd>
+    </dl>
+    <div class="w-prog-track" id="pf-bar" role="progressbar" aria-label="Local storage used" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="w-prog-fill"></div></div>
+    <label class="chk-toggle"><input type="checkbox" id="saver-toggle"><span class="chk-box" aria-hidden="true"></span><span>Battery Saver (no animations, flat dark)</span></label>
+    <label class="chk-toggle"><input type="checkbox" id="dsaver-toggle"><span class="chk-box" aria-hidden="true"></span><span>Data Saver (use saved map only)</span></label>
+    <button class="modal-btn cancel" onclick="closePerf()">Close</button>
+  </div>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<div class="css-modal" role="dialog" aria-modal="true" aria-labelledby="about-title">
+  <label for="about-toggle" class="css-modal-bg" aria-hidden="true"></label>
+  <div class="css-modal-card">
+    <label for="about-toggle" class="css-modal-x" aria-label="Close"><svg class="ic" aria-hidden="true"><use href="#i-close"/></svg></label>
+    <h4 id="about-title">Quick tips</h4>
+    <ul>
+      <li>Tap + 1 on any card to log an entry.</li>
+      <li>Undo removes the most recent action, in order.</li>
+      <li>Logs shows every entry; PDF and Share export the day.</li>
+      <li>Use the sun/moon switch to change theme.</li>
+      <li>Print gives a clean paper copy of the current page.</li>
+      <li>All data stays on this device.</li>
+    </ul>
+  </div>
+</div>
+
 <script>
-const { jsPDF } = window.jspdf;
 
 const LS_STATE = 'sbi_v20_dark_v4', LS_NS = 'sbi_net_sourcing', LS_STACK = 'sbi_action_stack', LS_THEME = 'sbi_theme';
 const TARGETS = { 'Yono SBI': 5, WhatsApp: 15, 'Contact Centre': 10, NPS: 10 };
@@ -641,6 +848,7 @@ $('seal-ring-fill').style.strokeDashoffset = SEAL_CIRC;
 
 /* Clears only the ledger data; the saved geotag location and map are kept. */
 function clearLedgerData() {
+  clearTimeout(saveT); dirty = false;
   [LS_STATE, LS_NS, LS_STACK].forEach(k => { try { localStorage.removeItem(k); } catch (e) {} });
 }
 
@@ -666,7 +874,11 @@ function undoLast() {
   save();
 }
 
-function save() { try { localStorage.setItem(LS_STATE, JSON.stringify(state)); } catch (e) {} refreshUI(); }
+let saveT = null, dirty = false;
+function flushSave() { clearTimeout(saveT); saveT = null; if (dirty) { dirty = false; try { localStorage.setItem(LS_STATE, JSON.stringify(state)); } catch (e) {} } }
+function save() { dirty = true; clearTimeout(saveT); saveT = setTimeout(flushSave, 400); refreshUI(); }
+addEventListener('pagehide', flushSave);
+document.addEventListener('visibilitychange', () => { if (document.hidden) flushSave(); });
 
 function refreshUI() {
   $('btn-undo').disabled = state.logs.length === 0;
@@ -680,7 +892,7 @@ function refreshUI() {
     if (TARGETS[key]) {
       totalTargetCount += Math.min(count, TARGETS[key]);   /* extra over target no longer inflates the total */
       const itemPct = Math.min(100, Math.round((count / TARGETS[key]) * 100));
-      if (e.prog) e.prog.style.width = itemPct + '%';
+      if (e.prog) { const tr = e.prog.parentElement; tr.style.setProperty('--pct', itemPct + '%'); tr.setAttribute('aria-valuenow', itemPct); }
       if (count >= TARGETS[key]) { e.card.classList.add('met'); e.btn.textContent = 'DONE'; targetsMetCount++; }
       else e.btn.textContent = '+ 1';
     } else if (count >= 5) e.card.classList.add('danger-met');
@@ -688,6 +900,7 @@ function refreshUI() {
 
   const pct = Math.min(100, Math.round((totalTargetCount / TOTAL_TARGET) * 100));
   $('seal-pct').textContent = pct + '%';
+  const ob = $('overall-bar'); ob.style.setProperty('--pct', pct + '%'); ob.setAttribute('aria-valuenow', pct);
   $('seal-frac').textContent = `${totalTargetCount} / ${TOTAL_TARGET}`;
   $('seal-ring-fill').style.strokeDashoffset = SEAL_CIRC - (Math.min(1, totalTargetCount / TOTAL_TARGET) * SEAL_CIRC);
   const statusEl = $('summary-status');
@@ -729,8 +942,10 @@ function handleConfirmSubmit() {
 }
 $('confirm-field').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); handleConfirmSubmit(); } });
 
-function generatePDF() { openConfirmModal('pdf', doGeneratePDF); }
-function doGeneratePDF() {
+function generatePDF() { loadPdfLibs().catch(() => {}); openConfirmModal('pdf', doGeneratePDF); }
+async function doGeneratePDF() {
+  try { await loadPdfLibs(); } catch (e) { return alert('Could not load the PDF library. Check your internet connection and try again.'); }
+  const { jsPDF } = window.jspdf;
   const doc = new jsPDF(); const dateStr = new Date().toLocaleDateString('en-GB');
   doc.setFontSize(18); doc.setTextColor(0, 75, 135); doc.text('SBI Ops Ledger Report', 14, 16);
   doc.setFontSize(10); doc.setTextColor(100, 116, 139); doc.text(`Login: ${state.loginTime || '-'} | Date: ${dateStr}`, 14, 24);
@@ -766,7 +981,18 @@ function shareBranchReport() {
   closeBranchShareModal();
 }
 
-function applySavedTheme() { document.body.classList.remove('light-theme'); }   /* always dark */
+const themeToggle = $('theme-toggle');
+function applySavedTheme() {
+  let t = 'dark'; try { t = localStorage.getItem(LS_THEME) || 'dark'; } catch (e) {}
+  document.body.classList.toggle('light-theme', t === 'light'); themeToggle.checked = t === 'light';
+}
+themeToggle.addEventListener('change', () => {
+  document.body.classList.toggle('light-theme', themeToggle.checked);
+  try { localStorage.setItem(LS_THEME, themeToggle.checked ? 'light' : 'dark'); } catch (e) {}
+});
+function navDeck() { if (state.loginTime) hideReport(); }
+function navLogs() { if (state.loginTime) showReport(); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('about-toggle').checked = false; });
 function resetApp() { openConfirmModal('reset', () => { clearLedgerData(); window.location.reload(); }); }   /* keeps geotag settings */
 window.onload = () => { applySavedTheme(); if (state.loginTime) doLogin(); else refreshUI(); };
 
@@ -831,7 +1057,7 @@ refreshUI = function () { _refreshUI(); $('btn-undo').disabled = state.logs.leng
 /* ===== GEOTAG PHOTO (separate from ledger data and reports) ===== */
 const GT_KEY = 'sbi_geotag_loc', GT_MAPKEY = 'sbi_geotag_map', GT_DTKEY = 'sbi_geotag_dt';
 const GT_DEF = { l1: 'Hanumannagar -1, Komtalpeta,', l2: 'Rayagada, Odisha 765017, India', lat: 19.235755, lon: 83.422085 };
-const GT_MAX = 2400, GT_Z = 18;          /* GT_MAX was 1600: higher-resolution saved photo */
+let GT_MAX = 2400; const GT_Z = 18;          /* GT_MAX was 1600: higher-resolution saved photo */
 const GT_VIEW_DVH = 78;                  /* preview height cap in % of screen height (was 56) */
 const GT_FONT = 'Roboto, "Segoe UI", system-ui, -apple-system, Arial, sans-serif';
 let gtStream = null, gtBlob = null, gtUrl = null, gtBusy = false, gtName = 'geotag.jpg', gtFacing = 'environment';
@@ -859,7 +1085,7 @@ function gtWarmMap() { const o = gtLoc(); gtMap(Number(o.lat), Number(o.lon)).ca
 
 function openGeoPanel() {
   gtMsg(''); gtCancelAddr(); gtClearResult(); gtStopCamera();
-  gtFacing = 'environment'; gtDeviceId = null; gtLensIdx = 0;
+  gtFacing = 'environment'; gtDeviceId = null; gtLensIdx = 0; gtLowWarned = false;
   gtShowLoc(); gtStep('choose');
   $('gt-overlay').classList.add('show');
   gtWarmMap();
@@ -897,6 +1123,7 @@ function gtSaveAddr() {
 
 /* camera */
 function gtStopStream() {
+  clearTimeout(gtIdleT); wlOff();
   if (gtStream) { gtStream.getTracks().forEach(t => t.stop()); gtStream = null; }
   const v = $('gt-video'); if (v) v.srcObject = null;
 }
@@ -953,7 +1180,7 @@ async function gtAttach(facing) {
       await new Promise(r => { v.onloadedmetadata = () => r(); setTimeout(r, 2000); });
     } catch (e) {}
   }
-  gtStream = stream;
+  gtStream = stream; gtIdleReset(); wlOn();
   gtStep('camera');
   await v.play().catch(() => {});
   if (v.videoWidth) gtFitVideo();
@@ -962,6 +1189,7 @@ async function gtAttach(facing) {
 }
 async function gtStartCamera(isFlip) {
   gtMsg('');
+  if (!gtStream && !gtLowWarned && battery && battery.level <= 0.2 && !battery.charging) { gtLowWarned = true; return gtMsg('Battery is low and the camera drains power. Tap again to continue.'); }
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     gtMsg('Live camera not available here. Opening your phone camera instead.');
     return gtOpenFile(true);
@@ -1134,7 +1362,7 @@ async function gtMapLoad(lat, lon, key) {
   const wx = (lon + 180) / 360 * n * 256;
   const wy = (0.5 - Math.log((1 + sinL) / (1 - sinL)) / (4 * Math.PI)) * n * 256;
   const left = wx - 128, top = wy - 128;
-  const providers = [
+  const providers = dataSaverOn() ? [] : [
     { credit: 'Esri, Maxar', url: (z, x, y) => 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/' + z + '/' + y + '/' + x },
     { credit: '© OpenStreetMap', url: (z, x, y) => 'https://tile.openstreetmap.org/' + z + '/' + x + '/' + y + '.png' }
   ];
@@ -1262,6 +1490,106 @@ async function gtShare() {
   } else gtMsg('Sharing is not supported on this browser. Use Download instead.');
 }
 document.addEventListener('visibilitychange', () => { if (document.hidden && gtStream) gtCancelCamera(); });
+
+/* ===== DEVICE & PERFORMANCE ===== */
+const LS_SAVER = 'sbi_saver', LS_DSAVER = 'sbi_datasaver', LS_Q = 'sbi_photo_q';
+const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+const fmtB = n => n > 1048576 ? (n / 1048576).toFixed(2) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB';
+let battery = null, autoSaverOn = false, gtLowWarned = false, gtIdleT = null, wl = null, fpsRaf = 0, toastT = null;
+const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 3500); }
+
+/* Battery Saver + reduced-motion auto-detect */
+function saverOn() { return $('saver-toggle').checked; }
+function applySaver() { document.body.classList.toggle('saver', saverOn()); }
+$('saver-toggle').checked = lsGet(LS_SAVER, '0') === '1'; applySaver();
+$('saver-toggle').addEventListener('change', () => { lsSet(LS_SAVER, saverOn() ? '1' : '0'); autoSaverOn = false; applySaver(); perfRender(); });
+const rmq = matchMedia('(prefers-reduced-motion: reduce)');
+const rmApply = () => document.body.classList.toggle('reduce-motion', rmq.matches);
+rmApply(); if (rmq.addEventListener) rmq.addEventListener('change', rmApply);
+
+/* Network + Data Saver */
+function netState() {
+  if (!navigator.onLine) return 'Offline';
+  if (conn && (conn.saveData || /2g/.test(conn.effectiveType || ''))) return 'Slow';
+  return 'Online';
+}
+$('dsaver-toggle').checked = lsGet(LS_DSAVER, '0') === '1';
+function dataSaverOn() { return $('dsaver-toggle').checked || netState() === 'Slow'; }
+$('dsaver-toggle').addEventListener('change', () => { lsSet(LS_DSAVER, $('dsaver-toggle').checked ? '1' : '0'); perfRender(); });
+addEventListener('online', perfRender); addEventListener('offline', perfRender);
+if (conn && conn.addEventListener) conn.addEventListener('change', perfRender);
+
+/* Battery level + low-battery auto mode */
+function batUpdate() {
+  if (!battery) return;
+  const p = Math.round(battery.level * 100);
+  if (p <= 20 && !battery.charging && !saverOn()) { $('saver-toggle').checked = true; autoSaverOn = true; applySaver(); toast('Battery low: Battery Saver turned on'); }
+  else if (autoSaverOn && (battery.charging || p > 25)) { $('saver-toggle').checked = false; autoSaverOn = false; applySaver(); }
+  perfRender();
+}
+if (navigator.getBattery) navigator.getBattery().then(b => { battery = b; ['levelchange', 'chargingchange'].forEach(ev => b.addEventListener(ev, batUpdate)); batUpdate(); }).catch(() => {});
+
+/* Storage meter + panel */
+function lsBytes() { let n = 0; try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); n += (k.length + (localStorage.getItem(k) || '').length) * 2; } } catch (e) {} return n; }
+function perfRender() {
+  const n = netState(), p = battery ? Math.round(battery.level * 100) : null, b = lsBytes(), pct = Math.min(100, Math.round(b / 52428.8));
+  $('hdr-net').dataset.s = n; $('hdr-bat').textContent = p === null ? '' : p + '%';
+  $('pf-bat').textContent = p === null ? 'Not supported on this browser' : p + '%' + (battery.charging ? ' (charging)' : '') + (autoSaverOn ? ', saver auto-on' : '');
+  $('pf-net').textContent = n + (conn && conn.effectiveType ? ' (' + conn.effectiveType.toUpperCase() + ')' : '');
+  $('pf-store').textContent = fmtB(b) + ' of ~5 MB';
+  $('pf-bar').style.setProperty('--pct', pct + '%'); $('pf-bar').setAttribute('aria-valuenow', pct);
+  $('perf-btn').setAttribute('aria-label', 'Device and performance. Network ' + n + (p === null ? '' : ', battery ' + p + '%'));
+}
+function fpsStart() {
+  cancelAnimationFrame(fpsRaf); let f = 0, t = performance.now();
+  const loop = now => {
+    f++;
+    if (now - t >= 1000) { $('pf-fps').textContent = Math.round(f * 1000 / (now - t)) + ' fps'; f = 0; t = now; const m = performance.memory; $('pf-mem').textContent = m ? fmtB(m.usedJSHeapSize) : 'Not available'; }
+    fpsRaf = requestAnimationFrame(loop);
+  };
+  fpsRaf = requestAnimationFrame(loop);
+}
+function openPerf() { perfRender(); $('perf-overlay').classList.add('show'); fpsStart(); }
+function closePerf(e) { if (e && e.target !== $('perf-overlay')) return; $('perf-overlay').classList.remove('show'); cancelAnimationFrame(fpsRaf); }
+perfRender();
+
+/* Photo quality */
+$('gt-quality').value = lsGet(LS_Q, '2400'); GT_MAX = parseInt($('gt-quality').value, 10) || 2400;
+$('gt-quality').addEventListener('change', e => { GT_MAX = parseInt(e.target.value, 10) || 2400; lsSet(LS_Q, e.target.value); });
+
+/* Camera auto-off (60s idle) + Wake Lock while camera is open */
+function gtIdleReset() {
+  clearTimeout(gtIdleT);
+  if (!gtStream) return;
+  gtIdleT = setTimeout(() => {
+    if (!gtStream) return;
+    if (gtBusy) return gtIdleReset();
+    gtCancelCamera(); gtMsg('Camera turned off after 60 seconds of inactivity to save battery.');
+  }, 60000);
+}
+$('gt-camera').addEventListener('pointerdown', gtIdleReset);
+$('gt-camera').addEventListener('input', gtIdleReset);
+async function wlOn() { try { if ('wakeLock' in navigator && !wl) { wl = await navigator.wakeLock.request('screen'); wl.addEventListener('release', () => { wl = null; }); } } catch (e) {} }
+function wlOff() { try { if (wl) wl.release(); } catch (e) {} wl = null; }
+
+/* Lazy-loaded PDF libraries */
+const PDF_SRC = ['https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js'];
+let pdfP = null;
+const loadJs = src => new Promise((res, rej) => { const el = document.createElement('script'); el.src = src; el.onload = res; el.onerror = () => rej(new Error(src)); document.head.appendChild(el); });
+function loadPdfLibs() {
+  if (window.jspdf && window.jspdf.jsPDF && window.jspdf.jsPDF.API && window.jspdf.jsPDF.API.autoTable) return Promise.resolve();
+  return pdfP || (pdfP = loadJs(PDF_SRC[0]).then(() => loadJs(PDF_SRC[1])).catch(e => { pdfP = null; throw e; }));
+}
+
+/* Install-to-home-screen manifest, built inline so no extra files are needed */
+try {
+  const icon = document.querySelector('link[rel="icon"]').href;
+  const mf = { name: 'SBI Ops Ledger', short_name: 'SBI Ledger', start_url: location.href.split('#')[0], display: 'standalone', background_color: '#0c1220', theme_color: '#0c1220', icons: [{ src: icon, sizes: 'any', type: 'image/svg+xml' }] };
+  $('manifest-link').href = URL.createObjectURL(new Blob([JSON.stringify(mf)], { type: 'application/manifest+json' }));
+} catch (e) {}
 </script>
 </body>
 </html>
