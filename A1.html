@@ -93,22 +93,6 @@ header {
 .quick-link-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .quick-link-arrow { color: #fff; font-weight: 700; font-size: 15px; flex-shrink: 0; margin-left: 4px; }
 
-.command-module {
-  background: var(--paper); border: 1px solid var(--border); border-radius: var(--radius-lg);
-  padding: 16px; box-shadow: var(--card-shadow); flex-shrink: 0;
-}
-.summary-card { display: flex; align-items: center; gap: 16px; width: 100%; }
-.seal-ring-wrap { position: relative; width: 62px; height: 62px; flex-shrink: 0; }
-.seal-ring-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
-.seal-track { fill: none; stroke: var(--paper-elevated); stroke-width: 10; }
-.seal-fill { fill: none; stroke: var(--ink); stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset .4s ease; }
-.seal-center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-.seal-pct { font-size: 13px; font-weight: 700; }
-.summary-meta { flex: 1; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-.summary-left { display: flex; flex-direction: column; gap: 3px; }
-.summary-title { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: .06em; }
-.summary-sub { font-size: 13px; color: var(--ink); font-weight: 700; }
-.summary-frac { font-size: 22px; font-weight: 700; }
 
 .section-title {
   font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;
@@ -354,18 +338,16 @@ label.gt-head-btn { cursor:pointer; }
 .chk-toggle input:checked + .chk-box { background:var(--success-light); border-color:var(--success); }
 .chk-toggle input:checked + .chk-box::after { transform:translateX(18px); background:var(--success); }
 .chk-toggle input:focus-visible + .chk-box { outline:3px solid var(--ink); outline-offset:2px; }
-#dashboard:has(#hide-done:checked) .widget.met { display:none; }
 
 /* 5. Progress bar driven by CSS variable --pct */
 .w-prog-track { --pct:0%; }
 .w-prog-fill { width:var(--pct, 0%) !important; }
-.w-prog-track.overall { margin-top:14px; height:7px; }
 
 /* 1. Responsive grid */
 .lists-grid { display:grid; grid-template-columns:1fr; gap:16px; flex-shrink:0; align-items:start; }
 @media (min-width:768px) {
   #dashboard { max-width:960px; }
-  .target-grid { grid-template-columns:repeat(4, 1fr); }
+  .target-grid { grid-template-columns:repeat(3, 1fr); }   /* 3 columns: six large buttons make two even rows */
   .lists-grid { grid-template-columns:1fr 1fr; }
   .quick-link-deck:has(#net-sourcing) { max-width:520px; }
 }
@@ -395,18 +377,9 @@ body { font-size:clamp(14px, 13px + .25vw, 16px); }
 .brand-name { font-size:clamp(14px, .85rem + .3vw, 17px); }
 #login-page h2 { font-size:clamp(1.5rem, 1.1rem + 2vw, 2.2rem); }
 .w-count { font-size:clamp(1.7rem, 1.35rem + 1.5vw, 2.4rem); }
-.summary-frac { font-size:clamp(20px, 1rem + 1vw, 26px); }
 .compact-title { font-size:clamp(13.5px, .8rem + .3vw, 15px); }
 
 /* 3. CSS-only modal (checkbox hack) */
-.css-modal { position:fixed; inset:0; z-index:1100; display:grid; place-items:center; padding:16px; visibility:hidden; opacity:0; transition:opacity .2s ease, visibility .2s ease; }
-body:has(#about-toggle:checked) .css-modal { visibility:visible; opacity:1; }
-.css-modal-bg { position:absolute; inset:0; background:rgba(5,9,18,.72); cursor:pointer; }
-.css-modal-card { position:relative; width:min(440px, 100%); max-height:85dvh; overflow:auto; background:var(--paper); border:1px solid var(--border); border-radius:var(--radius-lg); padding:22px 20px; transform:translateY(12px) scale(.97); transition:transform .2s ease; }
-body:has(#about-toggle:checked) .css-modal-card { transform:none; }
-.css-modal-card h4 { margin:0 0 12px; font-size:1.2rem; }
-.css-modal-card ul { margin:0 0 6px; padding-left:18px; color:var(--text-muted); font-size:13.5px; line-height:1.6; }
-.css-modal-x { position:absolute; top:12px; right:12px; width:34px; height:34px; border-radius:50%; border:1px solid var(--border); background:var(--paper-elevated); color:var(--text-main); display:flex; align-items:center; justify-content:center; cursor:pointer; }
 
 /* 11. Accessible form styling */
 :where(button, a, input, select, textarea, label):focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
@@ -427,7 +400,7 @@ body:has(#about-toggle:checked) .css-modal-card { transform:none; }
   #dashboard, #report-page { height:auto; overflow:visible; max-width:none; padding:0; }
   .widget, .compact-card, .report-section, .command-module { break-inside:avoid; }
   .widget { aspect-ratio:auto; }
-  .target-grid { grid-template-columns:repeat(4, 1fr); }
+  .target-grid { grid-template-columns:repeat(3, 1fr); }
   .lists-grid { grid-template-columns:1fr 1fr; }
 }
 
@@ -436,7 +409,6 @@ body:has(#about-toggle:checked) .css-modal-card { transform:none; }
 .net-dot { width:8px; height:8px; border-radius:50%; background:var(--success); }
 .net-dot[data-s="Slow"] { background:#f59e0b; }
 .net-dot[data-s="Offline"] { background:var(--danger); }
-@media (max-width:419px) { .hdr-bat { display:none; } }
 .perf-sheet { max-height:92dvh; overflow:auto; }
 .perf-grid { display:grid; grid-template-columns:auto 1fr; gap:8px 16px; margin:0 0 12px; font-size:13.5px; }
 .perf-grid dt { color:var(--text-muted); font-weight:700; }
@@ -449,6 +421,18 @@ body:is(.saver, .reduce-motion) *, body:is(.saver, .reduce-motion) *::before, bo
 body.saver .widget:hover, body.saver .quick-link-banner:hover, body.saver .w-btn:hover, body.saver .compact-btn:hover, body.saver .nav-item:hover, body.saver .gt-head-btn:hover { transform:none; box-shadow:none; filter:none; }
 body.saver:not(.light-theme) { --bg-main:#000; --paper:#070a11; --paper-glass:#000; --paper-elevated:#10151f; --border:#1a2336; }
 body.saver .bottom-nav { box-shadow:none; }
+
+/* Compact target cards: all 6 fit on one screen without scrolling */
+#dashboard .target-grid { gap:8px; }
+#dashboard .widget { aspect-ratio:auto; padding:8px 10px; border-radius:12px; }
+#dashboard .widget .w-header { margin-bottom:4px; }
+#dashboard .widget .w-title { font-size:11.5px; }
+#dashboard .widget .w-target { font-size:9px; padding:1px 6px; }
+#dashboard .widget .w-main-row { margin:0 0 6px; gap:6px; }
+#dashboard .widget .w-count { font-size:1.45rem; }
+#dashboard .widget .w-btn { height:28px; min-width:50px; padding:0 10px; font-size:11.5px; }
+#dashboard .widget .w-prog-track { height:4px; }
+@media (min-width:768px) { #dashboard .target-grid { grid-template-columns:repeat(3, 1fr); } }
 </style>
 </head>
 <body>
@@ -477,16 +461,9 @@ body.saver .bottom-nav { box-shadow:none; }
     <button type="button" class="tn-link" onclick="window.print()"><svg class="ic" aria-hidden="true"><use href="#i-print"/></svg>Print</button>
   </nav>
   <div class="head-tools">
-    <button type="button" id="perf-btn" class="gt-head-btn perf-pill tip" data-tip="Device &amp; performance" onclick="openPerf()" aria-label="Device and performance">
-      <svg class="ic" aria-hidden="true"><use href="#i-activity"/></svg><span id="hdr-bat" class="hdr-bat"></span><span id="hdr-net" class="net-dot" data-s="Online" aria-hidden="true"></span>
-    </button>
     <label class="theme-switch tip" data-tip="Dark / Light theme">
       <input type="checkbox" id="theme-toggle" role="switch" aria-label="Light theme">
       <span class="ts-track" aria-hidden="true"><span class="ts-thumb"></span><svg class="ic ts-moon"><use href="#i-moon"/></svg><svg class="ic ts-sun"><use href="#i-sun"/></svg></span>
-    </label>
-    <label class="gt-head-btn tip" data-tip="About &amp; tips">
-      <input type="checkbox" id="about-toggle" class="sr-only" aria-label="About this app">
-      <svg class="ic" aria-hidden="true"><use href="#i-info"/></svg>
     </label>
     <button id="gt-header-btn" class="gt-head-btn tip" data-tip="Geotag photo" onclick="openGeoPanel()" aria-label="Geotag Photo">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
@@ -534,29 +511,8 @@ body.saver .bottom-nav { box-shadow:none; }
     </button>
   </div>
 
-  <div class="command-module">
-    <div class="summary-card">
-      <div class="seal-ring-wrap">
-        <svg viewBox="0 0 100 100">
-          <circle class="seal-track" cx="50" cy="50" r="42"></circle>
-          <circle class="seal-fill" id="seal-ring-fill" cx="50" cy="50" r="42"></circle>
-        </svg>
-        <div class="seal-center"><span class="seal-pct" id="seal-pct">0%</span></div>
-      </div>
-      <div class="summary-meta">
-        <div class="summary-left">
-          <div class="summary-title">Daily Target Progress</div>
-          <div class="summary-sub" id="summary-status">Keep pushing!</div>
-        </div>
-        <div class="summary-frac mono" id="seal-frac">0 / 40</div>
-      </div>
-    </div>
-    <div class="w-prog-track overall" id="overall-bar" role="progressbar" aria-label="Overall daily target progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="w-prog-fill"></div></div>
-  </div>
-
   <div>
     <div class="section-title">Daily Targets</div>
-    <label class="chk-toggle"><input type="checkbox" id="hide-done"><span class="chk-box" aria-hidden="true"></span><span>Hide completed targets</span></label>
     <div class="target-grid">
       <div class="widget ledger-row" id="card-yono">
         <div class="w-header"><span class="w-title">YONO Reg.</span><span class="w-target mono">G:5</span></div>
@@ -577,6 +533,15 @@ body.saver .bottom-nav { box-shadow:none; }
         <div class="w-header"><span class="w-title">NPS Feedback</span><span class="w-target mono">G:10</span></div>
         <div class="w-main-row"><span class="w-count mono" id="c-nps">0</span><button id="btn-nps" class="w-btn" onclick="addSimple('NPS')">+ 1</button></div>
         <div class="w-prog-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="w-prog-fill" id="prog-nps"></div></div>
+      </div>
+      <!-- NEW LARGE BUTTONS (moved up from the Financial & Accounts list) -->
+      <div class="widget ledger-row" id="card-fin">
+        <div class="w-header"><span class="w-title">Financial Txn</span></div>
+        <div class="w-main-row"><span class="w-count mono" id="c-fin">0</span><button id="btn-fin" class="w-btn" onclick="addSimple('FINANCIAL TRANSACTION')">+ 1</button></div>
+      </div>
+      <div class="widget ledger-row" id="card-nonfin">
+        <div class="w-header"><span class="w-title">Non-Financial</span></div>
+        <div class="w-main-row"><span class="w-count mono" id="c-nonfin">0</span><button id="btn-nonfin" class="w-btn" onclick="addSimple('NON FINANCIAL')">+ 1</button></div>
       </div>
     </div>
   </div>
@@ -602,8 +567,6 @@ body.saver .bottom-nav { box-shadow:none; }
       <div class="compact-card" id="card-wd40"><div class="compact-info"><span class="compact-title">Upto 40k Withdraw</span><span class="compact-count" id="c-wd40">0</span></div><button id="btn-wd40" class="compact-btn" onclick="addSimple('Upto 40000 Widrawl')">+</button></div>
       <div class="compact-card" id="card-tr40"><div class="compact-info"><span class="compact-title">Upto 40k Transfer</span><span class="compact-count" id="c-tr40">0</span></div><button id="btn-tr40" class="compact-btn" onclick="addSimple('Upto 40000 Transfer')">+</button></div>
       <div class="compact-card" id="card-trabove40"><div class="compact-info"><span class="compact-title">Above 40k Transfer</span><span class="compact-count" id="c-trabove40">0</span></div><button id="btn-trabove40" class="compact-btn" onclick="addSimple('Above 40000 Transfer')">+</button></div>
-      <div class="compact-card" id="card-fin"><div class="compact-info"><span class="compact-title">Financial TXN (Other)</span><span class="compact-count" id="c-fin">0</span></div><button id="btn-fin" class="compact-btn" onclick="addSimple('FINANCIAL TRANSACTION')">+</button></div>
-      <div class="compact-card" id="card-nonfin"><div class="compact-info"><span class="compact-title">Non Financial</span><span class="compact-count" id="c-nonfin">0</span></div><button id="btn-nonfin" class="compact-btn" onclick="addSimple('NON FINANCIAL')">+</button></div>
       <div class="compact-card" id="card-sbac"><div class="compact-info"><span class="compact-title">SB Acc Open / Funding</span><span class="compact-count" id="c-sbac">0</span></div><button id="btn-sbac" class="compact-btn" onclick="addSimple('SB Account opening/Funding')">+</button></div>
       <div class="compact-card" id="card-cbdc"><div class="compact-info"><span class="compact-title">CBDC</span><span class="compact-count" id="c-cbdc">0</span></div><button id="btn-cbdc" class="compact-btn" onclick="addSimple('CBDC')">+</button></div>
       <div class="compact-card" id="card-fd"><div class="compact-info"><span class="compact-title">FD Through YONO</span><span class="compact-count" id="c-fd">0</span></div><button id="btn-fd" class="compact-btn" onclick="addSimple('FD Through yono')">+</button></div>
@@ -794,21 +757,6 @@ body.saver .bottom-nav { box-shadow:none; }
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<div class="css-modal" role="dialog" aria-modal="true" aria-labelledby="about-title">
-  <label for="about-toggle" class="css-modal-bg" aria-hidden="true"></label>
-  <div class="css-modal-card">
-    <label for="about-toggle" class="css-modal-x" aria-label="Close"><svg class="ic" aria-hidden="true"><use href="#i-close"/></svg></label>
-    <h4 id="about-title">Quick tips</h4>
-    <ul>
-      <li>Tap + 1 on any card to log an entry.</li>
-      <li>Undo removes the most recent action, in order.</li>
-      <li>Logs shows every entry; PDF and Share export the day.</li>
-      <li>Use the sun/moon switch to change theme.</li>
-      <li>Print gives a clean paper copy of the current page.</li>
-      <li>All data stays on this device.</li>
-    </ul>
-  </div>
-</div>
 
 <script>
 
@@ -842,9 +790,6 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;'
 const els = {};
 MAP.forEach(({ key, id }) => { els[key] = { count: $('c-' + id), btn: $('btn-' + id), card: $('card-' + id), prog: $('prog-' + id) }; });
 
-const SEAL_CIRC = 2 * Math.PI * 42;
-$('seal-ring-fill').style.strokeDasharray = SEAL_CIRC;
-$('seal-ring-fill').style.strokeDashoffset = SEAL_CIRC;
 
 /* Clears only the ledger data; the saved geotag location and map are kept. */
 function clearLedgerData() {
@@ -898,13 +843,6 @@ function refreshUI() {
     } else if (count >= 5) e.card.classList.add('danger-met');
   });
 
-  const pct = Math.min(100, Math.round((totalTargetCount / TOTAL_TARGET) * 100));
-  $('seal-pct').textContent = pct + '%';
-  const ob = $('overall-bar'); ob.style.setProperty('--pct', pct + '%'); ob.setAttribute('aria-valuenow', pct);
-  $('seal-frac').textContent = `${totalTargetCount} / ${TOTAL_TARGET}`;
-  $('seal-ring-fill').style.strokeDashoffset = SEAL_CIRC - (Math.min(1, totalTargetCount / TOTAL_TARGET) * SEAL_CIRC);
-  const statusEl = $('summary-status');
-  if (statusEl) statusEl.textContent = targetsMetCount === 4 ? 'All 4 goals cleared!' : `${targetsMetCount} of 4 goals cleared`;
 }
 
 function showReport() {
@@ -992,7 +930,6 @@ themeToggle.addEventListener('change', () => {
 });
 function navDeck() { if (state.loginTime) hideReport(); }
 function navLogs() { if (state.loginTime) showReport(); }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') $('about-toggle').checked = false; });
 function resetApp() { openConfirmModal('reset', () => { clearLedgerData(); window.location.reload(); }); }   /* keeps geotag settings */
 window.onload = () => { applySavedTheme(); if (state.loginTime) doLogin(); else refreshUI(); };
 
@@ -1536,12 +1473,10 @@ if (navigator.getBattery) navigator.getBattery().then(b => { battery = b; ['leve
 function lsBytes() { let n = 0; try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); n += (k.length + (localStorage.getItem(k) || '').length) * 2; } } catch (e) {} return n; }
 function perfRender() {
   const n = netState(), p = battery ? Math.round(battery.level * 100) : null, b = lsBytes(), pct = Math.min(100, Math.round(b / 52428.8));
-  $('hdr-net').dataset.s = n; $('hdr-bat').textContent = p === null ? '' : p + '%';
   $('pf-bat').textContent = p === null ? 'Not supported on this browser' : p + '%' + (battery.charging ? ' (charging)' : '') + (autoSaverOn ? ', saver auto-on' : '');
   $('pf-net').textContent = n + (conn && conn.effectiveType ? ' (' + conn.effectiveType.toUpperCase() + ')' : '');
   $('pf-store').textContent = fmtB(b) + ' of ~5 MB';
   $('pf-bar').style.setProperty('--pct', pct + '%'); $('pf-bar').setAttribute('aria-valuenow', pct);
-  $('perf-btn').setAttribute('aria-label', 'Device and performance. Network ' + n + (p === null ? '' : ', battery ' + p + '%'));
 }
 function fpsStart() {
   cancelAnimationFrame(fpsRaf); let f = 0, t = performance.now();
