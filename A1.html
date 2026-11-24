@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>SBI Bank Ops - Target Ledger</title>
-<meta name="theme-color" content="#0c1220">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%232f6fe0'/%3E%3Ctext x='256' y='320' font-family='Arial,sans-serif' font-size='190' font-weight='800' text-anchor='middle' fill='%23fff'%3ESBI%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#1a0f0a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23d4520b'/%3E%3Ctext x='256' y='320' font-family='Arial,sans-serif' font-size='190' font-weight='800' text-anchor='middle' fill='%23fff'%3ESBI%3C/text%3E%3C/svg%3E">
 <link rel="manifest" id="manifest-link">
 <style>
 :root {
-  --ink:#5aa2ff; --ink-secondary:#2f6fe0; --ink-light:rgba(90,162,255,.14); --ink-glow:rgba(90,162,255,.30);
-  --bg-main:#0c1220; --paper:#131b2e; --paper-elevated:#1b2640; --paper-glass:#101828;
-  --text-main:#eef3fb; --text-muted:#8a97b3; --border:#243150; --border-active:#3b6fc4;
+  --ink:#ff9a4d; --ink-secondary:#d4520b; --ink-light:rgba(255,154,77,.14); --ink-glow:rgba(255,154,77,.30);
+  --bg-main:#1a0f0a; --paper:#251610; --paper-elevated:#33201a; --paper-glass:#1f120c;
+  --text-main:#fdf1e7; --text-muted:#b39683; --border:#43291d; --border-active:#c26a2e;
   --success:#34d399; --success-light:rgba(52,211,153,.14); --danger:#fb7185; --danger-light:rgba(251,113,133,.15);
   --radius-sm:10px; --radius-md:16px; --radius-lg:24px;
   --card-shadow:none; --btn-shadow:none;
@@ -19,11 +19,11 @@
   --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Roboto Mono",monospace;
 }
 body.light-theme {
-  --ink:#1f5fbf; --ink-secondary:#164a96; --ink-light:rgba(31,95,191,.10); --ink-glow:rgba(31,95,191,.20);
-  --bg-main:#f1f4f9; --paper:#fff; --paper-elevated:#eaf0f8; --paper-glass:#fff;
-  --text-main:#14202f; --text-muted:#66758c; --border:#dde4ef; --border-active:#9db9e6;
+  --ink:#d9570f; --ink-secondary:#b3430a; --ink-light:rgba(217,87,15,.10); --ink-glow:rgba(217,87,15,.20);
+  --bg-main:#fff6ee; --paper:#fff; --paper-elevated:#ffe9d6; --paper-glass:#fff;
+  --text-main:#2b1608; --text-muted:#8a6a52; --border:#f1dcc9; --border-active:#f0b27f;
   --success:#0f9d6e; --success-light:rgba(15,157,110,.10); --danger:#d63150; --danger-light:rgba(214,49,80,.10);
-  --card-shadow:0 1px 2px rgba(20,32,47,.06);
+  --card-shadow:0 1px 2px rgba(43,22,8,.08);
 }
 *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html { -webkit-font-smoothing: antialiased; }
@@ -168,7 +168,7 @@ header {
 
 /* MODALS */
 .overlay {
-  position: fixed; inset: 0; background: rgba(5,9,18,.72); opacity: 0; pointer-events: none;
+  position: fixed; inset: 0; background: rgba(12,6,2,.72); opacity: 0; pointer-events: none;
   transition: opacity .2s ease; z-index: 1000;
 }
 .overlay.show { opacity: 1; pointer-events: auto; }
@@ -224,7 +224,7 @@ header {
 
 /* SIGN-IN SIDE PANEL */
 .si-overlay {
-  position: fixed; inset: 0; background: rgba(5,9,18,.72); opacity: 0; pointer-events: none;
+  position: fixed; inset: 0; background: rgba(12,6,2,.72); opacity: 0; pointer-events: none;
   transition: opacity .2s ease; z-index: 1000;
 }
 .si-overlay.show { opacity: 1; pointer-events: auto; }
@@ -258,7 +258,7 @@ header {
 .gt-head-btn:active { transform: scale(.94); }
 .gt-head-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }
 .gt-overlay {
-  position: fixed; inset: 0; background: rgba(5,9,18,.72); opacity: 0; pointer-events: none;
+  position: fixed; inset: 0; background: rgba(12,6,2,.72); opacity: 0; pointer-events: none;
   transition: opacity .2s ease; z-index: 1000;
 }
 .gt-overlay.show { opacity: 1; pointer-events: auto; }
@@ -419,7 +419,7 @@ body { font-size:clamp(14px, 13px + .25vw, 16px); }
 .toast.show { opacity:1; }
 body:is(.saver, .reduce-motion) *, body:is(.saver, .reduce-motion) *::before, body:is(.saver, .reduce-motion) *::after { animation:none !important; transition:none !important; }
 body.saver .widget:hover, body.saver .quick-link-banner:hover, body.saver .w-btn:hover, body.saver .compact-btn:hover, body.saver .nav-item:hover, body.saver .gt-head-btn:hover { transform:none; box-shadow:none; filter:none; }
-body.saver:not(.light-theme) { --bg-main:#000; --paper:#070a11; --paper-glass:#000; --paper-elevated:#10151f; --border:#1a2336; }
+body.saver:not(.light-theme) { --bg-main:#000; --paper:#0b0705; --paper-glass:#000; --paper-elevated:#150e09; --border:#2a1a10; }
 body.saver .bottom-nav { box-shadow:none; }
 
 /* Compact target cards: all 6 fit on one screen without scrolling */
@@ -1522,7 +1522,7 @@ function loadPdfLibs() {
 /* Install-to-home-screen manifest, built inline so no extra files are needed */
 try {
   const icon = document.querySelector('link[rel="icon"]').href;
-  const mf = { name: 'SBI Ops Ledger', short_name: 'SBI Ledger', start_url: location.href.split('#')[0], display: 'standalone', background_color: '#0c1220', theme_color: '#0c1220', icons: [{ src: icon, sizes: 'any', type: 'image/svg+xml' }] };
+  const mf = { name: 'SBI Ops Ledger', short_name: 'SBI Ledger', start_url: location.href.split('#')[0], display: 'standalone', background_color: '#1a0f0a', theme_color: '#1a0f0a', icons: [{ src: icon, sizes: 'any', type: 'image/svg+xml' }] };
   $('manifest-link').href = URL.createObjectURL(new Blob([JSON.stringify(mf)], { type: 'application/manifest+json' }));
 } catch (e) {}
 </script>
