@@ -433,6 +433,48 @@ body.saver .bottom-nav { box-shadow:none; }
 #dashboard .widget .w-btn { height:28px; min-width:50px; padding:0 10px; font-size:11.5px; }
 #dashboard .widget .w-prog-track { height:4px; }
 @media (min-width:768px) { #dashboard .target-grid { grid-template-columns:repeat(3, 1fr); } }
+
+/* Colour palettes (default = Sunset Orange). Each has a dark and a light version. */
+body[data-palette="ocean"] { --ink:#5aa2ff; --ink-secondary:#2f6fe0; --ink-light:rgba(90,162,255,.14); --ink-glow:rgba(90,162,255,.28);
+  --bg-main:#0c1220; --paper:#131b2e; --paper-elevated:#1b2640; --paper-glass:#101828;
+  --text-main:#eef3fb; --text-muted:#8a97b3; --border:#243150; --border-active:#3b6fc4; }
+body[data-palette="ocean"].light-theme { --ink:#1f5fbf; --ink-secondary:#164a96; --ink-light:rgba(31,95,191,.14); --ink-glow:rgba(31,95,191,.28);
+  --bg-main:#f1f4f9; --paper:#fff; --paper-elevated:#eaf0f8; --paper-glass:#fff;
+  --text-main:#14202f; --text-muted:#66758c; --border:#dde4ef; --border-active:#9db9e6; }
+body[data-palette="teal"] { --ink:#2dd4bf; --ink-secondary:#0d9488; --ink-light:rgba(45,212,191,.14); --ink-glow:rgba(45,212,191,.28);
+  --bg-main:#08171a; --paper:#0f2428; --paper-elevated:#17343a; --paper-glass:#0b1d20;
+  --text-main:#ecfdfa; --text-muted:#84a9ad; --border:#1d4048; --border-active:#26a69a; }
+body[data-palette="teal"].light-theme { --ink:#0f766e; --ink-secondary:#0b5a54; --ink-light:rgba(15,118,110,.14); --ink-glow:rgba(15,118,110,.28);
+  --bg-main:#effaf8; --paper:#fff; --paper-elevated:#dff3f0; --paper-glass:#fff;
+  --text-main:#0f2a2c; --text-muted:#5b7f82; --border:#d2e8e5; --border-active:#7cc9c1; }
+body[data-palette="purple"] { --ink:#b794f6; --ink-secondary:#7c3aed; --ink-light:rgba(183,148,246,.14); --ink-glow:rgba(183,148,246,.28);
+  --bg-main:#140d24; --paper:#1d1433; --paper-elevated:#2a1d49; --paper-glass:#170f2a;
+  --text-main:#f3eefc; --text-muted:#a093bf; --border:#33264f; --border-active:#7b55c9; }
+body[data-palette="purple"].light-theme { --ink:#6d28d9; --ink-secondary:#5b21b6; --ink-light:rgba(109,40,217,.14); --ink-glow:rgba(109,40,217,.28);
+  --bg-main:#f6f2fd; --paper:#fff; --paper-elevated:#ece4fa; --paper-glass:#fff;
+  --text-main:#1c1230; --text-muted:#6f6388; --border:#e3daf3; --border-active:#b9a1ec; }
+body[data-palette="rose"] { --ink:#fb7ba6; --ink-secondary:#db2777; --ink-light:rgba(251,123,166,.14); --ink-glow:rgba(251,123,166,.28);
+  --bg-main:#1c0d14; --paper:#27131d; --paper-elevated:#3a1c2b; --paper-glass:#21101a;
+  --text-main:#fdeef4; --text-muted:#b995a5; --border:#4a2336; --border-active:#c4457a; }
+body[data-palette="rose"].light-theme { --ink:#db2777; --ink-secondary:#be185d; --ink-light:rgba(219,39,119,.14); --ink-glow:rgba(219,39,119,.28);
+  --bg-main:#fff1f6; --paper:#fff; --paper-elevated:#ffe0eb; --paper-glass:#fff;
+  --text-main:#2d1019; --text-muted:#8c5d70; --border:#f4d4e0; --border-active:#f2a0c0; }
+body[data-palette="gold"] { --ink:#f5c542; --ink-secondary:#b07a08; --ink-light:rgba(245,197,66,.14); --ink-glow:rgba(245,197,66,.28);
+  --bg-main:#0b0b0b; --paper:#151515; --paper-elevated:#212121; --paper-glass:#101010;
+  --text-main:#f7f3e8; --text-muted:#a39b86; --border:#2c2a22; --border-active:#a88420; }
+body[data-palette="gold"].light-theme { --ink:#a16207; --ink-secondary:#854d0e; --ink-light:rgba(161,98,7,.14); --ink-glow:rgba(161,98,7,.28);
+  --bg-main:#faf7ee; --paper:#fff; --paper-elevated:#f1ead3; --paper-glass:#fff;
+  --text-main:#231c0a; --text-muted:#7a6d4d; --border:#e8e0c6; --border-active:#d8b75a; }
+.pal-wrap { position:relative; display:inline-flex; }
+.pal-menu { position:fixed; top:58px; right:10px; z-index:1150; width:200px; padding:8px; border-radius:14px; background:var(--paper); border:1px solid var(--border); box-shadow:0 12px 30px rgba(0,0,0,.35); display:none; flex-direction:column; gap:2px; }
+.pal-menu.open { display:flex; }
+.pal-menu-title { font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); padding:4px 8px 6px; }
+.pal-opt { display:flex; align-items:center; gap:10px; width:100%; padding:8px; border:0; border-radius:10px; background:transparent; color:var(--text-main); font-size:13px; font-weight:600; cursor:pointer; text-align:left; }
+.pal-opt:hover, .pal-opt:focus-visible { background:var(--paper-elevated); outline:none; }
+.pal-opt[aria-checked="true"] { background:var(--ink-light); }
+.pal-sw { width:22px; height:22px; border-radius:50%; flex-shrink:0; border:2px solid var(--border); }
+.pal-opt[aria-checked="true"]::after { content:"\2713"; margin-left:auto; color:var(--ink); font-weight:800; }
+@media print { .pal-wrap { display:none !important; } }
 </style>
 </head>
 <body>
@@ -461,6 +503,12 @@ body.saver .bottom-nav { box-shadow:none; }
     <button type="button" class="tn-link" onclick="window.print()"><svg class="ic" aria-hidden="true"><use href="#i-print"/></svg>Print</button>
   </nav>
   <div class="head-tools">
+    <div class="pal-wrap">
+      <button type="button" id="pal-btn" class="gt-head-btn tip" data-tip="Colour theme" aria-label="Choose colour theme" aria-haspopup="true" aria-expanded="false" onclick="togglePalMenu(event)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.8 1.8-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.7 1.7-1.7H16a5 5 0 0 0 5-5c0-3.9-4-7.2-9-7.2z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></svg>
+      </button>
+      <div id="pal-menu" class="pal-menu" role="menu" aria-label="Colour themes"></div>
+    </div>
     <label class="theme-switch tip" data-tip="Dark / Light theme">
       <input type="checkbox" id="theme-toggle" role="switch" aria-label="Light theme">
       <span class="ts-track" aria-hidden="true"><span class="ts-thumb"></span><svg class="ic ts-moon"><use href="#i-moon"/></svg><svg class="ic ts-sun"><use href="#i-sun"/></svg></span>
@@ -805,17 +853,28 @@ function doLogin() {
   save();
 }
 
+/* Service buttons that also count as one Non-Financial transaction */
+const NONFIN_AUTO = new Set(['FORM 15 G/H Submission', 'ATM Card Issuance', 'Cheque Book Request', 'Re-KYC', 'Nominee update', 'Statement & Enquiry', 'Yono Reset Old']);
 function addSimple(cat) {
   state.counts[cat]++;
   state.logs.push({ id: state.logs.length + 1, cat, val: 'Auto (+1)', time: new Date().toLocaleTimeString() });
+  if (NONFIN_AUTO.has(cat)) {
+    state.counts['NON FINANCIAL']++;
+    state.logs.push({ id: state.logs.length + 1, cat: 'NON FINANCIAL', val: 'Auto (from ' + cat + ')', time: new Date().toLocaleTimeString(), auto: true });
+  }
   save();
 }
 
 function undoLast() {
   if (state.logs.length === 0) return;
-  const lastLog = state.logs.pop();
-  const baseMap = MAP.find(m => lastLog.cat === m.key || lastLog.cat.startsWith(m.key + ' '));
-  if (baseMap && state.counts[baseMap.key] > 0) state.counts[baseMap.key]--;
+  const undoOne = () => {
+    const lastLog = state.logs.pop();
+    const baseMap = MAP.find(m => lastLog.cat === m.key || lastLog.cat.startsWith(m.key + ' '));
+    if (baseMap && state.counts[baseMap.key] > 0) state.counts[baseMap.key]--;
+    return lastLog;
+  };
+  const removed = undoOne();
+  if (removed.auto && state.logs.length) undoOne();   /* auto Non-Financial entry: also undo the button press that caused it */
   save();
 }
 
@@ -922,12 +981,54 @@ function shareBranchReport() {
 const themeToggle = $('theme-toggle');
 function applySavedTheme() {
   let t = 'dark'; try { t = localStorage.getItem(LS_THEME) || 'dark'; } catch (e) {}
-  document.body.classList.toggle('light-theme', t === 'light'); themeToggle.checked = t === 'light';
+  document.body.classList.toggle('light-theme', t === 'light'); themeToggle.checked = t === 'light'; syncThemeColor();
 }
 themeToggle.addEventListener('change', () => {
   document.body.classList.toggle('light-theme', themeToggle.checked);
   try { localStorage.setItem(LS_THEME, themeToggle.checked ? 'light' : 'dark'); } catch (e) {}
+  syncThemeColor();
 });
+
+/* ===== Colour palettes ===== */
+const LS_PAL = 'sbi_palette';
+const PALETTES = [
+  { id: 'sunset', name: 'Sunset Orange', c1: '#ff9a4d', c2: '#1a0f0a' },
+  { id: 'ocean',  name: 'Ocean Blue',    c1: '#5aa2ff', c2: '#0c1220' },
+  { id: 'teal',   name: 'Teal',          c1: '#2dd4bf', c2: '#08171a' },
+  { id: 'purple', name: 'Royal Purple',  c1: '#b794f6', c2: '#140d24' },
+  { id: 'rose',   name: 'Rose Pink',     c1: '#fb7ba6', c2: '#1c0d14' },
+  { id: 'gold',   name: 'Black & Gold',  c1: '#f5c542', c2: '#0b0b0b' }
+];
+function syncThemeColor() {
+  try { const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = getComputedStyle(document.body).getPropertyValue('--bg-main').trim() || m.content; } catch (e) {}
+}
+function applyPalette(id) {
+  if (!PALETTES.some(p => p.id === id)) id = 'sunset';
+  if (id === 'sunset') document.body.removeAttribute('data-palette'); else document.body.setAttribute('data-palette', id);
+  document.querySelectorAll('.pal-opt').forEach(b => b.setAttribute('aria-checked', b.dataset.id === id ? 'true' : 'false'));
+  syncThemeColor();
+}
+function buildPalMenu() {
+  const m = $('pal-menu');
+  m.innerHTML = '<div class="pal-menu-title">Colour theme</div>' + PALETTES.map(p =>
+    `<button type="button" class="pal-opt" role="menuitemradio" aria-checked="false" data-id="${p.id}"><span class="pal-sw" style="background:linear-gradient(135deg,${p.c1} 50%,${p.c2} 50%)"></span>${p.name}</button>`).join('');
+  m.addEventListener('click', e => {
+    const b = e.target.closest('.pal-opt'); if (!b) return;
+    applyPalette(b.dataset.id);
+    try { localStorage.setItem(LS_PAL, b.dataset.id); } catch (err) {}
+    closePalMenu();
+  });
+}
+function togglePalMenu(e) {
+  if (e) e.stopPropagation();
+  const m = $('pal-menu'), open = !m.classList.contains('open');
+  m.classList.toggle('open', open); $('pal-btn').setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+function closePalMenu() { $('pal-menu').classList.remove('open'); $('pal-btn').setAttribute('aria-expanded', 'false'); }
+document.addEventListener('click', e => { if (!e.target.closest('.pal-wrap')) closePalMenu(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePalMenu(); });
+buildPalMenu();
+(function () { let p = 'sunset'; try { p = localStorage.getItem(LS_PAL) || 'sunset'; } catch (e) {} applyPalette(p); })();
 function navDeck() { if (state.loginTime) hideReport(); }
 function navLogs() { if (state.loginTime) showReport(); }
 function resetApp() { openConfirmModal('reset', () => { clearLedgerData(); window.location.reload(); }); }   /* keeps geotag settings */
@@ -969,7 +1070,7 @@ try { actionStack = JSON.parse(localStorage.getItem(LS_STACK)) || []; } catch (e
 function saveStack() { try { localStorage.setItem(LS_STACK, JSON.stringify(actionStack)); } catch (e) {} }
 
 const _addSimple = addSimple;
-addSimple = function (cat) { _addSimple(cat); actionStack.push('log'); saveStack(); };
+addSimple = function (cat) { const n0 = state.logs.length; _addSimple(cat); for (let i = n0; i < state.logs.length; i++) actionStack.push('log'); saveStack(); };
 
 function addNetSourcing() {
   netSourcing++;
@@ -985,7 +1086,11 @@ undoLast = function () {
     netSourcing--;
     try { localStorage.setItem(LS_NS, netSourcing); } catch (e) {}
     $('ns-count').textContent = netSourcing; refreshUI();
-  } else _undoLast();
+  } else {
+    const l = state.logs[state.logs.length - 1];
+    if (top === 'log' && l && l.auto && actionStack[actionStack.length - 1] === 'log') { actionStack.pop(); saveStack(); }
+    _undoLast();
+  }
 };
 
 const _refreshUI = refreshUI;
