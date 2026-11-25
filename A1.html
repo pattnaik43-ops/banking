@@ -13,7 +13,7 @@
   --bg-main:#12060c; --paper:#1f0d16; --paper-elevated:#2b121f; --paper-glass:#180910; --paper-solid:#220e18;
   --text-main:#fff1f4; --text-muted:#d6a3b0; --border:rgba(255,255,255,.12); --border-active:rgba(253,164,175,.55);
   --grad:linear-gradient(135deg,#e11d48,#f472b6);
-  --bg-glow:radial-gradient(90% 45% at 50% 0%,rgba(225,29,72,.22),transparent 75%);
+  --bg-glow:radial-gradient(95% 45% at 50% 0%,rgba(225,29,72,.24),transparent 75%);
   --success:#34d399; --success-light:rgba(52,211,153,.14); --success-border:rgba(52,211,153,.48);
   --warn:#fbbf24; --warn-light:rgba(251,191,36,.14); --warn-border:rgba(251,191,36,.48);
   --danger:#fb7185; --danger-light:rgba(251,113,133,.16);
@@ -22,98 +22,82 @@
   --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Roboto Mono",monospace;
 }
 
-/* ===== 16 AMOLED-TUNED DARK THEMES (Zero GPU Lag) ===== */
-/* 1. Blush Rose */
+/* ===== 16 AMOLED-TUNED DARK THEMES (Zero GPU Lag for Samsung F15) ===== */
 body[data-palette="blush"] { --ink:#fda4af; --ink-secondary:#e11d48; --ink-light:rgba(253,164,175,.15); --ink-glow:rgba(244,63,94,.28);
   --bg-main:#12060c; --paper:#1f0d16; --paper-elevated:#2b121f; --paper-glass:#180910; --paper-solid:#220e18;
   --text-main:#fff1f4; --text-muted:#d6a3b0; --border:rgba(255,255,255,.12); --border-active:rgba(253,164,175,.55);
   --grad:linear-gradient(135deg,#e11d48,#f472b6); --bg-glow:radial-gradient(95% 45% at 50% 0%,rgba(225,29,72,.24),transparent 75%); }
 
-/* 2. Lavender Mist */
 body[data-palette="lavender"] { --ink:#d8b4fe; --ink-secondary:#7c3aed; --ink-light:rgba(216,180,254,.15); --ink-glow:rgba(168,85,247,.28);
   --bg-main:#0e081a; --paper:#1a102e; --paper-elevated:#241740; --paper-glass:#130b24; --paper-solid:#1c1133;
   --text-main:#f7f2ff; --text-muted:#b8a6d9; --border:rgba(255,255,255,.12); --border-active:rgba(216,180,254,.55);
   --grad:linear-gradient(135deg,#7c3aed,#c084fc); --bg-glow:radial-gradient(95% 45% at 50% 0%,rgba(124,58,237,.25),transparent 75%); }
 
-/* 3. Botanical Sage */
 body[data-palette="sage"] { --ink:#86efac; --ink-secondary:#3d7a5c; --ink-light:rgba(134,239,172,.14); --ink-glow:rgba(74,148,112,.26);
   --bg-main:#07100c; --paper:#102119; --paper-elevated:#172e23; --paper-glass:#0b1711; --paper-solid:#12241c;
   --text-main:#f2faf5; --text-muted:#9ab8a7; --border:rgba(255,255,255,.12); --border-active:rgba(134,239,172,.50);
   --grad:linear-gradient(135deg,#3d7a5c,#c96a4b); --bg-glow:radial-gradient(95% 45% at 50% 0%,rgba(61,122,92,.24),transparent 75%); }
 
-/* 4. Champagne Gold */
 body[data-palette="champagne"] { --ink:#fcd34d; --ink-secondary:#b47b2b; --ink-light:rgba(252,211,77,.14); --ink-glow:rgba(212,163,89,.26);
   --bg-main:#100b06; --paper:#1f160d; --paper-elevated:#2b1f12; --paper-glass:#160f09; --paper-solid:#241a0f;
   --text-main:#fdf8ef; --text-muted:#c7b497; --border:rgba(255,255,255,.12); --border-active:rgba(252,211,77,.50);
   --grad:linear-gradient(135deg,#b47b2b,#dfb165); --bg-glow:radial-gradient(95% 45% at 50% 0%,rgba(180,123,43,.24),transparent 75%); }
 
-/* 5. Midnight Velvet */
 body[data-palette="velvet"] { --ink:#f2b8c6; --ink-secondary:#b85d79; --ink-light:rgba(242,184,198,.15); --ink-glow:rgba(226,169,184,.28);
   --bg-main:#0f0c17; --paper:#1b1529; --paper-elevated:#251d38; --paper-glass:#14101f; --paper-solid:#1e182e;
   --text-main:#fcf7fa; --text-muted:#c9b2be; --border:rgba(242,184,198,.15); --border-active:rgba(242,184,198,.55);
   --grad:linear-gradient(135deg,#b85d79,#8b5cf6); --bg-glow:radial-gradient(95% 45% at 50% 0%,rgba(184,93,121,.25),transparent 75%); }
 
-/* 6. Sunset Blaze */
 body[data-palette="sunset"] { --ink:#ffa94d; --ink-secondary:#ea580c; --ink-light:rgba(255,169,77,.15); --ink-glow:rgba(255,169,77,.28);
   --bg-main:#120716; --paper:#220e21; --paper-elevated:#2e132d; --paper-glass:#18091a; --paper-solid:#240e22;
   --text-main:#fff3ea; --text-muted:#d1a9a6; --border:rgba(255,255,255,.12); --border-active:rgba(255,169,77,.55);
   --grad:linear-gradient(135deg,#ea580c,#db2777); --bg-glow:radial-gradient(95% 45% at 50% 0%,rgba(234,88,12,.25),transparent 75%); }
 
-/* 7. Aurora */
 body[data-palette="aurora"] { --ink:#5eead4; --ink-secondary:#0d9488; --ink-light:rgba(94,234,212,.15); --ink-glow:rgba(94,234,212,.28);
   --bg-main:#030c12; --paper:#071a26; --paper-elevated:#0c2536; --paper-glass:#05121a; --paper-solid:#081e2b;
   --text-main:#eafff9; --text-muted:#8fb5b8; --border:rgba(255,255,255,.12); --border-active:rgba(94,234,212,.55);
   --grad:linear-gradient(135deg,#0d9488,#6366f1); --bg-glow:radial-gradient(95% 45% at 50% 0%,rgba(13,148,136,.25),transparent 75%); }
 
-/* 8. Neon Cyber */
 body[data-palette="neon"] { --ink:#22d3ee; --ink-secondary:#c026d3; --ink-light:rgba(34,211,238,.15); --ink-glow:rgba(34,211,238,.28);
   --bg-main:#05030a; --paper:#0e081f; --paper-elevated:#160d2e; --paper-glass:#080512; --paper-solid:#100922;
   --text-main:#f1eaff; --text-muted:#a393c9; --border:rgba(255,255,255,.12); --border-active:rgba(34,211,238,.55);
   --grad:linear-gradient(135deg,#c026d3,#0891b2); --bg-glow:radial-gradient(95% 45% at 50% 0%,rgba(192,38,211,.24),transparent 75%); }
 
-/* 9. Deep Ocean */
 body[data-palette="ocean"] { --ink:#67e8f9; --ink-secondary:#0e7490; --ink-light:rgba(103,232,249,.15); --ink-glow:rgba(103,232,249,.28);
   --bg-main:#020d18; --paper:#051c33; --paper-elevated:#082747; --paper-glass:#031324; --paper-solid:#06203a;
   --text-main:#e8f8ff; --text-muted:#88b0c4; --border:rgba(255,255,255,.12); --border-active:rgba(103,232,249,.55);
   --grad:linear-gradient(135deg,#0e7490,#2563eb); --bg-glow:radial-gradient(95% 45% at 50% 0%,rgba(14,116,144,.25),transparent 75%); }
 
-/* 10. Cosmic Galaxy */
 body[data-palette="galaxy"] { --ink:#c4b5fd; --ink-secondary:#6d28d9; --ink-light:rgba(196,181,253,.15); --ink-glow:rgba(196,181,253,.28);
   --bg-main:#050312; --paper:#100a29; --paper-elevated:#180f3d; --paper-glass:#09051a; --paper-solid:#120b2e;
   --text-main:#f1ecff; --text-muted:#a99dcc; --border:rgba(255,255,255,.12); --border-active:rgba(196,181,253,.55);
   --grad:linear-gradient(135deg,#6d28d9,#c026d3); --bg-glow:radial-gradient(95% 45% at 50% 0%,rgba(109,40,217,.26),transparent 75%); }
 
-/* 11. Candy Pop */
 body[data-palette="candy"] { --ink:#ff8cc6; --ink-secondary:#db2777; --ink-light:rgba(255,140,198,.15); --ink-glow:rgba(255,140,198,.28);
   --bg-main:#120a21; --paper:#21123b; --paper-elevated:#2d194f; --paper-glass:#170d29; --paper-solid:#241440;
   --text-main:#fff1fa; --text-muted:#c3a6c9; --border:rgba(255,255,255,.12); --border-active:rgba(255,140,198,.55);
   --grad:linear-gradient(135deg,#db2777,#7c3aed); --bg-glow:radial-gradient(95% 45% at 50% 0%,rgba(219,39,119,.25),transparent 75%); }
 
-/* 12. Emerald Forest */
 body[data-palette="forest"] { --ink:#a3e635; --ink-secondary:#15803d; --ink-light:rgba(163,230,53,.15); --ink-glow:rgba(163,230,53,.28);
   --bg-main:#030d08; --paper:#072115; --paper-elevated:#0b301f; --paper-glass:#04140c; --paper-solid:#082618;
   --text-main:#effff4; --text-muted:#8db79c; --border:rgba(255,255,255,.12); --border-active:rgba(163,230,53,.55);
   --grad:linear-gradient(135deg,#15803d,#0d9488); --bg-glow:radial-gradient(95% 45% at 50% 0%,rgba(21,128,61,.25),transparent 75%); }
 
-/* 13. Gold Luxe */
 body[data-palette="gold"] { --ink:#f5c542; --ink-secondary:#92400e; --ink-light:rgba(245,197,66,.15); --ink-glow:rgba(245,197,66,.28);
   --bg-main:#080603; --paper:#171108; --paper-elevated:#241b0c; --paper-glass:#0d0a05; --paper-solid:#1a1309;
   --text-main:#fbf5e4; --text-muted:#b3a785; --border:rgba(255,255,255,.12); --border-active:rgba(245,197,66,.55);
   --grad:linear-gradient(135deg,#92400e,#b8860b); --bg-glow:radial-gradient(95% 45% at 50% 0%,rgba(180,83,9,.24),transparent 75%); }
 
-/* 14. Crimson Ruby */
 body[data-palette="ruby"] { --ink:#fb7185; --ink-secondary:#be123c; --ink-light:rgba(251,113,133,.15); --ink-glow:rgba(225,29,72,.30);
   --bg-main:#100407; --paper:#210910; --paper-elevated:#2e0d16; --paper-glass:#140509; --paper-solid:#240a11;
   --text-main:#fff1f3; --text-muted:#d99ca6; --border:rgba(251,113,133,.15); --border-active:rgba(251,113,133,.55);
   --grad:linear-gradient(135deg,#be123c,#f43f5e); --bg-glow:radial-gradient(95% 45% at 50% 0%,rgba(190,18,60,.26),transparent 75%); }
 
-/* 15. Peacock Sapphire */
 body[data-palette="sapphire"] { --ink:#38bdf8; --ink-secondary:#0284c7; --ink-light:rgba(56,189,248,.15); --ink-glow:rgba(14,165,233,.28);
   --bg-main:#040914; --paper:#09152e; --paper-elevated:#0f2045; --paper-glass:#060d1f; --paper-solid:#0a1733;
   --text-main:#eff8ff; --text-muted:#93b4d4; --border:rgba(56,189,248,.15); --border-active:rgba(56,189,248,.55);
   --grad:linear-gradient(135deg,#0284c7,#14b8a6); --bg-glow:radial-gradient(95% 45% at 50% 0%,rgba(2,132,199,.25),transparent 75%); }
 
-/* 16. Orchid Plum */
 body[data-palette="orchid"] { --ink:#f472b6; --ink-secondary:#a21caf; --ink-light:rgba(244,114,182,.15); --ink-glow:rgba(217,70,239,.28);
   --bg-main:#110617; --paper:#220c2b; --paper-elevated:#2f113b; --paper-glass:#16081c; --paper-solid:#240d2e;
   --text-main:#fdf2ff; --text-muted:#cca3d6; --border:rgba(244,114,182,.15); --border-active:rgba(244,114,182,.55);
@@ -137,7 +121,7 @@ body {
 .mono { font-family: var(--font-mono); }
 .ic { stroke: currentColor; fill: none; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; width: 17px; height: 17px; }
 
-/* HEADER (Optimized for Samsung F15 360px width + One UI status bar) */
+/* HEADER */
 header {
   position: sticky; top: 0; z-index: 50; flex-shrink: 0;
   background: var(--paper-glass);
@@ -179,7 +163,7 @@ header {
 }
 .head-icon-btn:active { transform: scale(.93); }
 
-/* FRICTION-FREE LANDING */
+/* LANDING / LOGIN */
 #login-page {
   flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px;
 }
@@ -201,7 +185,25 @@ header {
 .welcome-actions { display: flex; flex-direction: column; gap: 10px; }
 .welcome-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-/* MAIN DASHBOARD (Hardware-accelerated scrolling for F15 90Hz) */
+/* 2-STEP SIGN-IN SIDE PANEL */
+.si-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.78); opacity: 0; pointer-events: none;
+  transition: opacity .2s ease; z-index: 1050;
+}
+.si-overlay.show { opacity: 1; pointer-events: auto; }
+.si-panel {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(350px, 88%);
+  background: var(--paper-solid); border-left: 1.5px solid var(--border);
+  padding: max(24px, env(safe-area-inset-top)) 18px max(24px, env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; justify-content: center;
+  transform: translate3d(100%,0,0); transition: transform .22s cubic-bezier(.16,1,.3,1);
+}
+.si-overlay.show .si-panel { transform: translate3d(0,0,0); }
+.si-panel h3 { font-size: 1.2rem; font-weight: 800; margin: 0 0 8px; text-align: center; }
+.si-panel p { color: var(--text-muted); font-size: 13px; text-align: center; margin: 0 0 18px; }
+.si-error { color: var(--danger); font-size: 12px; font-weight: 700; text-align: center; margin: -4px 0 12px; }
+
+/* MAIN DASHBOARD */
 #dashboard {
   flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -243,7 +245,7 @@ header {
 .q-link span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .q-arrow { color: var(--ink); font-weight: 800; font-size: 14px; }
 
-/* 3. UNIFIED 21-CARD TAP GRID (Layout-contained for 0ms reflow on F15) */
+/* 3. UNIFIED 21-CARD TAP GRID */
 .ops-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 @media (min-width: 620px) { .ops-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; } }
 @media (min-width: 880px) { .ops-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; } }
@@ -269,7 +271,10 @@ header {
 
 .ops-top { display: flex; align-items: center; justify-content: space-between; gap: 4px; }
 .ops-title-wrap { display: flex; align-items: center; gap: 5px; min-width: 0; }
-.ops-ic { font-size: 15px; line-height: 1; flex-shrink: 0; }
+.ops-num {
+  font-family: var(--font-mono); font-size: 9.5px; font-weight: 800; color: var(--ink);
+  opacity: .85; flex-shrink: 0;
+}
 .ops-name { font-size: 12px; font-weight: 800; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ops-tag {
   font-family: var(--font-mono); font-size: 9px; font-weight: 800;
@@ -307,20 +312,20 @@ header {
 }
 .ops-card.flash-nf .auto-flash { opacity: 1; }
 
-/* 4. ONE UI BOTTOM GESTURE-SAFE THUMB DOCK */
+/* 4. ONE UI BOTTOM THUMB DOCK (UNDO, LOGS, SHARE, BRANCH, MORE) */
 .bottom-dock-wrapper {
   position: fixed; bottom: max(8px, env(safe-area-inset-bottom)); left: 0; right: 0;
-  display: flex; justify-content: center; pointer-events: none; z-index: 100; padding: 0 10px;
+  display: flex; justify-content: center; pointer-events: none; z-index: 100; padding: 0 8px;
 }
 .bottom-nav {
   background: var(--paper-glass);
   border: 1.5px solid var(--border); border-radius: 22px;
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 5px;
-  width: 100%; max-width: 440px; box-shadow: 0 8px 24px rgba(0,0,0,.65); pointer-events: auto;
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; padding: 5px;
+  width: 100%; max-width: 460px; box-shadow: 0 8px 24px rgba(0,0,0,.65); pointer-events: auto;
 }
 .nav-item {
-  height: 48px; border: none; border-radius: 16px; background: transparent;
-  color: var(--text-main); font-size: 11px; font-weight: 800; cursor: pointer;
+  height: 48px; border: none; border-radius: 15px; background: transparent;
+  color: var(--text-main); font-size: 10.5px; font-weight: 800; cursor: pointer;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
 }
 .nav-item:active { transform: scale(.94); background: var(--ink-light); }
@@ -329,7 +334,7 @@ header {
   background: var(--grad); color: #fff;
 }
 
-/* MODALS & SHEETS (Fast GPU translateY) */
+/* MODALS & SHEETS */
 .overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,.78);
   opacity: 0; pointer-events: none; transition: opacity .18s ease; z-index: 1000;
@@ -457,7 +462,7 @@ body.saver { --bg-main: #000 !important; --paper: #0b0b0b !important; --paper-el
   @page { margin: 12mm; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body { background: #fff !important; color: #000 !important; height: auto !important; overflow: visible !important; display: block; }
-  header, .bottom-dock-wrapper, .overlay, #login-page, .report-top-bar, .quick-strip, .mini-btn, .tap-badge { display: none !important; }
+  header, .bottom-dock-wrapper, .overlay, .si-overlay, #login-page, .report-top-bar, .quick-strip, .mini-btn, .tap-badge { display: none !important; }
   #dashboard, #report-page { height: auto; overflow: visible; max-width: none; padding: 0; }
   .ops-grid { grid-template-columns: repeat(3, 1fr); }
   .ops-card { break-inside: avoid; border: 1px solid #999; background: #fff !important; color: #000 !important; }
@@ -469,6 +474,7 @@ body.saver { --bg-main: #000 !important; --paper: #0b0b0b !important; --paper-el
   <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></symbol>
   <symbol id="i-logs" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></symbol>
   <symbol id="i-wa" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></symbol>
+  <symbol id="i-branch" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><path d="M9 11h.01M15 11h.01M9 15h.01M15 15h.01"/></symbol>
   <symbol id="i-more" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/><circle cx="5" cy="12" r="1.5"/></symbol>
   <symbol id="i-cam" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></symbol>
 </defs></svg>
@@ -494,18 +500,38 @@ body.saver { --bg-main: #000 !important; --paper: #0b0b0b !important; --paper-el
   </div>
 </header>
 
-<!-- FRICTION-FREE LANDING -->
+<!-- LANDING PAGE -->
 <div id="login-page">
   <div class="welcome-card">
     <div class="login-seal">SBI</div>
     <h1>Ops Command Deck</h1>
-    <div class="welcome-sub">Komtalpeta // Node 17978</div>
+    <div class="welcome-sub">Komtalpeta // 17978</div>
     <div class="welcome-actions">
-      <button type="button" class="modal-btn primary" onclick="doLogin()">Open Ops Deck ✨</button>
+      <button type="button" class="modal-btn primary" onclick="openSignInPanel()">Boot Ledger →</button>
       <div class="welcome-row">
         <button type="button" class="modal-btn cancel" style="margin:0" onclick="openPalSheet()">🎨 Themes (16)</button>
         <button type="button" class="modal-btn cancel" style="margin:0" onclick="openGeoPanel()">📸 Geotag</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2-STEP SIGN-IN CONFIRMATION PANEL -->
+<div id="si-overlay" class="si-overlay" onclick="closeSignInPanel(event)">
+  <div class="si-panel" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="si-heading">
+    <div id="si-step1">
+      <h3 id="si-heading">Did you sign in to the application?</h3>
+      <p>Please confirm before starting the ledger.</p>
+      <button type="button" class="modal-btn primary" onclick="signInYes()">Yes</button>
+      <button type="button" class="modal-btn cancel" style="margin-bottom:0" onclick="closeSignInPanel()">No</button>
+    </div>
+    <div id="si-step2" class="hidden">
+      <h3>Please reconfirm</h3>
+      <p>Type YES below to enter the ledger.</p>
+      <input type="text" id="si-field" class="input-field" aria-label="Type YES to confirm" placeholder="Type YES" autocomplete="off">
+      <div id="si-error" class="si-error hidden" role="alert">Please type YES to continue.</div>
+      <button type="button" class="modal-btn primary" onclick="signInConfirm()">Confirm</button>
+      <button type="button" class="modal-btn cancel" style="margin-bottom:0" onclick="closeSignInPanel()">Cancel</button>
     </div>
   </div>
 </div>
@@ -548,11 +574,11 @@ body.saver { --bg-main: #000 !important; --paper: #0b0b0b !important; --paper-el
     </a>
   </div>
 
-  <!-- 3. Unified 21-Card Tap Grid -->
+  <!-- 3. Swapped 21-Card Tap Grid -->
   <div class="ops-grid" id="ops-grid"></div>
 </div>
 
-<!-- 4. ONE UI BOTTOM THUMB DOCK -->
+<!-- 4. ONE UI BOTTOM THUMB DOCK (UNDO, LOGS, SHARE, BRANCH, MORE) -->
 <div class="bottom-dock-wrapper">
   <nav class="bottom-nav hidden" id="bottom-nav" aria-label="Primary actions">
     <button type="button" id="btn-undo" class="nav-item" onclick="undoLast()" disabled>
@@ -563,9 +589,13 @@ body.saver { --bg-main: #000 !important; --paper: #0b0b0b !important; --paper-el
       <svg class="ic" aria-hidden="true"><use href="#i-logs"/></svg>
       <span>Logs</span>
     </button>
-    <button type="button" class="nav-item primary-nav" onclick="openShareSheet()">
+    <button type="button" class="nav-item primary-nav" onclick="shareWA()">
       <svg class="ic" aria-hidden="true"><use href="#i-wa"/></svg>
-      <span>WhatsApp</span>
+      <span>Share</span>
+    </button>
+    <button type="button" class="nav-item" onclick="openBranchShareModal()">
+      <svg class="ic" aria-hidden="true"><use href="#i-branch"/></svg>
+      <span>Branch</span>
     </button>
     <button type="button" class="nav-item" onclick="openMoreSheet()">
       <svg class="ic" aria-hidden="true"><use href="#i-more"/></svg>
@@ -581,7 +611,7 @@ body.saver { --bg-main: #000 !important; --paper: #0b0b0b !important; --paper-el
     <button type="button" class="modal-btn primary" style="margin:0; padding:0 18px" onclick="window.print()">🖨️ Print</button>
   </div>
   <div class="report-section">
-    <h4>Daily Summary</h4>
+    <h4>Daily Summary (1–21)</h4>
     <table class="report-table" id="summary-table"></table>
   </div>
   <div class="report-section">
@@ -590,28 +620,20 @@ body.saver { --bg-main: #000 !important; --paper: #0b0b0b !important; --paper-el
   </div>
 </div>
 
-<!-- UNIFIED WHATSAPP SHARE SHEET -->
-<div id="share-overlay" class="overlay" onclick="closeSheet('share-overlay', event)">
-  <div class="bottom-sheet" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="share-sheet-title">
+<!-- BRANCH REPORT SHEET (CC CALLING & FEEDBACK ONLY) -->
+<div id="branch-share-overlay" class="overlay" onclick="closeSheet('branch-share-overlay', event)">
+  <div class="bottom-sheet" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="branch-sheet-title">
     <div class="sheet-head">
-      <h3 id="share-sheet-title">📲 WhatsApp Reporting</h3>
-      <button type="button" class="sheet-x" onclick="closeSheet('share-overlay')" aria-label="Close">✕</button>
+      <h3 id="branch-sheet-title">🏦 Branch Report</h3>
+      <button type="button" class="sheet-x" onclick="closeSheet('branch-share-overlay')" aria-label="Close">✕</button>
     </div>
-    <button type="button" class="modal-btn primary" onclick="shareWA()">Send Full Daily Data Report (21 Items)</button>
-    <div style="border-top:1px solid var(--border); margin:12px 0 10px; padding-top:10px;">
-      <div style="font-size:12px; font-weight:800; margin-bottom:8px;">Quick Branch Report (CC &amp; NPS)</div>
-      <div class="btn-grid-2">
-        <div>
-          <label class="field-label" for="branch-cc">Contact Centre (CC)</label>
-          <input type="number" id="branch-cc" class="input-field" placeholder="0" min="0" step="1" inputmode="numeric">
-        </div>
-        <div>
-          <label class="field-label" for="branch-nps">NPS (Feedback)</label>
-          <input type="number" id="branch-nps" class="input-field" placeholder="0" min="0" step="1" inputmode="numeric">
-        </div>
-      </div>
-      <button type="button" class="modal-btn cancel" style="margin-bottom:0" onclick="shareBranchReport()">Send Branch CC/NPS Report</button>
-    </div>
+    <p style="color:var(--text-muted); font-size:12px; margin:-4px 0 14px;">Enter values for CC Calling and Feedback (leave blank for 0).</p>
+    <label class="field-label" for="branch-cc">Contact Centre (CC)</label>
+    <input type="number" id="branch-cc" class="input-field" placeholder="0" min="0" step="1" inputmode="numeric">
+    <label class="field-label" for="branch-nps">NPS (Feedback)</label>
+    <input type="number" id="branch-nps" class="input-field" placeholder="0" min="0" step="1" inputmode="numeric">
+    <button type="button" class="modal-btn primary" onclick="shareBranchReport()">Send via WhatsApp</button>
+    <button type="button" class="modal-btn cancel" style="margin-bottom:0" onclick="closeSheet('branch-share-overlay')">Cancel</button>
   </div>
 </div>
 
@@ -661,7 +683,7 @@ body.saver { --bg-main: #000 !important; --paper: #0b0b0b !important; --paper-el
   </div>
 </div>
 
-<!-- CONFIRM SHEET -->
+<!-- CONFIRM SHEET (RESET / PDF) -->
 <div id="confirm-overlay" class="overlay" onclick="closeSheet('confirm-overlay', event)">
   <div class="bottom-sheet" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
     <h3 id="confirm-title" style="text-align:center; margin:0 0 8px;">Confirm Action</h3>
@@ -777,42 +799,72 @@ body.saver { --bg-main: #000 !important; --paper: #0b0b0b !important; --paper-el
 <script>
 const LS_STATE = 'sbi_v20_dark_v4', LS_STACK = 'sbi_action_stack', LS_PAL = 'sbi_palette';
 
-const ITEMS = [
-  { key: 'Yono SBI', id: 'yono', label: 'YONO Reg.', icon: '📱', target: 5 },
-  { key: 'WhatsApp', id: 'wa', label: 'WhatsApp Reg.', icon: '💬', target: 15 },
-  { key: 'Contact Centre', id: 'contact', label: 'Contact Ctr', icon: '☎️', target: 10 },
-  { key: 'NPS', id: 'nps', label: 'NPS Feedback', icon: '⭐', target: 10 },
-
-  { key: 'FORM 15 G/H Submission', id: 'form15', label: 'Form 15 G/H', icon: '📄', autoNonFin: true },
-  { key: 'ATM Card Issuance', id: 'atm', label: 'ATM Card Issue', icon: '🏧', autoNonFin: true },
-  { key: 'Cheque Book Request', id: 'cheque', label: 'Cheque Book', icon: '📘', autoNonFin: true },
-  { key: 'Re-KYC', id: 'cm', label: 'Re-KYC Update', icon: '🪪', autoNonFin: true },
-  { key: 'Nominee update', id: 'nominee', label: 'Nominee Update', icon: '👥', autoNonFin: true },
-  { key: 'Statement & Enquiry', id: 'stmt', label: 'Stmt & Enquiry', icon: '🔍', autoNonFin: true },
-  { key: 'Yono Reset Old', id: 'resetold', label: 'YONO Reset Old', icon: '🔄', autoNonFin: true },
-
-  { key: 'FINANCIAL TRANSACTION', id: 'fin', label: 'Financial Txn', icon: '💸' },
-  { key: 'NON FINANCIAL', id: 'nonfin', label: 'Non-Financial', icon: '📋' },
-  { key: 'Upto 40000 Deposit', id: 'dep40', label: '≤40k Deposit', icon: '📥' },
-  { key: 'Upto 40000 Widrawl', id: 'wd40', label: '≤40k Withdraw', icon: '📤' },
-  { key: 'Upto 40000 Transfer', id: 'tr40', label: '≤40k Transfer', icon: '🔁' },
-  { key: 'Above 40000 Transfer', id: 'trabove40', label: '>40k Transfer', icon: '🚀' },
-  { key: 'SB Account opening/Funding', id: 'sbac', label: 'SB Acc / Fund', icon: '🏦' },
-  { key: 'CBDC', id: 'cbdc', label: 'CBDC', icon: '🪙' },
-  { key: 'FD Through yono', id: 'fd', label: 'FD via YONO', icon: '📈' },
-  { key: 'PAI', id: 'pai', label: 'PAI', icon: '🛡️' }
+/* CANONICAL 1-21 SERIAL ORDER FOR WHATSAPP REPORT & PDF SUMMARY */
+const REPORT_ITEMS = [
+  { num: 1,  key: 'Yono SBI',                  id: 'yono',      label: 'YONO Reg.',       target: 5 },
+  { num: 2,  key: 'WhatsApp',                  id: 'wa',        label: 'WhatsApp Reg.',   target: 15 },
+  { num: 3,  key: 'Contact Centre',            id: 'contact',   label: 'Contact Ctr',     target: 10 },
+  { num: 4,  key: 'NPS',                       id: 'nps',       label: 'NPS Feedback',    target: 10 },
+  { num: 5,  key: 'FORM 15 G/H Submission',    id: 'form15',    label: 'Form 15 G/H',     autoNonFin: true },
+  { num: 6,  key: 'ATM Card Issuance',         id: 'atm',       label: 'ATM Card Issue',  autoNonFin: true },
+  { num: 7,  key: 'Cheque Book Request',       id: 'cheque',    label: 'Cheque Book',     autoNonFin: true },
+  { num: 8,  key: 'Re-KYC',                    id: 'cm',        label: 'Re-KYC Update',   autoNonFin: true },
+  { num: 9,  key: 'Nominee update',            id: 'nominee',   label: 'Nominee Update',  autoNonFin: true },
+  { num: 10, key: 'Statement & Enquiry',       id: 'stmt',      label: 'Stmt & Enquiry',  autoNonFin: true },
+  { num: 11, key: 'FINANCIAL TRANSACTION',     id: 'fin',       label: 'Financial Txn' },
+  { num: 12, key: 'NON FINANCIAL',             id: 'nonfin',    label: 'Non-Financial' },
+  { num: 13, key: 'SB Account opening/Funding',id: 'sbac',      label: 'SB Acc Opening' },
+  { num: 14, key: 'CBDC',                      id: 'cbdc',      label: 'CBDC' },
+  { num: 15, key: 'PAI',                       id: 'pai',       label: 'PAI' },
+  { num: 16, key: 'FD Through yono',           id: 'fd',        label: 'FD Through YONO' },
+  { num: 17, key: 'Yono Reset Old',            id: 'resetold',  label: 'YONO Reset Old',  autoNonFin: true },
+  { num: 18, key: 'Upto 40000 Deposit',        id: 'dep40',     label: 'Upto 40k Deposit' },
+  { num: 19, key: 'Upto 40000 Widrawl',        id: 'wd40',      label: 'Upto 40k Withdraw' },
+  { num: 20, key: 'Upto 40000 Transfer',       id: 'tr40',      label: 'Upto 40k Transfer' },
+  { num: 21, key: 'Above 40000 Transfer',      id: 'trabove40', label: 'Above 40k Transfer' }
 ];
 
-const TARGET_ITEMS = ITEMS.filter(i => i.target);
+const ITEM_BY_KEY = Object.fromEntries(REPORT_ITEMS.map(i => [i.key, i]));
+
+/* DASHBOARD GRID ORDER WITH REQUESTED SWAPS:
+   - #8 Re-KYC Update <-> #4 NPS Feedback
+   - #10 Stmt & Enquiry <-> #5 Form 15 G/H
+   - #9 Nominee Update <-> #6 ATM Card Issue
+   - #16 FD Through YONO <-> #7 Cheque Book (Option B) */
+const GRID_KEYS = [
+  'Yono SBI',
+  'WhatsApp',
+  'Contact Centre',
+  'Re-KYC',
+  'Statement & Enquiry',
+  'Nominee update',
+  'FD Through yono',
+  'NPS',
+  'ATM Card Issuance',
+  'FORM 15 G/H Submission',
+  'FINANCIAL TRANSACTION',
+  'NON FINANCIAL',
+  'SB Account opening/Funding',
+  'CBDC',
+  'PAI',
+  'Cheque Book Request',
+  'Yono Reset Old',
+  'Upto 40000 Deposit',
+  'Upto 40000 Widrawl',
+  'Upto 40000 Transfer',
+  'Above 40000 Transfer'
+];
+const GRID_ITEMS = GRID_KEYS.map(k => ITEM_BY_KEY[k]);
+
+const TARGET_ITEMS = REPORT_ITEMS.filter(i => i.target);
 const TOTAL_TARGET = TARGET_ITEMS.reduce((sum, i) => sum + i.target, 0);
-const ITEM_BY_KEY = Object.fromEntries(ITEMS.map(i => [i.key, i]));
 
 const DEFAULT_STATE = { counts: {}, logs: [], loginTime: null, brName: 'Komtalpeta', brCode: '17978', userName: 'Ashutosh Pattnaik' };
 let state;
 try { state = JSON.parse(localStorage.getItem(LS_STATE)) || { ...DEFAULT_STATE }; } catch (e) { state = { ...DEFAULT_STATE }; }
 if (!state.counts) state.counts = {};
 if (!Array.isArray(state.logs)) state.logs = [];
-ITEMS.forEach(({ key }) => { if (typeof state.counts[key] !== 'number') state.counts[key] = parseInt(state.counts[key], 10) || 0; });
+REPORT_ITEMS.forEach(({ key }) => { if (typeof state.counts[key] !== 'number') state.counts[key] = parseInt(state.counts[key], 10) || 0; });
 
 let actionStack = [];
 try { actionStack = JSON.parse(localStorage.getItem(LS_STACK)) || []; } catch (e) { actionStack = []; }
@@ -821,16 +873,16 @@ if (!Array.isArray(actionStack)) actionStack = [];
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-/* RENDER ALL 21 FULL-CARD TAP TARGETS */
-$('ops-grid').innerHTML = ITEMS.map(item => `
+/* RENDER ALL 21 FULL-CARD TAP TARGETS IN SWAPPED GRID POSITIONS */
+$('ops-grid').innerHTML = GRID_ITEMS.map(item => `
   <div class="ops-card" id="card-${item.id}" tabindex="0" role="button"
-       aria-label="${item.label}: tap to add 1"
+       aria-label="${item.num}. ${item.label}: tap to add 1"
        onclick="addDelta('${item.key}', 1)"
        onkeydown="if(event.target===this&&(event.key==='Enter'||event.key===' ')){event.preventDefault();addDelta('${item.key}',1)}">
     ${item.autoNonFin ? '<span class="auto-flash">+1 Non-Fin</span>' : ''}
     <div class="ops-top">
       <div class="ops-title-wrap">
-        <span class="ops-ic" aria-hidden="true">${item.icon}</span>
+        <span class="ops-num">${item.num}.</span>
         <span class="ops-name">${item.label}</span>
       </div>
       ${item.target
@@ -932,7 +984,7 @@ function refreshUI() {
   let totalOps = 0;
   let cappedTargetVol = 0;
 
-  ITEMS.forEach(item => {
+  REPORT_ITEMS.forEach(item => {
     const val = state.counts[item.key] || 0;
     totalOps += val;
     const countEl = $('c-' + item.id);
@@ -974,7 +1026,35 @@ function refreshUI() {
   bar.setAttribute('aria-valuenow', overallPct);
 }
 
-/* LOGIN & NAVIGATION */
+/* 2-STEP SIGN-IN CONFIRMATION PANEL */
+function openSignInPanel() {
+  $('si-step1').classList.remove('hidden');
+  $('si-step2').classList.add('hidden');
+  $('si-error').classList.add('hidden');
+  $('si-field').value = '';
+  $('si-overlay').classList.add('show');
+}
+function closeSignInPanel(e) {
+  if (e && e.target !== $('si-overlay')) return;
+  $('si-overlay').classList.remove('show');
+  $('si-field').value = '';
+}
+function signInYes() {
+  $('si-step1').classList.add('hidden');
+  $('si-step2').classList.remove('hidden');
+  setTimeout(() => $('si-field').focus(), 140);
+}
+function signInConfirm() {
+  if ($('si-field').value.trim().toLowerCase() !== 'yes') {
+    $('si-error').classList.remove('hidden');
+    $('si-field').value = '';
+    return $('si-field').focus();
+  }
+  closeSignInPanel();
+  doLogin();
+}
+$('si-field').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); signInConfirm(); } });
+
 function doLogin() {
   if (!state.loginTime) state.loginTime = new Date().toLocaleTimeString();
   $('login-page').classList.add('hidden');
@@ -988,9 +1068,9 @@ function showReport() {
   $('bottom-nav').classList.add('hidden');
   $('report-page').classList.remove('hidden');
 
-  let sumHTML = '<tr><th>Category</th><th>Count</th><th>Target</th></tr>';
-  ITEMS.forEach(item => {
-    sumHTML += `<tr><td>${item.icon} ${esc(item.key)}</td><td class="mono"><b>${state.counts[item.key]}</b></td><td class="mono">${item.target || '-'}</td></tr>`;
+  let sumHTML = '<tr><th>#</th><th>Category</th><th>Count</th><th>Target</th></tr>';
+  REPORT_ITEMS.forEach(item => {
+    sumHTML += `<tr><td class="mono">${item.num}</td><td>${esc(item.key)}</td><td class="mono"><b>${state.counts[item.key]}</b></td><td class="mono">${item.target || '-'}</td></tr>`;
   });
   $('summary-table').innerHTML = sumHTML;
 
@@ -1007,10 +1087,11 @@ function hideReport() {
 }
 
 /* SHEETS & CONFIRMATIONS */
-function openShareSheet() {
-  $('branch-cc').value = state.counts['Contact Centre'] || '';
-  $('branch-nps').value = state.counts['NPS'] || '';
-  $('share-overlay').classList.add('show');
+function openBranchShareModal() {
+  $('branch-cc').value = '';
+  $('branch-nps').value = '';
+  $('branch-share-overlay').classList.add('show');
+  setTimeout(() => $('branch-cc').focus(), 140);
 }
 function openMoreSheet() { $('more-overlay').classList.add('show'); }
 function openPalSheet() { $('pal-overlay').classList.add('show'); }
@@ -1054,21 +1135,20 @@ function clearLedgerData() {
 }
 function resetApp() { openConfirmModal('reset', () => { clearLedgerData(); window.location.reload(); }); }
 
-/* WHATSAPP EXPORTS */
+/* EXACT WHATSAPP REPORT FORMATS (1-21 SERIAL ORDER) */
 function shareWA() {
   const c = state.counts;
-  const msg = `*DAILY REPORTING OF DATA*\nName- ${state.userName}\nBranch -${state.brName}\n*Date* ${new Date().toLocaleDateString('en-GB')}\n1. YONO Registration - ${c['Yono SBI']}\n2. What's app Registration - ${c['WhatsApp']}\n3. Contact centre Migration - ${c['Contact Centre']}\n4. NPS (FeedBack) - ${c['NPS']}\n5. FORM 15 G/H Submission : ${c['FORM 15 G/H Submission']}\n6. ATM Card Issuance : ${c['ATM Card Issuance']}\n7. Cheque Book Request: ${c['Cheque Book Request']}\n8. RE-KYC update: ${c['Re-KYC']}\n9. Nominee update: ${c['Nominee update']}\n10. Statement & Enquiry : ${c['Statement & Enquiry']}\n11. FINANCIAL TRANSACTION - ${c['FINANCIAL TRANSACTION']}\n12. NON FINANCIAL - ${c['NON FINANCIAL']}\n13. SB Account opening - ${c['SB Account opening/Funding']}\n14. CBDC - ${c['CBDC']}\n15. PAI - ${c['PAI']}\n16. FD Through yono - ${c['FD Through yono']}\n17. Yono Reset Old - ${c['Yono Reset Old']}\n18. Upto 40000 Deposit - ${c['Upto 40000 Deposit']}\n19. Upto 40000 Widrawl - ${c['Upto 40000 Widrawl']}\n20. Upto 40000 Transfer - ${c['Upto 40000 Transfer']}\n21. Above 40000 Transfer - ${c['Above 40000 Transfer']}`;
+  const msg = `DAILY REPORTING OF DATA\nName- ${state.userName}\nBranch -${state.brName}\nDate ${new Date().toLocaleDateString('en-GB')}\n1. YONO Registration - ${c['Yono SBI']}\n2. What's app Registration - ${c['WhatsApp']}\n3. Contact centre Migration - ${c['Contact Centre']}\n4. NPS (FeedBack) - ${c['NPS']}\n5. FORM 15 G/H Submission : ${c['FORM 15 G/H Submission']}\n6. ATM Card Issuance : ${c['ATM Card Issuance']}\n7. Cheque Book Request: ${c['Cheque Book Request']}\n8. RE-KYC update: ${c['Re-KYC']}\n9. Nominee update: ${c['Nominee update']}\n10. Statement & Enquiry : ${c['Statement & Enquiry']}\n11. FINANCIAL TRANSACTION - ${c['FINANCIAL TRANSACTION']}\n12. NON FINANCIAL - ${c['NON FINANCIAL']}\n13. SB Account opening - ${c['SB Account opening/Funding']}\n14. CBDC - ${c['CBDC']}\n15. PAI - ${c['PAI']}\n16. FD Through yono - ${c['FD Through yono']}\n17. Yono Reset Old - ${c['Yono Reset Old']}\n18. Upto 40000 Deposit - ${c['Upto 40000 Deposit']}\n19. Upto 40000 Widrawl - ${c['Upto 40000 Widrawl']}\n20. Upto 40000 Transfer - ${c['Upto 40000 Transfer']}\n21. Above 40000 Transfer - ${c['Above 40000 Transfer']}`;
   window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
-  closeSheet('share-overlay');
 }
 
 function shareBranchReport() {
   const ccRaw = $('branch-cc').value.trim(), npsRaw = $('branch-nps').value.trim();
   const cc = ccRaw === '' ? 0 : parseInt(ccRaw, 10), nps = npsRaw === '' ? 0 : parseInt(npsRaw, 10);
   if (isNaN(cc) || isNaN(nps) || cc < 0 || nps < 0) return toast('Enter valid whole numbers.');
-  const msg = `*BRANCH REPORT*\nBranch -${state.brName}\n*Date* ${new Date().toLocaleDateString('en-GB')}\n1. Contact Centre (CC) - ${cc}\n2. NPS (Feedback) - ${nps}`;
+  const msg = `BRANCH REPORT\nBranch -${state.brName}\nDate ${new Date().toLocaleDateString('en-GB')}\n1. Contact Centre (CC) - ${cc}\n2. NPS (Feedback) - ${nps}`;
   window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
-  closeSheet('share-overlay');
+  closeSheet('branch-share-overlay');
 }
 
 /* PDF EXPORT */
@@ -1086,7 +1166,7 @@ async function doGeneratePDF() {
   const doc = new jsPDF(); const dateStr = new Date().toLocaleDateString('en-GB');
   doc.setFontSize(18); doc.setTextColor(0, 75, 135); doc.text('SBI Ops Ledger Report', 14, 16);
   doc.setFontSize(10); doc.setTextColor(100, 116, 139); doc.text(`Login: ${state.loginTime || '-'} | Date: ${dateStr}`, 14, 24);
-  doc.autoTable({ startY: 32, head: [['Category', 'Count', 'Target']], body: ITEMS.map(i => [i.key, state.counts[i.key], i.target || '-']), headStyles: { fillColor: [0, 75, 135] }, theme: 'grid' });
+  doc.autoTable({ startY: 32, head: [['#', 'Category', 'Count', 'Target']], body: REPORT_ITEMS.map(i => [i.num, i.key, state.counts[i.key], i.target || '-']), headStyles: { fillColor: [0, 75, 135] }, theme: 'grid' });
   const afterSum = doc.lastAutoTable.finalY + 10;
   doc.setFontSize(14); doc.setTextColor(0, 75, 135); doc.text('Detailed Logs', 14, afterSum);
   doc.autoTable({ startY: afterSum + 5, head: [['#', 'Details', 'Value']], body: state.logs.map((l, i) => [i + 1, `${l.cat} [${l.time}]`, l.val]), headStyles: { fillColor: [0, 75, 135] }, theme: 'grid' });
@@ -1501,7 +1581,8 @@ function wlOff() { try { if (wl) wl.release(); } catch (e) {} wl = null; }
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    ['share-overlay', 'more-overlay', 'pal-overlay', 'confirm-overlay', 'perf-overlay'].forEach(id => $(id).classList.remove('show'));
+    ['branch-share-overlay', 'more-overlay', 'pal-overlay', 'confirm-overlay', 'perf-overlay'].forEach(id => $(id).classList.remove('show'));
+    closeSignInPanel();
     closeGeoPanel();
   }
 });
