@@ -788,7 +788,9 @@ const REPORT_ITEMS = [
 
 const ITEM_BY_KEY = Object.fromEntries(REPORT_ITEMS.map(i => [i.key, i]));
 
-/* DASHBOARD GRID ORDER WITH REQUESTED SWAPS */
+/* DASHBOARD GRID ORDER WITH REQUESTED SWAPS:
+   - Non-Financial <-> Cheque Book Request
+   - FD Through YONO <-> ATM Card Issuance */
 const GRID_KEYS = [
   'Yono SBI',
   'WhatsApp',
@@ -796,16 +798,16 @@ const GRID_KEYS = [
   'Re-KYC',
   'Statement & Enquiry',
   'Nominee update',
-  'FD Through yono',
-  'NPS',
   'ATM Card Issuance',
+  'NPS',
+  'FD Through yono',
   'FORM 15 G/H Submission',
   'FINANCIAL TRANSACTION',
-  'NON FINANCIAL',
+  'Cheque Book Request',
   'SB Account opening/Funding',
   'CBDC',
   'PAI',
-  'Cheque Book Request',
+  'NON FINANCIAL',
   'Yono Reset Old',
   'Upto 40000 Deposit',
   'Upto 40000 Widrawl',
