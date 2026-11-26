@@ -212,24 +212,6 @@ header {
   max-width: 960px; width: 100%; margin: 0 auto;
 }
 
-/* QUICK LINKS STRIP */
-.quick-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.q-link {
-  display: flex; align-items: center; justify-content: space-between; gap: 8px;
-  background: var(--paper);
-  border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 13px 14px;
-  color: var(--text-main); text-decoration: none; font-weight: 700; font-size: 13px;
-}
-.q-link:active { transform: scale(.97); }
-.q-link-left { display: flex; align-items: center; gap: 9px; min-width: 0; }
-.q-link-ic {
-  width: 28px; height: 28px; border-radius: 9px; background: var(--ink-light); color: var(--ink);
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.q-link-ic svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2.3; }
-.q-link span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.q-arrow { color: var(--ink); font-weight: 800; font-size: 15px; }
-
 /* SPACIOUS 21-CARD TAP GRID */
 .ops-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
 @media (min-width: 620px) { .ops-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
@@ -244,6 +226,16 @@ header {
   transition: transform .1s ease-out, border-color .15s ease, background-color .15s ease;
 }
 .ops-card:active { transform: scale(.97); }
+
+/* MINIMIZED TOP 4 CARDS (YONO Reg., WhatsApp Reg., Contact Ctr, Re-KYC Update) */
+.ops-card.compact-top {
+  padding: 10px 12px 9px;
+  gap: 8px;
+  border-radius: var(--radius-sm);
+}
+.ops-card.compact-top .ops-name { font-size: 12px; }
+.ops-card.compact-top .ops-count { font-size: 20px; }
+.ops-card.compact-top .tap-badge { height: 26px; padding: 0 10px; font-size: 11px; border-radius: 8px; }
 
 .ops-card.has-val { border-color: var(--border-active); }
 .ops-card.mid { border-color: var(--warn-border); background: var(--warn-light); }
@@ -263,6 +255,7 @@ header {
   border: 1px solid var(--border); flex-shrink: 0;
 }
 .ops-tag.auto-tag { font-family: var(--font-ui); font-size: 8.5px; text-transform: uppercase; }
+.ops-tag.link-tag { font-family: var(--font-mono); font-size: 9px; letter-spacing: .02em; }
 
 .ops-mid { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .ops-count { font-family: var(--font-mono); font-size: 25px; font-weight: 800; line-height: 1; color: var(--text-main); }
@@ -437,7 +430,7 @@ body.saver { --bg-main: #000 !important; --paper: #0b0b0b !important; --paper-el
   @page { margin: 12mm; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body { background: #fff !important; color: #000 !important; height: auto !important; overflow: visible !important; display: block; }
-  header, .bottom-dock-wrapper, .overlay, .si-overlay, #login-page, .report-top-bar, .quick-strip, .tap-badge { display: none !important; }
+  header, .bottom-dock-wrapper, .overlay, .si-overlay, #login-page, .report-top-bar, .tap-badge { display: none !important; }
   #dashboard, #report-page { height: auto; overflow: visible; max-width: none; padding: 0; }
   .ops-grid { grid-template-columns: repeat(3, 1fr); }
   .ops-card { break-inside: avoid; border: 1px solid #999; background: #fff !important; color: #000 !important; }
@@ -509,26 +502,7 @@ body.saver { --bg-main: #000 !important; --paper: #0b0b0b !important; --paper-el
 
 <!-- MAIN DASHBOARD -->
 <div id="dashboard" class="hidden">
-  <!-- Quick Links Strip -->
-  <div class="quick-strip">
-    <a href="https://yonoretail.sbi.bank.in/accounts/re-kyc/kyc-entry?srcChn=RINB" target="_blank" rel="noopener" class="q-link">
-      <div class="q-link-left">
-        <span class="q-link-ic"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
-        <span>Re-KYC</span>
-      </div>
-      <span class="q-arrow">↗</span>
-    </a>
-
-    <a href="https://yonoretail.sbi.bank.in/registration/new-user-registration" target="_blank" rel="noopener" class="q-link">
-      <div class="q-link-left">
-        <span class="q-link-ic"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></span>
-        <span>New Reg.</span>
-      </div>
-      <span class="q-arrow">↗</span>
-    </a>
-  </div>
-
-  <!-- Spacious 21-Card Tap Grid -->
+  <!-- Spacious 21-Card Tap Grid (Top 4 minimized; double-tap YONO Reg. or Re-KYC Update to open links) -->
   <div class="ops-grid" id="ops-grid"></div>
 </div>
 
@@ -556,7 +530,7 @@ body.saver { --bg-main: #000 !important; --paper: #0b0b0b !important; --paper-el
   </div>
 </div>
 
-<!-- UNIFIED MENU SHEET (UNDO, LOGS, SHARE, BRANCH + TOOLS) -->
+<!-- UNIFIED MENU SHEET -->
 <div id="menu-overlay" class="overlay" onclick="closeSheet('menu-overlay', event)">
   <div class="bottom-sheet" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="menu-sheet-title">
     <div class="sheet-head">
@@ -763,14 +737,14 @@ const LS_STATE = 'sbi_v20_dark_v4', LS_STACK = 'sbi_action_stack', LS_PAL = 'sbi
 
 /* CANONICAL 1-21 SERIAL ORDER FOR WHATSAPP REPORT & PDF SUMMARY */
 const REPORT_ITEMS = [
-  { num: 1,  key: 'Yono SBI',                  id: 'yono',      label: 'YONO Reg.',       target: 5 },
-  { num: 2,  key: 'WhatsApp',                  id: 'wa',        label: 'WhatsApp Reg.',   target: 15 },
-  { num: 3,  key: 'Contact Centre',            id: 'contact',   label: 'Contact Ctr',     target: 10 },
+  { num: 1,  key: 'Yono SBI',                  id: 'yono',      label: 'YONO Reg.',       target: 5,  compactTop: true, dblUrl: 'https://yonoretail.sbi.bank.in/registration/new-user-registration', dblTitle: 'New Registration' },
+  { num: 2,  key: 'WhatsApp',                  id: 'wa',        label: 'WhatsApp Reg.',   target: 15, compactTop: true },
+  { num: 3,  key: 'Contact Centre',            id: 'contact',   label: 'Contact Ctr',     target: 10, compactTop: true },
   { num: 4,  key: 'NPS',                       id: 'nps',       label: 'NPS Feedback',    target: 10 },
   { num: 5,  key: 'FORM 15 G/H Submission',    id: 'form15',    label: 'Form 15 G/H',     autoNonFin: true },
   { num: 6,  key: 'ATM Card Issuance',         id: 'atm',       label: 'ATM Card Issue',  autoNonFin: true },
   { num: 7,  key: 'Cheque Book Request',       id: 'cheque',    label: 'Cheque Book',     autoNonFin: true },
-  { num: 8,  key: 'Re-KYC',                    id: 'cm',        label: 'Re-KYC Update',   autoNonFin: true },
+  { num: 8,  key: 'Re-KYC',                    id: 'cm',        label: 'Re-KYC Update',   autoNonFin: true, compactTop: true, dblUrl: 'https://yonoretail.sbi.bank.in/accounts/re-kyc/kyc-entry?srcChn=RINB', dblTitle: 'Re-KYC Portal' },
   { num: 9,  key: 'Nominee update',            id: 'nominee',   label: 'Nominee Update',  autoNonFin: true },
   { num: 10, key: 'Statement & Enquiry',       id: 'stmt',      label: 'Stmt & Enquiry',  autoNonFin: true },
   { num: 11, key: 'FINANCIAL TRANSACTION',     id: 'fin',       label: 'Financial Txn' },
@@ -788,9 +762,7 @@ const REPORT_ITEMS = [
 
 const ITEM_BY_KEY = Object.fromEntries(REPORT_ITEMS.map(i => [i.key, i]));
 
-/* DASHBOARD GRID ORDER WITH REQUESTED SWAPS:
-   - Non-Financial <-> Cheque Book Request
-   - FD Through YONO <-> ATM Card Issuance */
+/* DASHBOARD GRID ORDER */
 const GRID_KEYS = [
   'Yono SBI',
   'WhatsApp',
@@ -832,18 +804,20 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;'
 
 /* RENDER ALL 21 FULL-CARD TAP TARGETS */
 $('ops-grid').innerHTML = GRID_ITEMS.map(item => `
-  <div class="ops-card" id="card-${item.id}" tabindex="0" role="button"
-       aria-label="${item.label}: tap to add 1"
-       onclick="addDelta('${item.key}', 1)"
+  <div class="ops-card${item.compactTop ? ' compact-top' : ''}" id="card-${item.id}" tabindex="0" role="button"
+       aria-label="${item.label}: tap to add 1${item.dblUrl ? ', double tap to open ' + item.dblTitle : ''}"
+       onclick="handleCardTap('${item.key}')"
        onkeydown="if(event.target===this&&(event.key==='Enter'||event.key===' ')){event.preventDefault();addDelta('${item.key}',1)}">
     ${item.autoNonFin ? '<span class="auto-flash">+1 Non-Fin</span>' : ''}
     <div class="ops-top">
       <div class="ops-title-wrap">
         <span class="ops-name">${item.label}</span>
       </div>
-      ${item.target
-        ? `<span class="ops-tag">G:${item.target}</span>`
-        : (item.autoNonFin ? '<span class="ops-tag auto-tag">+NF</span>' : '')}
+      ${item.dblUrl
+        ? `<span class="ops-tag link-tag" title="Double tap to open ${item.dblTitle}">2× ↗</span>`
+        : (item.target
+            ? `<span class="ops-tag">G:${item.target}</span>`
+            : (item.autoNonFin ? '<span class="ops-tag auto-tag">+NF</span>' : ''))}
     </div>
     <div class="ops-mid">
       <span class="ops-count" id="c-${item.id}">0</span>
@@ -852,6 +826,31 @@ $('ops-grid').innerHTML = GRID_ITEMS.map(item => `
     ${item.target ? `<div class="ops-prog" role="progressbar" aria-label="${item.label} progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="ops-prog-fill" id="prog-${item.id}"></div></div>` : ''}
   </div>
 `).join('');
+
+/* SINGLE TAP = +1 | DOUBLE TAP (ON LINK-ENABLED CARDS) = OPEN NEW TAB */
+const tapTimers = {};
+function handleCardTap(key) {
+  const item = ITEM_BY_KEY[key];
+  if (!item) return;
+
+  if (!item.dblUrl) {
+    addDelta(key, 1);
+    return;
+  }
+
+  if (tapTimers[key]) {
+    clearTimeout(tapTimers[key]);
+    tapTimers[key] = null;
+    if (navigator.vibrate) navigator.vibrate([18, 30, 18]);
+    toast(`Opening ${item.dblTitle} ↗`);
+    window.open(item.dblUrl, '_blank', 'noopener');
+  } else {
+    tapTimers[key] = setTimeout(() => {
+      tapTimers[key] = null;
+      addDelta(key, 1);
+    }, 300);
+  }
+}
 
 function flashNFBadge(id) {
   const card = $('card-' + id);
