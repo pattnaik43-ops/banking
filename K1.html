@@ -43,7 +43,7 @@ body.saver {
 
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html { -webkit-font-smoothing:antialiased; }
-button, a, .stat-card, .theme-swatch-card { touch-action:manipulation; user-select:none; -webkit-user-select:none; }
+button, a, .stat-card, .theme-swatch-card, .menu-tile { touch-action:manipulation; user-select:none; -webkit-user-select:none; }
 body {
   font-family:'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; color:var(--ink);
   height:100vh; height:100dvh; overflow:hidden; display:flex; flex-direction:column; background-color:var(--bg-page);
@@ -131,7 +131,7 @@ header {
 
 /* DASHBOARD */
 #dashboard { display:flex; flex-direction:column; flex:1; min-height:0; }
-.scroll-area { flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; padding:12px 14px 18px; display:flex; flex-direction:column; gap:12px; }
+.scroll-area { flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; padding:12px 14px 86px; display:flex; flex-direction:column; gap:12px; }
 .summary-deck { display:flex; flex-direction:column; gap:10px; flex-shrink:0; }
 .stat-summary-box { background:var(--surface); border:2px solid var(--border); border-radius:var(--radius-md); padding:12px 16px; display:flex; align-items:center; justify-content:space-between; box-shadow:var(--shadow-card); transition:background-color .3s ease, border-color .3s ease; }
 .summary-meta { display:flex; flex-direction:column; }
@@ -195,19 +195,22 @@ header {
 .stat-card.met .card-count { color:#10b981; }
 .stat-card.met .tap-pill { background:#10b981; box-shadow:0 3px 8px rgba(16,185,129,.35); }
 
-/* BOTTOM DOCK */
-.bottom-actions { background:var(--glass); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-top:2px solid var(--border); padding:10px 14px max(10px, env(safe-area-inset-bottom)); display:flex; gap:8px; z-index:40; flex-shrink:0; transition:background-color .3s ease, border-color .3s ease; }
-.action-btn { height:46px; border-radius:var(--radius-md); border:none; font:800 13px 'Plus Jakarta Sans', sans-serif; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; transition:transform .1s ease; white-space:nowrap; }
-.action-btn:active { transform:translateY(2px); }
-.action-btn.reset { background:#fff1f2; border:1.5px solid #fecdd3; color:#e11d48; flex:.35; }
-.action-btn.rm { background:var(--surface-tint); border:1.5px solid var(--border); color:var(--ink-tertiary); flex:.45; }
-.action-btn.send { background:var(--grad-primary); color:#fff; box-shadow:0 6px 18px var(--primary-glow); flex:.9; }
-.action-btn.undo { background:var(--bg-subtle); border:1.5px solid var(--border); color:var(--ink-secondary); flex:.4; }
-.action-btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+/* SINGLE FLOATING MENU BUTTON DOCK */
+.bottom-dock-wrapper {
+  position:fixed; bottom:max(14px, env(safe-area-inset-bottom)); left:0; right:0;
+  display:flex; justify-content:center; pointer-events:none; z-index:40; padding:0 16px;
+}
+.menu-dock-btn {
+  height:48px; padding:0 28px; border-radius:var(--radius-pill); border:2px solid rgba(255,255,255,.35);
+  background:var(--grad-primary); color:#fff; font:800 14px 'Plus Jakarta Sans', sans-serif;
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  cursor:pointer; pointer-events:auto; box-shadow:0 8px 24px var(--primary-glow);
+  transition:transform .12s ease, box-shadow .2s ease;
+}
+.menu-dock-btn:active { transform:scale(.95); }
 .minus-pill { width:26px; height:26px; padding:0; border-radius:9px; border:1.5px solid var(--border); background:var(--surface-tint); color:var(--ink-secondary); font:800 15px 'JetBrains Mono', monospace; line-height:1; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .12s ease; }
 .minus-pill:active { transform:scale(.92); }
 .minus-pill:disabled { opacity:.35; cursor:default; transform:none; }
-@media (max-width:440px) { .bottom-actions { gap:6px; padding-left:10px; padding-right:10px; } .action-btn { font-size:12.5px; padding:0 6px; } .lbl-long { display:none; } }
 
 /* TOAST */
 #toast { position:fixed; top:-100px; left:50%; transform:translateX(-50%); background:var(--toast-bg); color:#fff; border:2px solid var(--primary); padding:10px 20px; border-radius:var(--radius-pill); font-weight:800; font-size:12.5px; max-width:92%; white-space:nowrap; z-index:9999; transition:top .35s cubic-bezier(.16,1,.3,1); box-shadow:var(--shadow-float); }
@@ -236,6 +239,7 @@ header {
 .rm-header { display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--border); padding-bottom:12px; margin-bottom:12px; }
 .rm-title { font-size:15.5px; font-weight:800; color:var(--ink); }
 .rm-sub { font-size:11px; font-weight:700; color:var(--ink-secondary); margin-top:2px; }
+.rm-close-x { width:32px; height:32px; border-radius:10px; background:#fff1f2; border:1.5px solid #fecdd3; color:#e11d48; font:800 13px 'Plus Jakarta Sans', sans-serif; display:flex; align-items:center; justify-content:center; cursor:pointer; }
 .rm-form-scroll { overflow-y:auto; flex:1; padding-right:4px; display:flex; flex-direction:column; gap:8px; }
 .rm-row { display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--row-bg); border:1.5px solid var(--border); padding:8px 11px; border-radius:var(--radius-sm); }
 .rm-row.auto-fetched { background:var(--auto-bg); border-color:var(--auto-bd); }
@@ -245,6 +249,30 @@ header {
 .rm-input:focus { border-color:var(--primary); }
 .rm-branch-input { width:140px; text-align:left; font-family:'Plus Jakarta Sans', sans-serif; }
 .rm-btn-grid { display:flex; gap:8px; margin-top:14px; padding-top:10px; border-top:2px solid var(--border); }
+
+/* UNIFIED MENU MODAL */
+.menu-modal-box {
+  background:var(--surface); border:2px solid var(--border); border-radius:var(--radius-lg);
+  padding:18px 16px; width:100%; max-width:390px; text-align:left;
+  transform:scale(.94); transition:transform .22s cubic-bezier(.16,1,.3,1);
+  box-shadow:var(--shadow-float); display:flex; flex-direction:column;
+}
+.overlay.show .menu-modal-box { transform:scale(1); }
+.menu-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.menu-tile {
+  padding:14px 12px; border-radius:var(--radius-md); border:1.5px solid var(--border);
+  background:var(--surface-tint); color:var(--ink); text-align:left; cursor:pointer;
+  display:flex; flex-direction:column; gap:4px; transition:transform .12s ease, border-color .15s ease;
+}
+.menu-tile:active { transform:scale(.96); }
+.menu-tile:disabled { opacity:.42; cursor:not-allowed; transform:none; }
+.menu-tile.primary-tile { background:var(--grad-primary); color:#fff; border-color:transparent; box-shadow:0 4px 14px var(--primary-glow); }
+.menu-tile.primary-tile .menu-tile-sub { color:rgba(255,255,255,.88); }
+.menu-tile.danger-tile { background:#fff1f2; border-color:#fecdd3; color:#e11d48; }
+.menu-tile.danger-tile .menu-tile-sub { color:#be123c; }
+.menu-tile-ic { font-size:20px; line-height:1.1; }
+.menu-tile-title { font-size:13px; font-weight:800; }
+.menu-tile-sub { font-size:10.5px; font-weight:600; color:var(--ink-secondary); }
 
 /* THEME BOUTIQUE MODAL */
 .theme-modal-box {
@@ -324,7 +352,7 @@ body:has(#about-toggle:checked) .css-modal-card { transform:none; }
 .css-modal-x { position:absolute; top:12px; right:12px; width:34px; height:34px; border-radius:50%; border:1.5px solid var(--border); background:var(--surface-tint); color:var(--ink); display:flex; align-items:center; justify-content:center; cursor:pointer; }
 
 /* ACCESSIBLE FOCUS */
-:where(button, a, input, label, .stat-card, .theme-swatch-card):focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+:where(button, a, input, label, .stat-card, .theme-swatch-card, .menu-tile):focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
 .custom-n-input:focus-visible, .rm-input:focus-visible { outline:3px solid var(--accent); outline-offset:1px; border-color:var(--accent); }
 .rm-input::placeholder, .custom-n-input::placeholder { color:var(--ink-secondary); opacity:1; }
 .rm-input:user-invalid, .custom-n-input:user-invalid { border-color:var(--danger); }
@@ -336,11 +364,13 @@ body:has(#about-toggle:checked) .css-modal-card { transform:none; }
   .stat-card:hover { transform:translateY(-3px); border-color:var(--primary); box-shadow:0 12px 24px -6px var(--primary-glow); }
   .stat-card:active { transform:scale(.98); }
   .theme-swatch-card:hover { transform:translateY(-2px); box-shadow:0 8px 18px rgba(0,0,0,.12); }
+  .menu-tile:not(:disabled):hover { transform:translateY(-2px); border-color:var(--primary); }
+  .menu-dock-btn:hover { transform:translateY(-2px); }
   .link-card { transition:transform .2s ease, filter .2s ease; }
   .link-card:hover { transform:translateY(-2px); filter:brightness(1.08); }
   .link-arrow { display:inline-block; transition:transform .2s ease; }
   .link-card:hover .link-arrow { transform:translate(3px,-3px); }
-  .action-btn:hover, .btn-exit-pill:hover, .btn-login:hover, .icon-btn:hover, .theme-studio-btn:hover { transform:translateY(-2px); }
+  .btn-exit-pill:hover, .btn-login:hover, .icon-btn:hover, .theme-studio-btn:hover { transform:translateY(-2px); }
   .tap-pill:hover, .add-n-pill:hover, .preset-chip:hover, .minus-pill:not(:disabled):hover { transform:scale(1.08); }
   .tn-link:hover { background:var(--bg-subtle); color:var(--ink); }
 }
@@ -348,11 +378,9 @@ body:has(#about-toggle:checked) .css-modal-card { transform:none; }
 /* BATTERY SAVER + REDUCED MOTION */
 body:is(.saver, .reduce-motion) *, body:is(.saver, .reduce-motion) *::before, body:is(.saver, .reduce-motion) *::after { animation:none !important; transition:none !important; }
 body.saver * { box-shadow:none !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
-body:is(.saver, .reduce-motion) :is(.stat-card, .link-card, .action-btn, .btn-exit-pill, .icon-btn, .theme-studio-btn, .tap-pill, .add-n-pill, .theme-swatch-card):hover { transform:none; filter:none; }
+body:is(.saver, .reduce-motion) :is(.stat-card, .link-card, .menu-dock-btn, .menu-tile, .btn-exit-pill, .icon-btn, .theme-studio-btn, .tap-pill, .add-n-pill, .theme-swatch-card):hover { transform:none; filter:none; }
 
 @media (max-width:360px) {
-  .bottom-actions { flex-wrap:wrap; }
-  .action-btn.send { flex:1 1 100%; order:-1; }
   .quick-links-grid { grid-template-columns:1fr; }
 }
 
@@ -362,7 +390,7 @@ body:is(.saver, .reduce-motion) :is(.stat-card, .link-card, .action-btn, .btn-ex
   * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   body, body.saver { --bg-page:#fff !important; --surface:#fff !important; --surface-tint:#f5f5f5 !important; --bg-subtle:#eee !important; --border:#999 !important; --ink:#000 !important; --ink-secondary:#333 !important; --ink-tertiary:#333 !important; --glass:#fff !important; --met-bg:#eee !important; --met-bd:#555 !important; --shadow-card:none !important; }
   html, body { height:auto !important; overflow:visible !important; display:block; background:#fff !important; background-image:none !important; }
-  header, .bottom-actions, .overlay, .css-modal, #toast, .quick-links-grid, .toggle-row, .add-n-pill, .minus-pill, #login-wrapper { display:none !important; }
+  header, .bottom-dock-wrapper, .overlay, .css-modal, #toast, .quick-links-grid, .toggle-row, .add-n-pill, .minus-pill, #login-wrapper { display:none !important; }
   #main-content { max-width:none; display:block; }
   #dashboard, .scroll-area { overflow:visible; height:auto; display:block; }
   .scroll-area { padding:0; }
@@ -376,6 +404,7 @@ body:is(.saver, .reduce-motion) :is(.stat-card, .link-card, .action-btn, .btn-ex
 <body>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="i-menu" viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></symbol>
   <symbol id="i-palette" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></symbol>
   <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
   <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></symbol>
@@ -471,16 +500,61 @@ body:is(.saver, .reduce-motion) :is(.stat-card, .link-card, .action-btn, .btn-ex
       <div class="grid" id="grid"></div>
     </div>
 
-    <div class="bottom-actions">
-      <button class="action-btn reset" onclick="openConfirm('reset')">Reset</button>
-      <button class="action-btn undo" id="btn-undo" onclick="undoLast()" aria-label="Undo last change" disabled>↩ Undo</button>
-      <button class="action-btn rm" onclick="openRMModal()">📋 RM<span class="lbl-long"> Report</span></button>
-      <button class="action-btn send" onclick="exportToWhatsApp()">📲 WhatsApp</button>
+    <div class="bottom-dock-wrapper">
+      <button type="button" class="menu-dock-btn" onclick="openMenuModal()" aria-label="Open Menu">
+        <svg class="ic" aria-hidden="true"><use href="#i-menu"/></svg>
+        <span>Menu</span>
+      </button>
     </div>
   </div>
 </div>
 
 <div id="toast" role="status" aria-live="polite"></div>
+
+<!-- UNIFIED MENU MODAL -->
+<div id="menu-overlay" class="overlay" onclick="closeMenuModal()">
+  <div class="menu-modal-box" onclick="event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="menu-modal-title">
+    <div class="rm-header">
+      <div>
+        <div class="rm-title" id="menu-modal-title">✨ Quick Menu</div>
+        <div class="rm-sub">Reports, undo &amp; ledger controls</div>
+      </div>
+      <button type="button" class="rm-close-x" onclick="closeMenuModal()" aria-label="Close">✕</button>
+    </div>
+    <div class="menu-grid">
+      <button type="button" class="menu-tile primary-tile" onclick="closeMenuModal(); exportToWhatsApp()">
+        <span class="menu-tile-ic">📲</span>
+        <span class="menu-tile-title">WhatsApp</span>
+        <span class="menu-tile-sub">Send daily report</span>
+      </button>
+      <button type="button" class="menu-tile" onclick="closeMenuModal(); openRMModal()">
+        <span class="menu-tile-ic">📋</span>
+        <span class="menu-tile-title">RM Report</span>
+        <span class="menu-tile-sub">Channel migration</span>
+      </button>
+      <button type="button" class="menu-tile" id="btn-undo" onclick="undoLast()" disabled>
+        <span class="menu-tile-ic">↩️</span>
+        <span class="menu-tile-title">Undo Last</span>
+        <span class="menu-tile-sub" id="undo-sub">Nothing to undo</span>
+      </button>
+      <button type="button" class="menu-tile" onclick="closeMenuModal(); window.print()">
+        <span class="menu-tile-ic">🖨️</span>
+        <span class="menu-tile-title">Print Copy</span>
+        <span class="menu-tile-sub">Clean paper view</span>
+      </button>
+      <button type="button" class="menu-tile" onclick="closeMenuModal(); openThemeModal()">
+        <span class="menu-tile-ic">🎨</span>
+        <span class="menu-tile-title">Themes (13)</span>
+        <span class="menu-tile-sub">Switch color mood</span>
+      </button>
+      <button type="button" class="menu-tile danger-tile" onclick="closeMenuModal(); openConfirm('reset')">
+        <span class="menu-tile-ic">🗑️</span>
+        <span class="menu-tile-title">Reset Counts</span>
+        <span class="menu-tile-sub">Clear today's data</span>
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- THEME BOUTIQUE MODAL (13 THEMES) -->
 <div id="theme-overlay" class="overlay" onclick="closeThemeModal()">
@@ -490,7 +564,7 @@ body:is(.saver, .reduce-motion) :is(.stat-card, .link-card, .action-btn, .btn-ex
         <div class="rm-title" id="theme-modal-title">✨ Theme Boutique (13 Themes)</div>
         <div class="rm-sub">Tap any palette to transform your dashboard</div>
       </div>
-      <button class="action-btn reset" onclick="closeThemeModal()" style="width:32px;height:32px;font-size:12px;padding:0;" aria-label="Close">✕</button>
+      <button class="rm-close-x" onclick="closeThemeModal()" aria-label="Close">✕</button>
     </div>
     <div class="theme-filter-bar" role="tablist" aria-label="Filter themes">
       <button type="button" class="theme-filter-chip active" data-filter="all" onclick="filterThemes('all', this)">All (13)</button>
@@ -537,7 +611,7 @@ body:is(.saver, .reduce-motion) :is(.stat-card, .link-card, .action-btn, .btn-ex
         <div class="rm-title" id="rm-title">Channel Migration Report</div>
         <div class="rm-sub">Auto-filled from today's counts</div>
       </div>
-      <button class="action-btn reset" onclick="closeRMModal()" style="width:32px;height:32px;font-size:12px;padding:0;" aria-label="Close">✕</button>
+      <button class="rm-close-x" onclick="closeRMModal()" aria-label="Close">✕</button>
     </div>
     <div class="rm-form-scroll">
       <div class="rm-row"><label class="rm-label" for="rm-branch">Branch Name</label><input type="text" id="rm-branch" class="rm-input rm-branch-input" value="Koraput"></div>
@@ -585,11 +659,11 @@ body:is(.saver, .reduce-motion) :is(.stat-card, .link-card, .action-btn, .btn-ex
     <h2 id="about-title">Quick tips</h2>
     <ul>
       <li>Tap a card to add +1, or use +N for a bigger amount.</li>
-      <li>RM Report is filled in from today's counts.</li>
+      <li>Tap the bottom Menu button for WhatsApp, RM Report, Undo, Print, and Reset.</li>
       <li>Hide completed targets to focus on what is left.</li>
       <li>Tap the Themes button in the top bar to switch across 13 curated palettes.</li>
       <li>The pulse button shows battery, network and storage.</li>
-      <li>Print gives a clean paper copy. All data stays on this device.</li>
+      <li>All data stays safely on this device.</li>
     </ul>
   </div>
 </div>
@@ -696,7 +770,13 @@ function refreshTotals() {
 }
 
 let undoStack = [];
-const updateUndoBtn = () => { $('btn-undo').disabled = undoStack.length === 0; };
+const updateUndoBtn = () => {
+  const hasUndo = undoStack.length > 0;
+  $('btn-undo').disabled = !hasUndo;
+  const last = undoStack[undoStack.length - 1];
+  const lastTitle = last ? ((CARDS.find(c => c[0] === last.f) || [])[2] || '') : '';
+  $('undo-sub').textContent = hasUndo && lastTitle ? `Revert ${lastTitle}` : 'Nothing to undo';
+};
 function increment(field, amount = 1) {
   const el = $(field), cur = parseInt(el.textContent) || 0, next = Math.max(0, cur + amount), delta = next - cur;
   if (!delta) return;
@@ -712,6 +792,15 @@ function undoLast() {
   const title = (CARDS.find(c => c[0] === a.f) || [])[2] || '';
   showToast(`Undone: ${a.d > 0 ? '+' : ''}${a.d} on ${title}`, 2200);
   if (navigator.vibrate) navigator.vibrate(20);
+}
+
+/* UNIFIED MENU MODAL */
+function openMenuModal() {
+  updateUndoBtn();
+  $('menu-overlay').classList.add('show');
+}
+function closeMenuModal() {
+  $('menu-overlay').classList.remove('show');
 }
 
 /* +N MODAL */
@@ -1043,11 +1132,9 @@ function applyTheme(id, announce = false) {
   document.body.dataset.themeMode = theme.mode;
   lsSet('sbi_a1_theme_id', theme.id);
 
-  // Update mobile browser bar color
   const m = document.querySelector('meta[name="theme-color"]');
   if (m) m.content = theme.vars['--bg-page'];
 
-  // Update header & login swatch previews
   const dotsHtml = theme.swatches.map(c => `<span style="background:${c}"></span>`).join('');
   if ($('hdr-swatches')) $('hdr-swatches').innerHTML = dotsHtml;
   if ($('login-swatches')) $('login-swatches').innerHTML = dotsHtml;
@@ -1112,6 +1199,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     $('about-toggle').checked = false;
     closeThemeModal();
+    closeMenuModal();
   }
 });
 
