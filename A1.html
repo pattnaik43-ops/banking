@@ -826,7 +826,24 @@ $('ops-grid').innerHTML = GRID_ITEMS.map(item => `
   </div>
 `).join('');
 
-/* SINGLE TAP = +1 | DOUBLE TAP (ON LINK-ENABLED CARDS) = OPEN NEW TAB */
+/* FORCE BROWSER TAB ON ANDROID SO YONO APP DOES NOT INTERCEPT LINK */
+function openPortalInBrowser(url) {
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  if (isAndroid) {
+    const noScheme = url.replace(/^https?:\/\//i, '');
+    const intentUrl = `intent://${noScheme}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(url)};end`;
+    const a = document.createElement('a');
+    a.href = intentUrl;
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  } else {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+}
+
+/* SINGLE TAP = +1 | DOUBLE TAP (ON LINK-ENABLED CARDS) = OPEN IN BROWSER */
 const tapTimers = {};
 function handleCardTap(key) {
   const item = ITEM_BY_KEY[key];
@@ -841,8 +858,8 @@ function handleCardTap(key) {
     clearTimeout(tapTimers[key]);
     tapTimers[key] = null;
     if (navigator.vibrate) navigator.vibrate([18, 30, 18]);
-    toast(`Opening ${item.dblTitle} ↗`);
-    window.open(item.dblUrl, '_blank', 'noopener');
+    toast(`Opening ${item.dblTitle} in browser ↗`);
+    openPortalInBrowser(item.dblUrl);
   } else {
     tapTimers[key] = setTimeout(() => {
       tapTimers[key] = null;
@@ -1155,7 +1172,7 @@ function applyPalette(id, announce = false) {
     if (badge) badge.classList.toggle('hidden', !active);
   });
   syncThemeColor();
-  if (announce) toast(`Theme: ${pal.name} ${pal.emoji}`);
+  if (announce) showToast(`Theme: ${pal.name} ${pal.emoji}`);
 }
 
 $('pal-menu').innerHTML = PALETTES.map(p => `
@@ -1486,7 +1503,7 @@ addEventListener('online', perfRender); addEventListener('offline', perfRender);
 function batUpdate() {
   if (!battery) return;
   const p = Math.round(battery.level * 100);
-  if (p <= 20 && !battery.charging && !saverOn()) { $('saver-toggle').checked = true; autoSaverOn = true; applySaver(); toast('Battery low: Battery Saver turned on'); }
+  if (p <= 20 && !battery.charging && !saverOn()) { $('saver-toggle').checked = true; autoSaverOn = true; applySaver(); showToast('Battery low: Battery Saver turned on'); }
   else if (autoSaverOn && (battery.charging || p > 25)) { $('saver-toggle').checked = false; autoSaverOn = false; applySaver(); }
   perfRender();
 }
@@ -1497,7 +1514,7 @@ function perfRender() {
   const n = netState(), p = battery ? Math.round(battery.level * 100) : null, b = lsBytes(), pct = Math.min(100, Math.round(b / 52428.8));
   $('pf-bat').textContent = p === null ? 'Not supported' : `${p}%${battery.charging ? ' (charging)' : ''}`;
   $('pf-net').textContent = n + (conn && conn.effectiveType ? ` (${conn.effectiveType.toUpperCase()})` : '');
-  $('pf-store').textContent = `${fmtB(b)} of ~5 MB`;
+  $('pf-store').textContent = fmtB(b) + ' of ~5 MB';
   const bar = $('pf-bar'); bar.style.setProperty('--pct', pct + '%'); bar.setAttribute('aria-valuenow', pct);
 }
 function fpsStart() {
